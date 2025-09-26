@@ -1,5 +1,10 @@
 # Fdb version 3
-["pdflatex"] 1758852276 "design-doc.tex" "design-doc.pdf" "design-doc" 1758852279
+["pdflatex"] 1758916218 "design-doc.tex" "design-doc.pdf" "design-doc" 1758916221
+  "../screenshots/diagram-screenshots/configure-dss.png" 1758912321 91999 4db4229c5c0b821bc5f2cc4162f3b806 ""
+  "../screenshots/diagram-screenshots/deregister-disk.png" 1758912352 73490 35ac3f1660bff1052c098fb04f06490c ""
+  "../screenshots/diagram-screenshots/deregister_user.png" 1758912342 75401 df85b190a529dd954ea10ba5b671fcb1 ""
+  "../screenshots/diagram-screenshots/register-disk.png" 1758912308 83893 870cefd00900fc876ee2a497a5c40776 ""
+  "../screenshots/diagram-screenshots/register-user.png" 1758912291 82485 aeb33b02633a22bd37075174c29312ae ""
   "/etc/texmf/web2c/texmf.cnf" 1746510369 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/home/parker/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/tcbx1200.600pk" 1758852274 15056 b16d7ee719007c56b7206b0c20d61b19 ""
   "/home/parker/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1095.600pk" 1758852276 12644 b52ab12700de853984a41b4c3cd3c9f5 ""
@@ -51,6 +56,7 @@
   "/usr/share/texlive/texmf-dist/tex/latex/base/size11.clo" 1636758526 8464 74db94825c407b51399ca17d9bd38a3d ""
   "/usr/share/texlive/texmf-dist/tex/latex/enumitem/enumitem.sty" 1561238569 51697 f8f08183cd2080d9d18a41432d651dfb ""
   "/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty" 1579991033 13886 d1306dcf79a944f6988e688c1785f9ce ""
+  "/usr/share/texlive/texmf-dist/tex/latex/float/float.sty" 1137110151 6749 16d2656a1984957e674b149555f1ea1d ""
   "/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty" 1578002852 41601 9cf6c5257b1bc7af01a58859749dd37a ""
   "/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/graphics.cfg" 1465944070 1224 978390e9c2234eab29404bc21b268d1e ""
   "/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def" 1601931164 19103 48d29b6e2a64cb717117ef65f107b404 ""
@@ -76,10 +82,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1746510477 128028 f533b797fba58d231669ea19e894e23e ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1746510863 1405643 62f5bfd0c136cdc989c6c17826d0d6d4 ""
-  "design-doc.aux" 1758852278 5618 7440bb44f0ee01a28e9aa1539913b127 "pdflatex"
-  "design-doc.out" 1758852278 4147 a9c125213b8433777e3747fbfba0e191 "pdflatex"
-  "design-doc.tex" 1758851547 3821 926ebbc08254a6010dadc7e30edff05a ""
-  "design-doc.toc" 1758852278 2578 3172edbe081a393c809cb88bc89f9ae4 "pdflatex"
+  "design-doc.aux" 1758916221 8890 c5b0eb7b0617f2622c4ba08bf08b7650 "pdflatex"
+  "design-doc.out" 1758916221 6260 194bad883a87484a022828b969bea480 "pdflatex"
+  "design-doc.tex" 1758916206 9813 c143c258a68fb06d91feab8401f03e1a ""
+  "design-doc.toc" 1758916221 4051 dde02453e738b23c52fe5c7ebbdcb49d "pdflatex"
   (generated)
   "design-doc.aux"
   "design-doc.log"

@@ -2,30 +2,47 @@
 \contentsline {section}{\numberline {2}Milestone Design Document (50\%)}{2}{section.2}%
 \contentsline {subsection}{\numberline {2.1}Application Overview}{2}{subsection.2.1}%
 \contentsline {subsection}{\numberline {2.2}Message Formats for Implemented Commands}{2}{subsection.2.2}%
-\contentsline {subsubsection}{\numberline {2.2.1}Command: \texttt {<NAME>}}{2}{subsubsection.2.2.1}%
-\contentsline {paragraph}{Purpose}{2}{section*.2}%
-\contentsline {paragraph}{Request Message Format}{2}{section*.3}%
-\contentsline {paragraph}{Response Message Format}{2}{section*.4}%
-\contentsline {paragraph}{Error Handling}{2}{section*.5}%
-\contentsline {subsection}{\numberline {2.3}Time--Space Diagrams}{2}{subsection.2.3}%
-\contentsline {subsubsection}{\numberline {2.3.1}Command: \texttt {<NAME>}}{2}{subsubsection.2.3.1}%
-\contentsline {subsection}{\numberline {2.4}Data Structures and Design Decisions}{2}{subsection.2.4}%
-\contentsline {subsubsection}{\numberline {2.4.1}Manager State}{2}{subsubsection.2.4.1}%
-\contentsline {subsubsection}{\numberline {2.4.2}Client/User State}{2}{subsubsection.2.4.2}%
-\contentsline {subsubsection}{\numberline {2.4.3}Protocol and Message Choices}{2}{subsubsection.2.4.3}%
-\contentsline {subsection}{\numberline {2.5}Screenshots}{3}{subsection.2.5}%
-\contentsline {subsection}{\numberline {2.6}Video Demo Link and Timestamps (3(a)--3(f))}{3}{subsection.2.6}%
-\contentsline {paragraph}{Accessible Link}{3}{section*.6}%
-\contentsline {paragraph}{Timestamps}{3}{section*.7}%
-\contentsline {section}{\numberline {3}Extended Design for Full Project (30\%)}{3}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Additional Commands Implemented}{3}{subsection.3.1}%
-\contentsline {subsubsection}{\numberline {3.1.1}Command: \texttt {<NAME>}}{3}{subsubsection.3.1.1}%
-\contentsline {paragraph}{Purpose}{3}{section*.8}%
-\contentsline {paragraph}{Request Message Format}{3}{section*.9}%
-\contentsline {paragraph}{Response Message Format}{3}{section*.10}%
-\contentsline {paragraph}{Error Handling}{3}{section*.11}%
-\contentsline {subsection}{\numberline {3.2}Updated Design Decisions and Use of Threads}{4}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Screenshots (Repeat Items from Step 1 of \S 4.1)}{4}{subsection.3.3}%
-\contentsline {subsection}{\numberline {3.4}Video Timestamps (3(a)--3(h))}{4}{subsection.3.4}%
-\contentsline {section}{\numberline {A}Message Format Template}{4}{appendix.A}%
-\contentsline {section}{\numberline {B}Time--Space Diagram Notes}{4}{appendix.B}%
+\contentsline {subsubsection}{\numberline {2.2.1}Envelope Format (Common to All Messages)}{2}{subsubsection.2.2.1}%
+\contentsline {paragraph}{Envelope}{2}{section*.2}%
+\contentsline {subsubsection}{\numberline {2.2.2}Command: \texttt {register\_user}}{2}{subsubsection.2.2.2}%
+\contentsline {paragraph}{Request}{2}{section*.3}%
+\contentsline {paragraph}{Response}{3}{section*.4}%
+\contentsline {subsubsection}{\numberline {2.2.3}Command: \texttt {register\_disk}}{3}{subsubsection.2.2.3}%
+\contentsline {paragraph}{Request}{3}{section*.5}%
+\contentsline {paragraph}{Response}{3}{section*.6}%
+\contentsline {subsubsection}{\numberline {2.2.4}Command: \texttt {configure\_dss}}{4}{subsubsection.2.2.4}%
+\contentsline {paragraph}{Request}{4}{section*.7}%
+\contentsline {paragraph}{Response (success)}{4}{section*.8}%
+\contentsline {subsubsection}{\numberline {2.2.5}Command: \texttt {deregister\_user}}{4}{subsubsection.2.2.5}%
+\contentsline {paragraph}{Request}{4}{section*.9}%
+\contentsline {paragraph}{Response}{5}{section*.10}%
+\contentsline {subsubsection}{\numberline {2.2.6}Command: \texttt {deregister\_disk}}{5}{subsubsection.2.2.6}%
+\contentsline {paragraph}{Request}{5}{section*.11}%
+\contentsline {paragraph}{Response}{5}{section*.12}%
+\contentsline {subsubsection}{\numberline {2.2.7}Manager Protocol Commands (TBD for Full Project)}{5}{subsubsection.2.2.7}%
+\contentsline {subsection}{\numberline {2.3}Time--Space Diagrams}{6}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Command: \texttt {register\_user}}{6}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Command: \texttt {register\_disk}}{7}{subsubsection.2.3.2}%
+\contentsline {subsubsection}{\numberline {2.3.3}Command: \texttt {configure\_dss}}{8}{subsubsection.2.3.3}%
+\contentsline {subsubsection}{\numberline {2.3.4}Command: \texttt {deregister\_user}}{9}{subsubsection.2.3.4}%
+\contentsline {subsubsection}{\numberline {2.3.5}Command: \texttt {deregister\_disk}}{10}{subsubsection.2.3.5}%
+\contentsline {subsection}{\numberline {2.4}Data Structures and Design Decisions}{10}{subsection.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.1}Manager State}{10}{subsubsection.2.4.1}%
+\contentsline {subsubsection}{\numberline {2.4.2}Client/User State}{10}{subsubsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.5}Port Numbers}{10}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Screenshots}{10}{subsection.2.6}%
+\contentsline {subsection}{\numberline {2.7}Video Demo Link and Timestamps (3(a)--3(f))}{11}{subsection.2.7}%
+\contentsline {paragraph}{Accessible Link}{11}{section*.13}%
+\contentsline {paragraph}{Timestamps}{11}{section*.14}%
+\contentsline {section}{\numberline {3}Extended Design for Full Project (30\%)}{11}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Additional Commands Implemented}{11}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Command: \texttt {<NAME>}}{11}{subsubsection.3.1.1}%
+\contentsline {paragraph}{Purpose}{11}{section*.15}%
+\contentsline {paragraph}{Request Message Format}{11}{section*.16}%
+\contentsline {paragraph}{Response Message Format}{11}{section*.17}%
+\contentsline {paragraph}{Error Handling}{11}{section*.18}%
+\contentsline {subsection}{\numberline {3.2}Updated Design Decisions and Use of Threads}{11}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Screenshots (Repeat Items from Step 1 of \S 4.1)}{11}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Video Timestamps (3(a)--3(h))}{11}{subsection.3.4}%
+\contentsline {section}{\numberline {A}Message Format Template}{12}{appendix.A}%
+\contentsline {section}{\numberline {B}Time--Space Diagram Notes}{12}{appendix.B}%

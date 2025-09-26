@@ -1,13 +1,14 @@
 """
 Distributed Storage System (DSS) Manager
 
-Listens on a UDP port for newline-delimited JSON (NDJSON) messages.
-Implements the register_user flow:
+Listens on a UDP port for newline-delimited JSON (NDJSON) messages and
+enforces the envelope specified in the design document for `register_user`.
 
-Request schema (one JSON object per line):
+Envelope schema (single JSON object per line):
 {
+  "version": 1,
+  "message_id": "<role>-<pid>-<timestamp_ms>-<counter>",
   "message_type": "register_user",
-  "message_id": "<string>",
   "body": {
     "user_name": "<A-Za-z string, max 15>",
     "ipv4_address": "<dotted-quad>",
@@ -18,10 +19,11 @@ Request schema (one JSON object per line):
 
 Response schema:
 {
-  "message_type": "register_user_response",
+  "version": 1,
   "message_id": "<mirrors request>",
-  "status": "SUCCESS" | "FAILURE",
-  "error": "<present only on FAILURE>"
+  "message_type": "register_user_response",
+  "status_code": "SUCCESS" | "FAILURE",
+  "reason": null | "<explanation on FAILURE>"
 }
 """
 
@@ -34,11 +36,14 @@ import logging
 import signal
 import socket
 import sys
+import re
 from dataclasses import dataclass
-from typing import Dict, Optional, Tuple, Any
+from typing import Any, Dict, Optional, Tuple
 
+PROTOCOL_VERSION = 1
 VALID_PORT_MIN = 21200
 VALID_PORT_MAX = 21299
+MESSAGE_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]+-\d+-\d+-\d{5,}$")
 
 
 @dataclass(frozen=True)
@@ -102,30 +107,69 @@ class ManagerServer:
                 addr,
                 message_type="register_user_response",
                 message_id="INVALID",
-                status="FAILURE",
-                error="Malformed JSON",
+                status_code="FAILURE",
+                reason="Malformed JSON",
+            )
+            return
+
+        message_id = message.get("message_id")
+        message_id_for_response = (
+            message_id if isinstance(message_id, str) and message_id else "MISSING"
+        )
+
+        version = message.get("version")
+        if version != PROTOCOL_VERSION:
+            logging.info(
+                "Unsupported protocol version %s from %s", version, addr
+            )
+            self._send_response(
+                addr,
+                message_type="register_user_response",
+                message_id=message_id_for_response,
+                status_code="FAILURE",
+                reason="Unsupported protocol version",
             )
             return
 
         message_type = message.get("message_type")
-        message_id = message.get("message_id")
         body = message.get("body")
 
-        if message_type == "register_user":
-            self.handle_register_user(message_id, body, addr)
+        if not isinstance(message_id, str) or not message_id:
+            logging.info("Missing or invalid message_id from %s", addr)
+            self._send_response(
+                addr,
+                message_type="register_user_response",
+                message_id="MISSING",
+                status_code="FAILURE",
+                reason="message_id must be a non-empty string",
+            )
             return
 
-        # Unknown message type: reply with a failure using the register response channel for consistency
-        logging.info("Unknown message_type '%s' from %s", message_type, addr)
-        self._send_response(
-            addr,
-            message_type="register_user_response",
-            message_id=message_id or "UNKNOWN",
-            status="FAILURE",
-            error="Unsupported message_type",
-        )
+        if not MESSAGE_ID_PATTERN.match(message_id):
+            logging.info("Invalid message_id format '%s' from %s", message_id, addr)
+            self._send_response(
+                addr,
+                message_type="register_user_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason="message_id must follow <role>-<pid>-<timestamp_ms>-<counter>",
+            )
+            return
 
-    def handle_register_user(self, message_id: Optional[str], body: Any, addr: Tuple[str, int]) -> None:
+        if message_type != "register_user":
+            logging.info("Unknown message_type '%s' from %s", message_type, addr)
+            self._send_response(
+                addr,
+                message_type="register_user_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason="Unsupported message_type",
+            )
+            return
+
+        self.handle_register_user(message_id, body, addr)
+
+    def handle_register_user(self, message_id: str, body: Any, addr: Tuple[str, int]) -> None:
         """Validate and register a user. Sends response to addr."""
         # Validate base fields
         error = self._validate_register_body(body)
@@ -134,9 +178,9 @@ class ManagerServer:
             self._send_response(
                 addr,
                 message_type="register_user_response",
-                message_id=message_id or "MISSING",
-                status="FAILURE",
-                error=error,
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=error,
             )
             return
 
@@ -150,14 +194,26 @@ class ManagerServer:
         if user_name in self.users:
             error = f"user_name '{user_name}' is already registered"
             logging.info("register_user FAILURE from %s: %s", addr, error)
-            self._send_response(addr, "register_user_response", message_id or "MISSING", "FAILURE", error)
+            self._send_response(
+                addr,
+                message_type="register_user_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=error,
+            )
             return
 
         # Port availability (cluster-wide) and per-process uniqueness
         if management_port == command_port:
             error = "management_port and command_port must be different"
             logging.info("register_user FAILURE from %s: %s", addr, error)
-            self._send_response(addr, "register_user_response", message_id or "MISSING", "FAILURE", error)
+            self._send_response(
+                addr,
+                message_type="register_user_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=error,
+            )
             return
 
         for port in (management_port, command_port):
@@ -165,7 +221,13 @@ class ManagerServer:
             if owner is not None:
                 error = f"port {port} is already claimed by {owner}"
                 logging.info("register_user FAILURE from %s: %s", addr, error)
-                self._send_response(addr, "register_user_response", message_id or "MISSING", "FAILURE", error)
+                self._send_response(
+                    addr,
+                    message_type="register_user_response",
+                    message_id=message_id,
+                    status_code="FAILURE",
+                    reason=error,
+                )
                 return
 
         # Success path: store state
@@ -191,8 +253,9 @@ class ManagerServer:
         self._send_response(
             addr,
             message_type="register_user_response",
-            message_id=message_id or "MISSING",
-            status="SUCCESS",
+            message_id=message_id,
+            status_code="SUCCESS",
+            reason=None,
         )
 
     def _validate_register_body(self, body: Any) -> Optional[str]:
@@ -235,18 +298,22 @@ class ManagerServer:
     def _send_response(
         self,
         addr: Tuple[str, int],
+        *,
         message_type: str,
         message_id: str,
-        status: str,
-        error: Optional[str] = None,
+        status_code: str,
+        reason: Optional[str],
+        body: Optional[Dict[str, Any]] = None,
     ) -> None:
         response: Dict[str, Any] = {
-            "message_type": message_type,
+            "version": PROTOCOL_VERSION,
             "message_id": message_id,
-            "status": status,
+            "message_type": message_type,
+            "status_code": status_code,
+            "reason": reason,
         }
-        if status == "FAILURE" and error:
-            response["error"] = error
+        if body is not None:
+            response["body"] = body
 
         payload = json.dumps(response, separators=(",", ":")) + "\n"
         try:

@@ -1,0 +1,143 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=*,labelsep=0.5em}
+
+\title{DSS Application Design Document}
+\author{Group 198}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Overview}
+TBD.
+
+\section{Milestone Design Document (50\%)}
+\subsection{Application Overview}
+TBD.
+
+\subsection{Message Formats for Implemented Commands}
+TBD.
+
+\subsubsection{Command: \texttt{<NAME>}}
+\paragraph{Purpose} TBD.
+\paragraph{Request Message Format} TBD.
+\paragraph{Response Message Format} TBD.
+\paragraph{Error Handling} TBD.
+
+\subsection{Time--Space Diagrams}
+TBD.
+
+\subsubsection{Command: \texttt{<NAME>}}
+\begin{figure}[h]
+  \centering
+  % \includegraphics[width=0.95\linewidth]{screenshots/<timespace-diagram>.pdf}
+  \fbox{\parbox{0.9\linewidth}{TBD: Insert time--space diagram for \texttt{<NAME>} (created with a software tool)}}
+  \caption{Time--space diagram for \texttt{<NAME>}}
+  \label{fig:ts-<name>}
+\end{figure}
+
+\subsection{Data Structures and Design Decisions}
+\subsubsection{Manager State}
+TBD.
+
+\subsubsection{Client/User State}
+TBD.
+
+\subsubsection{Protocol and Message Choices}
+TBD.
+
+\subsection{Screenshots}
+Provide the following screenshots (place files under \texttt{screenshots/}):
+\begin{enumerate}[label=\roman*.]
+  \item Output of: \texttt{git log --pretty=format:"\%h - \%an, \%ad (Commit) - \%cd (Author)"} \; (TBD)
+  \item Entire commit history of the GitHub repository (TBD)
+  \item Output of: \texttt{git reflog} (TBD)
+  \item Output of: \texttt{git fsck} (TBD)
+\end{enumerate}
+
+\begin{figure}[h]
+  \centering
+  % \includegraphics[width=\linewidth]{screenshots/git-log.png}
+  \fbox{\parbox{0.9\linewidth}{TBD: Insert screenshot of git log command output}}
+  \caption{\texttt{git log} output}
+  \label{fig:git-log}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  % \includegraphics[width=\linewidth]{screenshots/commit-history.png}
+  \fbox{\parbox{0.9\linewidth}{TBD: Insert screenshot of full commit history}}
+  \caption{Repository commit history}
+  \label{fig:commit-history}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  % \includegraphics[width=\linewidth]{screenshots/git-reflog.png}
+  \fbox{\parbox{0.9\linewidth}{TBD: Insert screenshot of \texttt{git reflog} output}}
+  \caption{\texttt{git reflog} output}
+  \label{fig:git-reflog}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  % \includegraphics[width=\linewidth]{screenshots/git-fsck.png}
+  \fbox{\parbox{0.9\linewidth}{TBD: Insert screenshot of \texttt{git fsck} output}}
+  \caption{\texttt{git fsck} output}
+  \label{fig:git-fsck}
+\end{figure}
+
+\subsection{Video Demo Link and Timestamps (3(a)--3(f))}
+\paragraph{Accessible Link} \url{TBD}
+\paragraph{Timestamps} TBD.
+\begin{enumerate}
+  \item 3(a): TBD
+  \item 3(b): TBD
+  \item 3(c): TBD
+  \item 3(d): TBD
+  \item 3(e): TBD
+  \item 3(f): TBD
+\end{enumerate}
+
+\section{Extended Design for Full Project (30\%)}
+\subsection{Additional Commands Implemented}
+TBD.
+
+\subsubsection{Command: \texttt{<NAME>}}
+\paragraph{Purpose} TBD.
+\paragraph{Request Message Format} TBD.
+\paragraph{Response Message Format} TBD.
+\paragraph{Error Handling} TBD.
+
+\subsection{Updated Design Decisions and Use of Threads}
+TBD.
+
+\subsection{Screenshots (Repeat Items from Step 1 of \S4.1)}
+TBD.
+
+\subsection{Video Timestamps (3(a)--3(h))}
+\begin{enumerate}
+  \item 3(a): TBD
+  \item 3(b): TBD
+  \item 3(c): TBD
+  \item 3(d): TBD
+  \item 3(e): TBD
+  \item 3(f): TBD
+  \item 3(g): TBD
+  \item 3(h): TBD
+\end{enumerate}
+
+\appendix
+\section{Message Format Template}
+TBD.
+
+\section{Time--Space Diagram Notes}
+TBD.
+
+\end{document}

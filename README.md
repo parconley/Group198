@@ -1,1 +1,2 @@
-# socket-project
+# Socket Project: Distributed Storage System
+

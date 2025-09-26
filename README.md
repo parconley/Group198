@@ -1,4 +1,5 @@
 # Socket Project: Distributed Storage System
 
-`/design-doc/design-doc.pdf` - An overview of the project design.
-`/dss_common` - A package that holds the protocol and utlities to keep things modular and uniform.
+This project impliments a distributed storage system (DSS).
+
+For more information, see about the project's design and status, see `/design-doc/design-doc.pdf`.

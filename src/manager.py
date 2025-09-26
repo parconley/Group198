@@ -4,16 +4,19 @@ import argparse
 import ipaddress
 import json
 import logging
+import random
 import signal
 import socket
 import sys
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any, Dict, Optional, Tuple
 
 PROTOCOL_VERSION = 1
 VALID_PORT_MIN = 21200
 VALID_PORT_MAX = 21299
+MIN_STRIPING_UNIT = 128
+MAX_STRIPING_UNIT = 1024 * 1024
 MESSAGE_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]+-\d+-\d+-\d{5,}$")
 
 
@@ -32,6 +35,20 @@ class DiskRecord:
     management_port: int
     command_port: int
     state: str = "Free"
+    member_of: Optional[str] = None
+
+
+@dataclass(frozen=True)
+class DssRecord:
+    dss_name: str
+    n: int
+    striping_unit: int
+    disks: Tuple[str, ...]
+    owner_user: str
+
+
+def _is_power_of_two(value: int) -> bool:
+    return value > 0 and (value & (value - 1)) == 0
 
 
 class ManagerServer:
@@ -43,6 +60,10 @@ class ManagerServer:
         self.users: Dict[str, UserRecord] = {}
         # disk_name -> record
         self.disks: Dict[str, DiskRecord] = {}
+        # dss_name -> record
+        self.dss_catalog: Dict[str, DssRecord] = {}
+        # disk_name -> dss_name
+        self.disk_membership: Dict[str, str] = {}
         # port -> owner identifier (e.g., "user:Alice" or "disk:DiskA")
         self.claimed_ports: Dict[int, str] = {}
 
@@ -84,7 +105,7 @@ class ManagerServer:
                 raise ValueError("Top-level JSON must be an object")
         except Exception as exc:
             logging.warning("Invalid JSON from %s: %s", addr, exc)
-            # Cannot mirror message_id; send minimal failure with synthetic id
+            # Cannot mirror message_id - send minimal failure with synthetic id
             self._send_response(
                 addr,
                 message_type="register_user_response",
@@ -155,6 +176,18 @@ class ManagerServer:
 
         if message_type == "register_disk":
             self.handle_register_disk(message_id, body, addr)
+            return
+
+        if message_type == "configure_dss":
+            self.handle_configure_dss(message_id, body, addr)
+            return
+
+        if message_type == "deregister_user":
+            self.handle_deregister_user(message_id, body, addr)
+            return
+
+        if message_type == "deregister_disk":
+            self.handle_deregister_disk(message_id, body, addr)
             return
 
         logging.info("Unknown message_type '%s' from %s", message_type, addr)
@@ -341,6 +374,217 @@ class ManagerServer:
             body={"state": record.state},
         )
 
+    def handle_configure_dss(self, message_id: str, body: Any, addr: Tuple[str, int]) -> None:
+        """Configure a new DSS by selecting free disks."""
+        error = self._validate_configure_dss_body(body)
+        if error is not None:
+            logging.info("configure_dss FAILURE from %s: %s", addr, error)
+            self._send_response(
+                addr,
+                message_type="configure_dss_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=error,
+            )
+            return
+
+        assert isinstance(body, dict)
+        user_name = body["user_name"]
+        dss_name = body["dss_name"]
+        n = int(body["n"])
+        striping_unit = int(body["striping_unit"])
+
+        if user_name not in self.users:
+            error = f"user_name '{user_name}' is not registered"
+            logging.info("configure_dss FAILURE from %s: %s", addr, error)
+            self._send_response(
+                addr,
+                message_type="configure_dss_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=error,
+            )
+            return
+
+        if dss_name in self.dss_catalog:
+            error = f"dss_name '{dss_name}' already exists"
+            logging.info("configure_dss FAILURE from %s: %s", addr, error)
+            self._send_response(
+                addr,
+                message_type="configure_dss_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=error,
+            )
+            return
+
+        free_disks = [
+            disk_name
+            for disk_name, record in self.disks.items()
+            if record.state == "Free" and record.member_of is None
+        ]
+        if len(free_disks) < n:
+            error = f"insufficient free disks: required {n}, available {len(free_disks)}"
+            logging.info("configure_dss FAILURE from %s: %s", addr, error)
+            self._send_response(
+                addr,
+                message_type="configure_dss_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=error,
+            )
+            return
+
+        selected_disks = tuple(random.sample(free_disks, n))
+
+        for disk_name in selected_disks:
+            record = self.disks[disk_name]
+            updated = replace(record, state="InDSS", member_of=dss_name)
+            self.disks[disk_name] = updated
+            self.disk_membership[disk_name] = dss_name
+
+        dss_record = DssRecord(
+            dss_name=dss_name,
+            n=n,
+            striping_unit=striping_unit,
+            disks=selected_disks,
+            owner_user=user_name,
+        )
+        self.dss_catalog[dss_name] = dss_record
+
+        logging.info(
+            "configure_dss SUCCESS dss=%s owner=%s n=%d striping=%d disks=%s from %s",
+            dss_name,
+            user_name,
+            n,
+            striping_unit,
+            ",".join(selected_disks),
+            addr,
+        )
+
+        self._send_response(
+            addr,
+            message_type="configure_dss_response",
+            message_id=message_id,
+            status_code="SUCCESS",
+            reason=None,
+            body={
+                "dss_name": dss_name,
+                "n": n,
+                "striping_unit": striping_unit,
+                "disks": list(selected_disks),
+            },
+        )
+
+    def handle_deregister_user(self, message_id: str, body: Any, addr: Tuple[str, int]) -> None:
+        error = self._validate_deregister_user_body(body)
+        if error is not None:
+            logging.info("deregister_user FAILURE from %s: %s", addr, error)
+            self._send_response(
+                addr,
+                message_type="deregister_user_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=error,
+            )
+            return
+
+        assert isinstance(body, dict)
+        user_name = body["user_name"]
+        record = self.users.get(user_name)
+        if record is None:
+            error = f"user_name '{user_name}' is not registered"
+            logging.info("deregister_user FAILURE from %s: %s", addr, error)
+            self._send_response(
+                addr,
+                message_type="deregister_user_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=error,
+            )
+            return
+
+        self.users.pop(user_name, None)
+        self.claimed_ports.pop(record.management_port, None)
+        self.claimed_ports.pop(record.command_port, None)
+
+        logging.info(
+            "deregister_user SUCCESS user=%s mgmt=%d cmd=%d from %s",
+            user_name,
+            record.management_port,
+            record.command_port,
+            addr,
+        )
+
+        self._send_response(
+            addr,
+            message_type="deregister_user_response",
+            message_id=message_id,
+            status_code="SUCCESS",
+            reason=None,
+        )
+
+    def handle_deregister_disk(self, message_id: str, body: Any, addr: Tuple[str, int]) -> None:
+        error = self._validate_deregister_disk_body(body)
+        if error is not None:
+            logging.info("deregister_disk FAILURE from %s: %s", addr, error)
+            self._send_response(
+                addr,
+                message_type="deregister_disk_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=error,
+            )
+            return
+
+        assert isinstance(body, dict)
+        disk_name = body["disk_name"]
+        record = self.disks.get(disk_name)
+        if record is None:
+            error = f"disk_name '{disk_name}' is not registered"
+            logging.info("deregister_disk FAILURE from %s: %s", addr, error)
+            self._send_response(
+                addr,
+                message_type="deregister_disk_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=error,
+            )
+            return
+
+        if record.state != "Free" or record.member_of is not None:
+            error = f"disk '{disk_name}' is currently part of DSS '{record.member_of}'"
+            logging.info("deregister_disk FAILURE from %s: %s", addr, error)
+            self._send_response(
+                addr,
+                message_type="deregister_disk_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=error,
+            )
+            return
+
+        self.disks.pop(disk_name, None)
+        self.claimed_ports.pop(record.management_port, None)
+        self.claimed_ports.pop(record.command_port, None)
+        self.disk_membership.pop(disk_name, None)
+
+        logging.info(
+            "deregister_disk SUCCESS disk=%s mgmt=%d cmd=%d from %s",
+            disk_name,
+            record.management_port,
+            record.command_port,
+            addr,
+        )
+
+        self._send_response(
+            addr,
+            message_type="deregister_disk_response",
+            message_id=message_id,
+            status_code="SUCCESS",
+            reason=None,
+        )
+
     def _validate_register_user_body(self, body: Any) -> Optional[str]:
         if not isinstance(body, dict):
             return "body must be an object"
@@ -412,6 +656,85 @@ class ManagerServer:
         for label, port in ("management_port", mgmt_port), ("command_port", cmd_port):
             if port < VALID_PORT_MIN or port > VALID_PORT_MAX:
                 return f"{label} must be in range {VALID_PORT_MIN}-{VALID_PORT_MAX}"
+
+        return None
+
+    def _validate_configure_dss_body(self, body: Any) -> Optional[str]:
+        if not isinstance(body, dict):
+            return "body must be an object"
+
+        required = ["user_name", "dss_name", "n", "striping_unit"]
+        for key in required:
+            if key not in body:
+                return f"missing field: {key}"
+
+        user_name = body["user_name"]
+        if not isinstance(user_name, str):
+            return "user_name must be a string"
+        if len(user_name) == 0 or len(user_name) > 15:
+            return "user_name length must be 1..15"
+        if not user_name.isalpha():
+            return "user_name must contain only alphabetic characters"
+
+        dss_name = body["dss_name"]
+        if not isinstance(dss_name, str):
+            return "dss_name must be a string"
+        if len(dss_name) == 0 or len(dss_name) > 15:
+            return "dss_name length must be 1..15"
+        if not dss_name.isalpha():
+            return "dss_name must contain only alphabetic characters"
+
+        try:
+            n_value = int(body["n"])
+        except Exception:
+            return "n must be an integer"
+        if n_value < 3:
+            return "n must be at least 3"
+
+        try:
+            striping_unit = int(body["striping_unit"])
+        except Exception:
+            return "striping_unit must be an integer"
+        if striping_unit < MIN_STRIPING_UNIT or striping_unit > MAX_STRIPING_UNIT:
+            return (
+                f"striping_unit must be between {MIN_STRIPING_UNIT} and {MAX_STRIPING_UNIT} bytes"
+            )
+        if not _is_power_of_two(striping_unit):
+            return "striping_unit must be a power of two"
+
+        return None
+
+    def _validate_deregister_user_body(self, body: Any) -> Optional[str]:
+        if not isinstance(body, dict):
+            return "body must be an object"
+
+        if "user_name" not in body:
+            return "missing field: user_name"
+
+        user_name = body["user_name"]
+        if not isinstance(user_name, str):
+            return "user_name must be a string"
+        if len(user_name) == 0 or len(user_name) > 15:
+            return "user_name length must be 1..15"
+        if not user_name.isalpha():
+            return "user_name must contain only alphabetic characters"
+
+        return None
+
+    def _validate_deregister_disk_body(self, body: Any) -> Optional[str]:
+        if not isinstance(body, dict):
+            return "body must be an object"
+
+        if "disk_name" not in body:
+            return "missing field: disk_name"
+
+        disk_name = body["disk_name"]
+        if not isinstance(disk_name, str):
+            return "disk_name must be a string"
+        if len(disk_name) == 0 or len(disk_name) > 15:
+            return "disk_name length must be 1..15"
+        if not disk_name.isalpha():
+            return "disk_name must contain only alphabetic characters"
 
         return None
 

@@ -1,32 +1,3 @@
-"""
-Distributed Storage System (DSS) Manager
-
-Listens on a UDP port for newline-delimited JSON (NDJSON) messages and
-enforces the envelope specified in the design document for `register_user`.
-
-Envelope schema (single JSON object per line):
-{
-  "version": 1,
-  "message_id": "<role>-<pid>-<timestamp_ms>-<counter>",
-  "message_type": "register_user",
-  "body": {
-    "user_name": "<A-Za-z string, max 15>",
-    "ipv4_address": "<dotted-quad>",
-    "management_port": <int>,
-    "command_port": <int>
-  }
-}
-
-Response schema:
-{
-  "version": 1,
-  "message_id": "<mirrors request>",
-  "message_type": "register_user_response",
-  "status_code": "SUCCESS" | "FAILURE",
-  "reason": null | "<explanation on FAILURE>"
-}
-"""
-
 from __future__ import annotations
 
 import argparse
@@ -54,6 +25,15 @@ class UserRecord:
     command_port: int
 
 
+@dataclass(frozen=True)
+class DiskRecord:
+    disk_name: str
+    ipv4_address: str
+    management_port: int
+    command_port: int
+    state: str = "Free"
+
+
 class ManagerServer:
     """UDP server for DSS manager."""
 
@@ -61,7 +41,9 @@ class ManagerServer:
         self.listen_port: int = listen_port
         # user_name -> record
         self.users: Dict[str, UserRecord] = {}
-        # port -> owner identifier (e.g., "user:<user_name>")
+        # disk_name -> record
+        self.disks: Dict[str, DiskRecord] = {}
+        # port -> owner identifier (e.g., "user:Alice" or "disk:DiskA")
         self.claimed_ports: Dict[int, str] = {}
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -156,23 +138,38 @@ class ManagerServer:
             )
             return
 
-        if message_type != "register_user":
-            logging.info("Unknown message_type '%s' from %s", message_type, addr)
+        if not isinstance(message_type, str):
+            logging.info("Missing or invalid message_type from %s", addr)
             self._send_response(
                 addr,
                 message_type="register_user_response",
                 message_id=message_id,
                 status_code="FAILURE",
-                reason="Unsupported message_type",
+                reason="message_type must be a string",
             )
             return
 
-        self.handle_register_user(message_id, body, addr)
+        if message_type == "register_user":
+            self.handle_register_user(message_id, body, addr)
+            return
+
+        if message_type == "register_disk":
+            self.handle_register_disk(message_id, body, addr)
+            return
+
+        logging.info("Unknown message_type '%s' from %s", message_type, addr)
+        self._send_response(
+            addr,
+            message_type=f"{message_type}_response" if isinstance(message_type, str) else "register_user_response",
+            message_id=message_id,
+            status_code="FAILURE",
+            reason="Unsupported message_type",
+        )
 
     def handle_register_user(self, message_id: str, body: Any, addr: Tuple[str, int]) -> None:
         """Validate and register a user. Sends response to addr."""
         # Validate base fields
-        error = self._validate_register_body(body)
+        error = self._validate_register_user_body(body)
         if error is not None:
             logging.info("register_user FAILURE from %s: %s", addr, error)
             self._send_response(
@@ -258,7 +255,93 @@ class ManagerServer:
             reason=None,
         )
 
-    def _validate_register_body(self, body: Any) -> Optional[str]:
+    def handle_register_disk(self, message_id: str, body: Any, addr: Tuple[str, int]) -> None:
+        """Validate and register a disk. Sends response to addr."""
+        error = self._validate_register_disk_body(body)
+        if error is not None:
+            logging.info("register_disk FAILURE from %s: %s", addr, error)
+            self._send_response(
+                addr,
+                message_type="register_disk_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=error,
+            )
+            return
+
+        assert isinstance(body, dict)
+        disk_name = body["disk_name"]
+        ipv4_address = body["ipv4_address"]
+        management_port = int(body["management_port"])
+        command_port = int(body["command_port"])
+
+        if disk_name in self.disks:
+            error = f"disk_name '{disk_name}' is already registered"
+            logging.info("register_disk FAILURE from %s: %s", addr, error)
+            self._send_response(
+                addr,
+                message_type="register_disk_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=error,
+            )
+            return
+
+        if management_port == command_port:
+            error = "management_port and command_port must be different"
+            logging.info("register_disk FAILURE from %s: %s", addr, error)
+            self._send_response(
+                addr,
+                message_type="register_disk_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=error,
+            )
+            return
+
+        for port in (management_port, command_port):
+            owner = self.claimed_ports.get(port)
+            if owner is not None:
+                error = f"port {port} is already claimed by {owner}"
+                logging.info("register_disk FAILURE from %s: %s", addr, error)
+                self._send_response(
+                    addr,
+                    message_type="register_disk_response",
+                    message_id=message_id,
+                    status_code="FAILURE",
+                    reason=error,
+                )
+                return
+
+        record = DiskRecord(
+            disk_name=disk_name,
+            ipv4_address=ipv4_address,
+            management_port=management_port,
+            command_port=command_port,
+        )
+        self.disks[disk_name] = record
+        self.claimed_ports[management_port] = f"disk:{disk_name}"
+        self.claimed_ports[command_port] = f"disk:{disk_name}"
+
+        logging.info(
+            "register_disk SUCCESS disk=%s ip=%s mgmt=%d cmd=%d from %s",
+            disk_name,
+            ipv4_address,
+            management_port,
+            command_port,
+            addr,
+        )
+
+        self._send_response(
+            addr,
+            message_type="register_disk_response",
+            message_id=message_id,
+            status_code="SUCCESS",
+            reason=None,
+            body={"state": record.state},
+        )
+
+    def _validate_register_user_body(self, body: Any) -> Optional[str]:
         if not isinstance(body, dict):
             return "body must be an object"
 
@@ -286,6 +369,43 @@ class ManagerServer:
         try:
             mgmt_port = int(body["management_port"])  # may raise
             cmd_port = int(body["command_port"])  # may raise
+        except Exception:
+            return "management_port and command_port must be integers"
+
+        for label, port in ("management_port", mgmt_port), ("command_port", cmd_port):
+            if port < VALID_PORT_MIN or port > VALID_PORT_MAX:
+                return f"{label} must be in range {VALID_PORT_MIN}-{VALID_PORT_MAX}"
+
+        return None
+
+    def _validate_register_disk_body(self, body: Any) -> Optional[str]:
+        if not isinstance(body, dict):
+            return "body must be an object"
+
+        required = ["disk_name", "ipv4_address", "management_port", "command_port"]
+        for key in required:
+            if key not in body:
+                return f"missing field: {key}"
+
+        disk_name = body["disk_name"]
+        if not isinstance(disk_name, str):
+            return "disk_name must be a string"
+        if len(disk_name) == 0 or len(disk_name) > 15:
+            return "disk_name length must be 1..15"
+        if not disk_name.isalpha():
+            return "disk_name must contain only alphabetic characters"
+
+        ipv4 = body["ipv4_address"]
+        if not isinstance(ipv4, str):
+            return "ipv4_address must be a string"
+        try:
+            ipaddress.IPv4Address(ipv4)
+        except Exception:
+            return "ipv4_address must be a valid IPv4 address"
+
+        try:
+            mgmt_port = int(body["management_port"])
+            cmd_port = int(body["command_port"])
         except Exception:
             return "management_port and command_port must be integers"
 

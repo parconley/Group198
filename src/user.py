@@ -1,31 +1,3 @@
-"""DSS User Client
-
-Builds NDJSON `register_user` requests that follow the design-document
-envelope and exchanges them with the manager.
-
-Request schema (one JSON object per line):
-{
-  "version": 1,
-  "message_id": "<role>-<pid>-<timestamp_ms>-<counter>",
-  "message_type": "register_user",
-  "body": {
-    "user_name": "<A-Za-z string, max 15>",
-    "ipv4_address": "<dotted-quad>",
-    "management_port": <int>,
-    "command_port": <int>
-  }
-}
-
-Response schema:
-{
-  "version": 1,
-  "message_id": "<mirrors request>",
-  "message_type": "register_user_response",
-  "status_code": "SUCCESS" | "FAILURE",
-  "reason": null | "<explanation on FAILURE>"
-}
-"""
-
 from __future__ import annotations
 
 import argparse

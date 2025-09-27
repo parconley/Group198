@@ -20,8 +20,7 @@
 \contentsline {section}{\numberline {3}Design Decisions}{11}{section.3}%
 \contentsline {section}{\numberline {4}Port Numbers}{11}{section.4}%
 \contentsline {section}{\numberline {5}Screenshots}{11}{section.5}%
-\contentsline {paragraph}{Note}{11}{section*.13}%
-\contentsline {section}{\numberline {6}Video Demo Link and Timestamps (3(a)--3(f))}{11}{section.6}%
-\contentsline {paragraph}{Accessible Link}{11}{section*.14}%
-\contentsline {paragraph}{Timestamps}{11}{section*.15}%
+\contentsline {section}{\numberline {6}Video Demo Link and Timestamps (3(a)--3(f))}{12}{section.6}%
+\contentsline {paragraph}{Accessible Link}{12}{section*.13}%
+\contentsline {paragraph}{Timestamps}{12}{section*.14}%
 \contentsline {section}{\numberline {7}Extended Design for Full Project}{12}{section.7}%

@@ -1,10 +1,13 @@
 # Fdb version 3
-["pdflatex"] 1758936063 "design-doc.tex" "design-doc.pdf" "design-doc" 1758936066
+["pdflatex"] 1758937472 "design-doc.tex" "design-doc.pdf" "design-doc" 1758937475
   "../screenshots/diagram-screenshots/configure-dss.png" 1758912321 91999 4db4229c5c0b821bc5f2cc4162f3b806 ""
   "../screenshots/diagram-screenshots/deregister-disk.png" 1758912352 73490 35ac3f1660bff1052c098fb04f06490c ""
   "../screenshots/diagram-screenshots/deregister_user.png" 1758912342 75401 df85b190a529dd954ea10ba5b671fcb1 ""
   "../screenshots/diagram-screenshots/register-disk.png" 1758912308 83893 870cefd00900fc876ee2a497a5c40776 ""
   "../screenshots/diagram-screenshots/register-user.png" 1758912291 82485 aeb33b02633a22bd37075174c29312ae ""
+  "../screenshots/git-screenshots/2025-09-26_git-fsck.png" 1758936465 12772 c496c4213e976544c47755916f561cc7 ""
+  "../screenshots/git-screenshots/2025-09-26_git-log.png" 1758936423 66275 184a16dc3b0886d11b5d56047b82c773 ""
+  "../screenshots/git-screenshots/2025-09-26_git-reflog.png" 1758936446 49175 aace2569243b61ad570ba0b6fb9db585 ""
   "/etc/texmf/web2c/texmf.cnf" 1746510369 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1136768653 1328 c834bbb027764024c09d3d2bf908b5f0 ""
@@ -80,10 +83,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1746510477 128028 f533b797fba58d231669ea19e894e23e ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1746510863 1405643 62f5bfd0c136cdc989c6c17826d0d6d4 ""
-  "design-doc.aux" 1758936065 5865 ff057849fe504cba1be761bba66eed95 "pdflatex"
-  "design-doc.out" 1758936065 2339 4f2cf6d0c0629717413c37866a5c9a01 "pdflatex"
-  "design-doc.tex" 1758935123 8813 51b114852d2554b1cbeb3a0084610b44 ""
-  "design-doc.toc" 1758936065 1904 0622e0bf402122a4f12f2fab1e2e0449 "pdflatex"
+  "design-doc.aux" 1758937475 5782 37b030f70db21c77a41b9dff4dac4ec0 "pdflatex"
+  "design-doc.out" 1758937475 2339 4f2cf6d0c0629717413c37866a5c9a01 "pdflatex"
+  "design-doc.tex" 1758937461 8495 a6cc68ec35fabbc6a476b27802c82034 ""
+  "design-doc.toc" 1758937475 1854 fd42f51b55c824300a4bfa0e3535502f "pdflatex"
   (generated)
   "design-doc.aux"
   "design-doc.log"

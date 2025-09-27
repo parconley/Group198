@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import shlex
 import sys
 from dataclasses import dataclass
 from typing import Optional
@@ -11,6 +12,7 @@ from dss_common import (
     PROTOCOL_VERSION,
     RegistrationError,
     configure_logging,
+    deregister_entity,
     exchange_with_manager,
     generate_message_id,
     resolve_local_ipv4,
@@ -20,6 +22,11 @@ from dss_common import (
     validate_retries,
     validate_timeout,
 )
+
+
+MIN_DSS_DISKS = 3
+MIN_STRIPING_UNIT = 128
+MAX_STRIPING_UNIT = 1024 * 1024
 
 
 @dataclass(frozen=True)
@@ -147,9 +154,194 @@ def register_user(args: RegisterArgs) -> dict:
     return response
 
 
+def _is_power_of_two(value: int) -> bool:
+    return value > 0 and (value & (value - 1)) == 0
+
+
+def _handle_configure_dss(args: RegisterArgs, tokens: list[str]) -> None:
+    if len(tokens) != 4:
+        print("Usage: configure-dss <dss-name> <n> <striping-unit>")
+        return
+
+    _, dss_name, n_text, striping_text = tokens
+
+    try:
+        validate_entity_name(dss_name, "dss_name")
+    except ValueError as exc:
+        logging.error("Invalid dss_name: %s", exc)
+        return
+
+    try:
+        n_value = int(n_text)
+    except ValueError:
+        logging.error("n must be an integer >= %d", MIN_DSS_DISKS)
+        return
+
+    if n_value < MIN_DSS_DISKS:
+        logging.error("n must be at least %d", MIN_DSS_DISKS)
+        return
+
+    try:
+        striping_unit = int(striping_text)
+    except ValueError:
+        logging.error(
+            "striping-unit must be an integer between %d and %d",
+            MIN_STRIPING_UNIT,
+            MAX_STRIPING_UNIT,
+        )
+        return
+
+    if (
+        striping_unit < MIN_STRIPING_UNIT
+        or striping_unit > MAX_STRIPING_UNIT
+        or not _is_power_of_two(striping_unit)
+    ):
+        logging.error(
+            "striping-unit must be a power of two between %d and %d",
+            MIN_STRIPING_UNIT,
+            MAX_STRIPING_UNIT,
+        )
+        return
+
+    message_id = generate_message_id(args.user_name)
+    message = {
+        "version": PROTOCOL_VERSION,
+        "message_id": message_id,
+        "message_type": "configure_dss",
+        "body": {
+            "user_name": args.user_name,
+            "dss_name": dss_name,
+            "n": n_value,
+            "striping_unit": striping_unit,
+        },
+    }
+    payload = (json.dumps(message, separators=(",", ":")) + "\n").encode("utf-8")
+
+    try:
+        response = exchange_with_manager(
+            action="configure_dss",
+            expected_response_type="configure_dss_response",
+            message_id=message_id,
+            payload=payload,
+            manager_host=args.manager_host,
+            manager_port=args.manager_port,
+            timeout=args.timeout,
+            retries=args.retries,
+        )
+    except RegistrationError as exc:
+        logging.error("configure-dss exchange failed: %s", exc)
+        return
+
+    status_code = response.get("status_code")
+    reason = response.get("reason")
+
+    if status_code == "SUCCESS":
+        body = response.get("body")
+        if not isinstance(body, dict):
+            body = {}
+        disks = body.get("disks")
+        disks_text = ", ".join(disks) if isinstance(disks, list) else "(unspecified)"
+        logging.info(
+            "configure-dss SUCCESS dss=%s n=%d striping=%d disks=%s",
+            dss_name,
+            n_value,
+            striping_unit,
+            disks_text,
+        )
+    else:
+        logging.warning(
+            "configure-dss FAILURE dss=%s n=%d striping=%d reason=%s",
+            dss_name,
+            n_value,
+            striping_unit,
+            reason or "Unknown reason",
+        )
+
+    print(json.dumps(response, indent=2))
+
+
+def _handle_deregister_user(args: RegisterArgs) -> bool:
+    try:
+        _, response = deregister_entity(
+            "user",
+            args.user_name,
+            manager_host=args.manager_host,
+            manager_port=args.manager_port,
+            timeout=args.timeout,
+            retries=args.retries,
+        )
+    except RegistrationError as exc:
+        logging.error("deregister-user exchange failed: %s", exc)
+        return False
+    except ValueError as exc:
+        logging.error("deregister-user invalid arguments: %s", exc)
+        return False
+
+    status_code = response.get("status_code")
+    reason = response.get("reason")
+
+    if status_code == "SUCCESS":
+        logging.info("deregister-user SUCCESS for %s", args.user_name)
+        print(json.dumps(response, indent=2))
+        return True
+
+    logging.error(
+        "deregister-user FAILURE for %s: %s",
+        args.user_name,
+        reason or "Unknown reason",
+    )
+    print(json.dumps(response, indent=2))
+    return False
+
+
 def enter_command_loop(args: RegisterArgs, response: dict) -> int:
-    logging.info("Entering command loop (not yet implemented)")
-    # Placeholder for upcoming user command handling implementation.
+    logging.info("Registration complete; entering command loop")
+    print(
+        "Available commands: configure-dss <dss-name> <n> <striping-unit>, deregister-user, help"
+    )
+
+    while True:
+        try:
+            line = input("user> ")
+        except EOFError:
+            print()
+            break
+
+        if not line.strip():
+            continue
+
+        try:
+            tokens = shlex.split(line)
+        except ValueError as exc:
+            logging.error("Unable to parse command: %s", exc)
+            continue
+
+        command = tokens[0].lower()
+
+        if command == "configure-dss":
+            _handle_configure_dss(args, tokens)
+            continue
+
+        if command in {"deregister-user", "deregister"}:
+            if _handle_deregister_user(args):
+                return 0
+            continue
+
+        if command in {"help", "?"}:
+            print(
+                "Commands:\n"
+                "  configure-dss <dss-name> <n> <striping-unit>\n"
+                "  deregister-user\n"
+                "  help"
+            )
+            continue
+
+        if command in {"exit", "quit"}:
+            logging.info("Use deregister-user to cleanly exit the client")
+            continue
+
+        logging.error("Unknown command '%s'", tokens[0])
+
     return 0
 
 

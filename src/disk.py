@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import shlex
 import sys
 from dataclasses import dataclass
 from typing import Optional
@@ -19,6 +20,7 @@ from dss_common import (
     validate_ports,
     validate_retries,
     validate_timeout,
+    deregister_entity,
 )
 
 
@@ -154,8 +156,77 @@ def register_disk(args: RegisterArgs) -> dict:
 
 
 def enter_service_loop(args: RegisterArgs, response: dict) -> int:
-    logging.info("Entering disk service loop (not yet implemented)")
+    logging.info("Registration complete; entering disk command loop")
+    print("Available commands: deregister-disk, help")
+
+    while True:
+        try:
+            line = input("disk> ")
+        except EOFError:
+            print()
+            break
+
+        if not line.strip():
+            continue
+
+        try:
+            tokens = shlex.split(line)
+        except ValueError as exc:
+            logging.error("Unable to parse command: %s", exc)
+            continue
+
+        command = tokens[0].lower()
+
+        if command in {"deregister-disk", "deregister"}:
+            if _handle_deregister_disk(args):
+                return 0
+            continue
+
+        if command in {"help", "?"}:
+            print("Commands:\n  deregister-disk\n  help")
+            continue
+
+        if command in {"exit", "quit"}:
+            logging.info("Use deregister-disk to cleanly exit the disk client")
+            continue
+
+        logging.error("Unknown command '%s'", tokens[0])
+
     return 0
+
+
+def _handle_deregister_disk(args: RegisterArgs) -> bool:
+    try:
+        _, response = deregister_entity(
+            "disk",
+            args.disk_name,
+            manager_host=args.manager_host,
+            manager_port=args.manager_port,
+            timeout=args.timeout,
+            retries=args.retries,
+        )
+    except RegistrationError as exc:
+        logging.error("deregister-disk exchange failed: %s", exc)
+        return False
+    except ValueError as exc:
+        logging.error("deregister-disk invalid arguments: %s", exc)
+        return False
+
+    status_code = response.get("status_code")
+    reason = response.get("reason")
+
+    if status_code == "SUCCESS":
+        logging.info("deregister-disk SUCCESS for %s", args.disk_name)
+        print(json.dumps(response, indent=2))
+        return True
+
+    logging.error(
+        "deregister-disk FAILURE for %s: %s",
+        args.disk_name,
+        reason or "Unknown reason",
+    )
+    print(json.dumps(response, indent=2))
+    return False
 
 
 def main(argv: Optional[list[str]] = None) -> int:

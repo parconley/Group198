@@ -36,7 +36,7 @@ This milestone uses a common message envelope for all requests and responses. In
 \end{verbatim}
 
 \noindent\textbf{Message ID Format}\par
-\noindent\textbf{Pattern}: \texttt{<role>-<pid>-<timestamp\_ms>-<counter>} (e.g., \texttt{user1-4123-1732665001123-00042}).\par
+\noindent\textbf{Pattern} \texttt{<role>-<pid>-<timestamp\_ms>-<counter>} (e.g., \texttt{user1-4123-1732665001123-00042}).\par
 \begin{tabular}{@{}ll@{}}
 \textbf{Role}: & user name or disk name (e.g., \texttt{manager}, \texttt{user1}, \texttt{diskA}) \\
 \textbf{PID}: & process ID of the sender \\
@@ -78,7 +78,7 @@ This milestone uses a common message envelope for all requests and responses. In
 
 \begin{figure}[H]
   \centering
-  \textbf{Time-Space Diagram}
+  \textbf{Time--Space Diagram}
   \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/register-user.png}
   \caption{Time-Space diagram for \texttt{register\_user}}
   \label{fig:ts-register-user}
@@ -115,9 +115,9 @@ This milestone uses a common message envelope for all requests and responses. In
 
 \begin{figure}[H]
   \centering
-  \textbf{Time-Space Diagram}
+  \textbf{Time--Space Diagram}
   \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/register-disk.png}
-  \caption{Time-Space diagram for \texttt{register\_disk}}
+  \caption{Time--space diagram for \texttt{register\_disk}}
   \label{fig:ts-register-disk}
 \end{figure}
 
@@ -156,9 +156,9 @@ This milestone uses a common message envelope for all requests and responses. In
 
 \begin{figure}[H]
   \centering
-  \textbf{Time-Space Diagram}
+  \textbf{Time--Space Diagram}
   \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/configure-dss.png}
-  \caption{Time-Space diagram for \texttt{configure\_dss}}
+  \caption{Time--space diagram for \texttt{configure\_dss}}
   \label{fig:ts-configure-dss}
 \end{figure}
 
@@ -190,9 +190,9 @@ This milestone uses a common message envelope for all requests and responses. In
 
 \begin{figure}[H]
   \centering
-  \textbf{Time-Space Diagram}
+  \textbf{Time--Space Diagram}
   \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/deregister_user.png}
-  \caption{Time-Space diagram for \texttt{deregister\_user}}
+  \caption{Time--space diagram for \texttt{deregister\_user}}
   \label{fig:ts-deregister-user}
 \end{figure}
 
@@ -224,64 +224,61 @@ This milestone uses a common message envelope for all requests and responses. In
 
 \begin{figure}[H]
   \centering
-  \textbf{Time-Space Diagram}
+  \textbf{Time--Space Diagram}
   \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/deregister-disk.png}
-  \caption{Time-Space diagram for \texttt{deregister\_disk}}
+  \caption{Time--space diagram for \texttt{deregister\_disk}}
   \label{fig:ts-deregister-disk}
 \end{figure}
 
 \section{Design Decisions}
 
 Key design decisions include:
-- Using a common message envelope for all messages.
-- Using a shared message ID pattern for all messages.
-- Using standardized response/request message formats for all commands.
+\begin{itemize}
+  \item Using a common message envelope for all messages.
+  \item Using a shared message ID pattern for all messages.
+  \item Using standardized response/request message formats for all commands.
+\end{itemize}
 
 \section{Port Numbers}
 Because I am Group 198, the port numbers are 21200–21299 (inclusive).
 
 \section{Screenshots}
-Provide the following screenshots (place files under \texttt{screenshots/}):
-\begin{enumerate}[label=\roman*.]
-  \item Output of: \texttt{git log --pretty=format:"\%h - \%an, \%ad (Commit) - \%cd (Author)"} \; (TBD)
-  \item Entire commit history of the GitHub repository (TBD)
-  \item Output of: \texttt{git reflog} (TBD)
-  \item Output of: \texttt{git fsck} (TBD)
-\end{enumerate}
-
-\paragraph{Note} I didn't include the entire git history due to it being paywalled by GitHub Plus.
-
 \begin{figure}[H]
   \centering
-  % \includegraphics[width=\linewidth]{screenshots/git-log.png}
-  \fbox{\parbox{0.9\linewidth}{TBD: Insert screenshot of git log command output}}
+  \includegraphics[width=\linewidth]{../screenshots/git-screenshots/2025-09-26_git-log.png}
   \caption{\texttt{git log} output}
   \label{fig:git-log}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  % \includegraphics[width=\linewidth]{screenshots/commit-history.png}
-  \fbox{\parbox{0.9\linewidth}{TBD: Insert screenshot of full commit history}}
+  \fbox{\parbox{0.9\linewidth}{I didn't include the GitHub commit history due to it being paywalled by GitHub Plus.}}
   \caption{Repository commit history}
   \label{fig:commit-history}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  % \includegraphics[width=\linewidth]{screenshots/git-reflog.png}
-  \fbox{\parbox{0.9\linewidth}{TBD: Insert screenshot of \texttt{git reflog} output}}
+  \includegraphics[width=\linewidth]{../screenshots/git-screenshots/2025-09-26_git-reflog.png}
   \caption{\texttt{git reflog} output}
   \label{fig:git-reflog}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  % \includegraphics[width=\linewidth]{screenshots/git-fsck.png}
-  \fbox{\parbox{0.9\linewidth}{TBD: Insert screenshot of \texttt{git fsck} output}}
+  \includegraphics[width=\linewidth]{../screenshots/git-screenshots/2025-09-26_git-fsck.png}
   \caption{\texttt{git fsck} output}
   \label{fig:git-fsck}
 \end{figure}
+
+\vspace{0.5em}
+\noindent The figures above correspond to:
+\begin{enumerate}[label=\roman*.]
+  \item Output of: \texttt{git log --pretty=format:"\%h - \%an, \%ad (Commit) - \%cd (Author)"}
+  \item Entire commit history of the GitHub repository (omitted due to paywall)
+  \item Output of: \texttt{git reflog}
+  \item Output of: \texttt{git fsck}
+\end{enumerate}
 
 \section{Video Demo Link and Timestamps (3(a)--3(f))}
 \paragraph{Accessible Link} \url{TBD}

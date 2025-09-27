@@ -180,3 +180,44 @@ def exchange_with_manager(
             logging.warning("No usable response lines received; retrying")
 
     raise RegistrationError(f"Did not receive a valid {expected_response_type}")
+
+
+def deregister_entity(
+    kind: str,
+    name: str,
+    *,
+    manager_host: str,
+    manager_port: int,
+    timeout: float,
+    retries: int,
+) -> tuple[str, dict]:
+    if kind not in {"user", "disk"}:
+        raise ValueError("kind must be 'user' or 'disk'")
+
+    validate_entity_name(name, f"{kind}_name")
+
+    message_id = generate_message_id(name)
+    body_field = f"{kind}_name"
+    message_type = f"deregister_{kind}"
+    expected_response = f"{message_type}_response"
+
+    message = {
+        "version": PROTOCOL_VERSION,
+        "message_id": message_id,
+        "message_type": message_type,
+        "body": {body_field: name},
+    }
+    payload = (json.dumps(message, separators=(",", ":")) + "\n").encode("utf-8")
+
+    response = exchange_with_manager(
+        action=message_type,
+        expected_response_type=expected_response,
+        message_id=message_id,
+        payload=payload,
+        manager_host=manager_host,
+        manager_port=manager_port,
+        timeout=timeout,
+        retries=retries,
+    )
+
+    return message_id, response

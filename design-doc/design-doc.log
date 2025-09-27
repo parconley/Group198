@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.5.5)  26 SEP 2025 18:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.5.5)  26 SEP 2025 22:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -401,7 +401,7 @@ File: ../screenshots/git-screenshots/2025-09-26_git-log.png Graphic file (type
 png)
 <use ../screenshots/git-screenshots/2025-09-26_git-log.png>
 Package pdftex.def Info: ../screenshots/git-screenshots/2025-09-26_git-log.png 
- used on input line 246.
+ used on input line 248.
 (pdftex.def)             Requested size: 469.75502pt x 122.60323pt.
 <../screenshots/git-screenshots/2025-09-26_git-reflog.png, id=141, 981.6675pt x
  241.90375pt>
@@ -409,7 +409,7 @@ File: ../screenshots/git-screenshots/2025-09-26_git-reflog.png Graphic file (ty
 pe png)
 <use ../screenshots/git-screenshots/2025-09-26_git-reflog.png>
 Package pdftex.def Info: ../screenshots/git-screenshots/2025-09-26_git-reflog.p
-ng  used on input line 260.
+ng  used on input line 262.
 (pdftex.def)             Requested size: 469.75502pt x 115.75812pt.
 <../screenshots/git-screenshots/2025-09-26_git-fsck.png, id=142, 974.64125pt x 
 61.22874pt>
@@ -417,34 +417,35 @@ File: ../screenshots/git-screenshots/2025-09-26_git-fsck.png Graphic file (type
  png)
 <use ../screenshots/git-screenshots/2025-09-26_git-fsck.png>
 Package pdftex.def Info: ../screenshots/git-screenshots/2025-09-26_git-fsck.png
-  used on input line 267.
+  used on input line 269.
 (pdftex.def)             Requested size: 469.75502pt x 29.51091pt.
  [11 <../screenshots/git-screenshots/2025-09-26_git-log.png (PNG copy)> <../scr
 eenshots/git-screenshots/2025-09-26_git-reflog.png (PNG copy)> <../screenshots/
 git-screenshots/2025-09-26_git-fsck.png (PNG copy)>] [12]
 (./design-doc.aux)
 Package rerunfilecheck Info: File `design-doc.out' has not changed.
-(rerunfilecheck)             Checksum: 4F2CF6D0C0629717413C37866A5C9A01;2339.
+(rerunfilecheck)             Checksum: FB07132550EC6922BDDDE52A19C90444;2255.
  ) 
 Here is how much of TeX's memory you used:
- 9162 strings out of 480247
- 146688 string characters out of 5896152
+ 9166 strings out of 480247
+ 146750 string characters out of 5896152
  440681 words of memory out of 5000000
- 26944 multiletter control sequences out of 15000+600000
- 474767 words of font info for 47 fonts, out of 8000000 for 9000
+ 26947 multiletter control sequences out of 15000+600000
+ 475108 words of font info for 48 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 60i,7n,63p,335b,440s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></us
-r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on design-doc.pdf (12 pages, 655306 bytes).
+ 60i,7n,63p,328b,440s stack positions out of 5000i,500n,10000p,200000b,80000s
+ </home/parker/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1095.60
+0pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></
+usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/sh
+are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/font
+s/type1/public/amsfonts/cm/cmtt12.pfb>
+Output written on design-doc.pdf (12 pages, 657832 bytes).
 PDF statistics:
- 215 PDF objects out of 1000 (max. 8388607)
- 177 compressed objects within 2 object streams
+ 220 PDF objects out of 1000 (max. 8388607)
+ 181 compressed objects within 2 object streams
  59 named destinations out of 1000 (max. 500000)
  145 words of extra memory for PDF output out of 10000 (max. 10000000)
 

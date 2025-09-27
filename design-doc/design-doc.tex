@@ -7,7 +7,7 @@
 \setlist{nosep,leftmargin=*,labelsep=0.5em}
 
 \title{DSS Application Design Document}
-\author{Group 198}
+\author{Group 198: Parker Conley}
 \date{\today}
 
 \begin{document}
@@ -16,16 +16,13 @@
 \newpage
 
 \section{Overview}
-TBD.
 
-\section{Milestone Design Document (50\%)}
-\subsection{Application Overview}
-TBD.
+This is a design document for a distributed storage system (DSS). It includes the message formats for the implemented commands, the time-space diagrams, the data structures and design decisions, the port numbers, the screenshots, the video demo link and timestamps.
 
-\subsection{Message Formats for Implemented Commands}
+\section{Message Formats for Implemented Commands}
 This milestone uses a common message envelope for all requests and responses. Individual commands define their own bodies and semantics.
 
-\subsubsection{Envelope Format (Common to All Messages)}
+\subsection{Envelope Format (Common to All Messages)}
 \paragraph{Envelope}
 \begin{verbatim}
 {
@@ -39,7 +36,7 @@ This milestone uses a common message envelope for all requests and responses. In
 \end{verbatim}
 
 \noindent\textbf{Message ID Format}\par
-\noindent\textbf{Pattern:} \texttt{<role>-<pid>-<timestamp\_ms>-<counter>} (e.g., \texttt{user1-4123-1732665001123-00042}).\par
+\noindent\textbf{Pattern}: \texttt{<role>-<pid>-<timestamp\_ms>-<counter>} (e.g., \texttt{user1-4123-1732665001123-00042}).\par
 \begin{tabular}{@{}ll@{}}
 \textbf{Role}: & user name or disk name (e.g., \texttt{manager}, \texttt{user1}, \texttt{diskA}) \\
 \textbf{PID}: & process ID of the sender \\
@@ -47,9 +44,10 @@ This milestone uses a common message envelope for all requests and responses. In
 \textbf{Counter}: & incremented each time this process sends a message \\
 \end{tabular}
 
-\noindent\textbf{Purpose:} match requests and responses, enable retries on UDP, deduplicate requests, and simplify logging.
+\noindent\textbf{Purpose}: match requests and responses, enable retries on UDP, deduplicate requests, and simplify logging.
 
-\subsubsection{Command: \texttt{register\_user}}
+\clearpage
+\subsection{Command: \texttt{register\_user}}
 \noindent\textbf{Purpose}\par
 \medskip
 \noindent Register a user process with the manager.
@@ -77,9 +75,17 @@ This milestone uses a common message envelope for all requests and responses. In
   "reason": null
 }
 \end{verbatim}
-On failure: \texttt{status\_code: "FAILURE"} with a \texttt{reason}. Manager ensures unique user name and ports.
 
-\subsubsection{Command: \texttt{register\_disk}}
+\begin{figure}[H]
+  \centering
+  \textbf{Time-Space Diagram}
+  \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/register-user.png}
+  \caption{Time-Space diagram for \texttt{register\_user}}
+  \label{fig:ts-register-user}
+\end{figure}
+
+\clearpage
+\subsection{Command: \texttt{register\_disk}}
 \noindent\textbf{Purpose}\par
 \medskip
 \noindent Register a disk process with the manager.
@@ -106,9 +112,17 @@ On failure: \texttt{status\_code: "FAILURE"} with a \texttt{reason}. Manager ens
   "status_code": "SUCCESS"
 }
 \end{verbatim}
-Manager marks the disk as \texttt{Free}.
 
-\subsubsection{Command: \texttt{configure\_dss}}
+\begin{figure}[H]
+  \centering
+  \textbf{Time-Space Diagram}
+  \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/register-disk.png}
+  \caption{Time-Space diagram for \texttt{register\_disk}}
+  \label{fig:ts-register-disk}
+\end{figure}
+
+\clearpage
+\subsection{Command: \texttt{configure\_dss}}
 \noindent\textbf{Purpose}\par
 \medskip
 \noindent Configure a DSS from available disks.
@@ -125,7 +139,7 @@ Manager marks the disk as \texttt{Free}.
   }
 }
 \end{verbatim}
-\paragraph{Response (success)}
+\paragraph{Response}
 \begin{verbatim}
 {
   "version": 1,
@@ -139,9 +153,17 @@ Manager marks the disk as \texttt{Free}.
   }
 }
 \end{verbatim}
-On failure: \texttt{status\_code: "FAILURE"} with a \texttt{reason}. Manager validates all rules.
 
-\subsubsection{Command: \texttt{deregister\_user}}
+\begin{figure}[H]
+  \centering
+  \textbf{Time-Space Diagram}
+  \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/configure-dss.png}
+  \caption{Time-Space diagram for \texttt{configure\_dss}}
+  \label{fig:ts-configure-dss}
+\end{figure}
+
+\clearpage
+\subsection{Command: \texttt{deregister\_user}}
 \noindent\textbf{Purpose}\par
 \medskip
 \noindent Deregister a user process from the manager.
@@ -166,7 +188,16 @@ On failure: \texttt{status\_code: "FAILURE"} with a \texttt{reason}. Manager val
 }
 \end{verbatim}
 
-\subsubsection{Command: \texttt{deregister\_disk}}
+\begin{figure}[H]
+  \centering
+  \textbf{Time-Space Diagram}
+  \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/deregister_user.png}
+  \caption{Time-Space diagram for \texttt{deregister\_user}}
+  \label{fig:ts-deregister-user}
+\end{figure}
+
+\clearpage
+\subsection{Command: \texttt{deregister\_disk}}
 \noindent\textbf{Purpose}\par
 \medskip
 \noindent Deregister a disk process from the manager.
@@ -191,70 +222,25 @@ On failure: \texttt{status\_code: "FAILURE"} with a \texttt{reason}. Manager val
 }
 \end{verbatim}
 
-\subsubsection{Manager Protocol Commands (TBD for Full Project)}
-\begin{center}
-\begin{tabular}{|l|l|}\hline
-\textbf{Command} & \textbf{Status} \\ \hline
-\texttt{ls} & TBD \\ \hline
-\texttt{copy} & TBD (Phase 1 and Phase 2) \\ \hline
-\texttt{read} & TBD (Phase 1 and Phase 2) \\ \hline
-\texttt{disk\_failure} & TBD (Phase 1 and Phase 2) \\ \hline
-\texttt{decommission\_dss} & TBD \\ \hline
-\end{tabular}
-\end{center}
-
-\subsection{Time--Space Diagrams}
-\subsubsection{Command: \texttt{register\_user}}
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/register-user.png}
-  \caption{Time--space diagram for \texttt{register\_user}}
-  \label{fig:ts-register-user}
-\end{figure}
-
-\subsubsection{Command: \texttt{register\_disk}}
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/register-disk.png}
-  \caption{Time--space diagram for \texttt{register\_disk}}
-  \label{fig:ts-register-disk}
-\end{figure}
-
-\subsubsection{Command: \texttt{configure\_dss}}
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/configure-dss.png}
-  \caption{Time--space diagram for \texttt{configure\_dss}}
-  \label{fig:ts-configure-dss}
-\end{figure}
-
-\subsubsection{Command: \texttt{deregister\_user}}
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/deregister_user.png}
-  \caption{Time--space diagram for \texttt{deregister\_user}}
-  \label{fig:ts-deregister-user}
-\end{figure}
-
-\subsubsection{Command: \texttt{deregister\_disk}}
-\begin{figure}[H]
-  \centering
+  \textbf{Time-Space Diagram}
   \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/deregister-disk.png}
-  \caption{Time--space diagram for \texttt{deregister\_disk}}
+  \caption{Time-Space diagram for \texttt{deregister\_disk}}
   \label{fig:ts-deregister-disk}
 \end{figure}
 
-\subsection{Data Structures and Design Decisions}
-\subsubsection{Manager State}
-TBD.
+\section{Design Decisions}
 
-\subsubsection{Client/User State}
-TBD.
+Key design decisions include:
+- Using a common message envelope for all messages.
+- Using a shared message ID pattern for all messages.
+- Using standardized response/request message formats for all commands.
 
-\subsection{Port Numbers}
+\section{Port Numbers}
 Because I am Group 198, the port numbers are 21200–21299 (inclusive).
 
-\subsection{Screenshots}
+\section{Screenshots}
 Provide the following screenshots (place files under \texttt{screenshots/}):
 \begin{enumerate}[label=\roman*.]
   \item Output of: \texttt{git log --pretty=format:"\%h - \%an, \%ad (Commit) - \%cd (Author)"} \; (TBD)
@@ -263,7 +249,9 @@ Provide the following screenshots (place files under \texttt{screenshots/}):
   \item Output of: \texttt{git fsck} (TBD)
 \end{enumerate}
 
-\begin{figure}[h]
+\paragraph{Note} I didn't include the entire git history due to it being paywalled by GitHub Plus.
+
+\begin{figure}[H]
   \centering
   % \includegraphics[width=\linewidth]{screenshots/git-log.png}
   \fbox{\parbox{0.9\linewidth}{TBD: Insert screenshot of git log command output}}
@@ -271,7 +259,7 @@ Provide the following screenshots (place files under \texttt{screenshots/}):
   \label{fig:git-log}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
   % \includegraphics[width=\linewidth]{screenshots/commit-history.png}
   \fbox{\parbox{0.9\linewidth}{TBD: Insert screenshot of full commit history}}
@@ -279,7 +267,7 @@ Provide the following screenshots (place files under \texttt{screenshots/}):
   \label{fig:commit-history}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
   % \includegraphics[width=\linewidth]{screenshots/git-reflog.png}
   \fbox{\parbox{0.9\linewidth}{TBD: Insert screenshot of \texttt{git reflog} output}}
@@ -287,7 +275,7 @@ Provide the following screenshots (place files under \texttt{screenshots/}):
   \label{fig:git-reflog}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
   % \includegraphics[width=\linewidth]{screenshots/git-fsck.png}
   \fbox{\parbox{0.9\linewidth}{TBD: Insert screenshot of \texttt{git fsck} output}}
@@ -295,7 +283,7 @@ Provide the following screenshots (place files under \texttt{screenshots/}):
   \label{fig:git-fsck}
 \end{figure}
 
-\subsection{Video Demo Link and Timestamps (3(a)--3(f))}
+\section{Video Demo Link and Timestamps (3(a)--3(f))}
 \paragraph{Accessible Link} \url{TBD}
 \paragraph{Timestamps} TBD.
 \begin{enumerate}
@@ -307,39 +295,8 @@ Provide the following screenshots (place files under \texttt{screenshots/}):
   \item 3(f): TBD
 \end{enumerate}
 
-\section{Extended Design for Full Project (30\%)}
-\subsection{Additional Commands Implemented}
-TBD.
+\section{Extended Design for Full Project}
 
-\subsubsection{Command: \texttt{<NAME>}}
-\paragraph{Purpose} TBD.
-\paragraph{Request Message Format} TBD.
-\paragraph{Response Message Format} TBD.
-\paragraph{Error Handling} TBD.
-
-\subsection{Updated Design Decisions and Use of Threads}
-TBD.
-
-\subsection{Screenshots (Repeat Items from Step 1 of \S4.1)}
-TBD.
-
-\subsection{Video Timestamps (3(a)--3(h))}
-\begin{enumerate}
-  \item 3(a): TBD
-  \item 3(b): TBD
-  \item 3(c): TBD
-  \item 3(d): TBD
-  \item 3(e): TBD
-  \item 3(f): TBD
-  \item 3(g): TBD
-  \item 3(h): TBD
-\end{enumerate}
-
-\appendix
-\section{Message Format Template}
-TBD.
-
-\section{Time--Space Diagram Notes}
-TBD.
+For the next version of this project, I'll need to add commands, add threading, and record another video demo.
 
 \end{document}

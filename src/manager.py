@@ -47,6 +47,13 @@ class DssRecord:
     owner_user: str
 
 
+@dataclass(frozen=True)
+class FileRecord:
+    file_name: str
+    file_size: int
+    owner: str
+
+
 def _is_power_of_two(value: int) -> bool:
     return value > 0 and (value & (value - 1)) == 0
 
@@ -66,6 +73,11 @@ class ManagerServer:
         self.disk_membership: Dict[str, str] = {}
         # port -> owner identifier (e.g., "user:Alice" or "disk:DiskA")
         self.claimed_ports: Dict[int, str] = {}
+        # (dss_name, file_name) -> FileRecord
+        self.files: Dict[Tuple[str, str], FileRecord] = {}
+        # Critical section tracking for copy/read operations
+        self.in_progress_copy: Optional[str] = None  # dss_name currently being copied to
+        self.in_progress_reads: set = set()  # Set of (dss_name, file_name) tuples
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         # Allow quick restart
@@ -180,6 +192,18 @@ class ManagerServer:
 
         if message_type == "configure_dss":
             self.handle_configure_dss(message_id, body, addr)
+            return
+
+        if message_type == "ls":
+            self.handle_ls(message_id, body, addr)
+            return
+
+        if message_type == "copy":
+            self.handle_copy(message_id, body, addr)
+            return
+
+        if message_type == "copy_complete":
+            self.handle_copy_complete(message_id, body, addr)
             return
 
         if message_type == "deregister_user":
@@ -474,6 +498,227 @@ class ManagerServer:
                 "striping_unit": striping_unit,
                 "disks": list(selected_disks),
             },
+        )
+
+    def handle_ls(self, message_id: str, body: Any, addr: Tuple[str, int]) -> None:
+        """List all files across all DSSs."""
+        if len(self.dss_catalog) == 0:
+            logging.info("ls FAILURE from %s: no DSS configured", addr)
+            self._send_response(
+                addr,
+                message_type="ls_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason="No DSS is configured"
+            )
+            return
+
+        # Build response with DSS info and files
+        dss_list = []
+        for dss_name, dss_record in self.dss_catalog.items():
+            # Get files for this DSS
+            files_list = []
+            for (file_dss, file_name), file_record in self.files.items():
+                if file_dss == dss_name:
+                    files_list.append({
+                        "file_name": file_record.file_name,
+                        "file_size": file_record.file_size,
+                        "owner": file_record.owner
+                    })
+
+            dss_list.append({
+                "dss_name": dss_record.dss_name,
+                "n": dss_record.n,
+                "disks": list(dss_record.disks),
+                "striping_unit": dss_record.striping_unit,
+                "files": files_list
+            })
+
+        logging.info("ls SUCCESS from %s: %d DSSs", addr, len(dss_list))
+        self._send_response(
+            addr,
+            message_type="ls_response",
+            message_id=message_id,
+            status_code="SUCCESS",
+            reason=None,
+            body={"dss_list": dss_list}
+        )
+
+    def handle_copy(self, message_id: str, body: Any, addr: Tuple[str, int]) -> None:
+        """Phase 1 of copy: select DSS and send parameters to user."""
+        # Check if in critical section
+        if self.in_progress_copy is not None:
+            logging.info("copy FAILURE from %s: copy already in progress for DSS %s", addr, self.in_progress_copy)
+            self._send_response(
+                addr,
+                message_type="copy_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=f"Copy operation already in progress for DSS '{self.in_progress_copy}'"
+            )
+            return
+
+        if not isinstance(body, dict):
+            self._send_response(
+                addr,
+                message_type="copy_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason="body must be an object"
+            )
+            return
+
+        required = ["file_name", "file_size", "owner"]
+        for key in required:
+            if key not in body:
+                self._send_response(
+                    addr,
+                    message_type="copy_response",
+                    message_id=message_id,
+                    status_code="FAILURE",
+                    reason=f"missing field: {key}"
+                )
+                return
+
+        file_name = body["file_name"]
+        file_size = int(body["file_size"])
+        owner = body["owner"]
+
+        # Verify owner is registered
+        if owner not in self.users:
+            logging.info("copy FAILURE from %s: owner '%s' not registered", addr, owner)
+            self._send_response(
+                addr,
+                message_type="copy_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=f"owner '{owner}' is not registered"
+            )
+            return
+
+        if len(self.dss_catalog) == 0:
+            logging.info("copy FAILURE from %s: no DSS configured", addr)
+            self._send_response(
+                addr,
+                message_type="copy_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason="No DSS exists"
+            )
+            return
+
+        # Select first available DSS (could be more sophisticated)
+        dss_name = list(self.dss_catalog.keys())[0]
+        dss_record = self.dss_catalog[dss_name]
+
+        # Enter critical section
+        self.in_progress_copy = dss_name
+
+        # Build disk info list
+        disks_info = []
+        for disk_name in dss_record.disks:
+            disk_record = self.disks[disk_name]
+            disks_info.append({
+                "disk_name": disk_name,
+                "ipv4_address": disk_record.ipv4_address,
+                "command_port": disk_record.command_port
+            })
+
+        logging.info(
+            "copy Phase1 SUCCESS from %s: file=%s size=%d owner=%s dss=%s",
+            addr,
+            file_name,
+            file_size,
+            owner,
+            dss_name
+        )
+
+        self._send_response(
+            addr,
+            message_type="copy_response",
+            message_id=message_id,
+            status_code="SUCCESS",
+            reason=None,
+            body={
+                "dss_name": dss_name,
+                "n": dss_record.n,
+                "striping_unit": dss_record.striping_unit,
+                "disks": disks_info
+            }
+        )
+
+    def handle_copy_complete(self, message_id: str, body: Any, addr: Tuple[str, int]) -> None:
+        """Phase 2 of copy: user confirms completion, manager updates directory."""
+        if not isinstance(body, dict):
+            self._send_response(
+                addr,
+                message_type="copy_complete_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason="body must be an object"
+            )
+            return
+
+        required = ["dss_name", "file_name", "file_size", "owner"]
+        for key in required:
+            if key not in body:
+                self._send_response(
+                    addr,
+                    message_type="copy_complete_response",
+                    message_id=message_id,
+                    status_code="FAILURE",
+                    reason=f"missing field: {key}"
+                )
+                return
+
+        dss_name = body["dss_name"]
+        file_name = body["file_name"]
+        file_size = int(body["file_size"])
+        owner = body["owner"]
+
+        # Verify we're in the right critical section
+        if self.in_progress_copy != dss_name:
+            logging.warning(
+                "copy_complete FAILURE from %s: expected DSS '%s' but got '%s'",
+                addr,
+                self.in_progress_copy,
+                dss_name
+            )
+            self._send_response(
+                addr,
+                message_type="copy_complete_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=f"No copy in progress for DSS '{dss_name}'"
+            )
+            return
+
+        # Add file to directory
+        file_record = FileRecord(
+            file_name=file_name,
+            file_size=file_size,
+            owner=owner
+        )
+        self.files[(dss_name, file_name)] = file_record
+
+        # Exit critical section
+        self.in_progress_copy = None
+
+        logging.info(
+            "copy_complete SUCCESS from %s: dss=%s file=%s size=%d owner=%s",
+            addr,
+            dss_name,
+            file_name,
+            file_size,
+            owner
+        )
+
+        self._send_response(
+            addr,
+            message_type="copy_complete_response",
+            message_id=message_id,
+            status_code="SUCCESS",
+            reason=None
         )
 
     def handle_deregister_user(self, message_id: str, body: Any, addr: Tuple[str, int]) -> None:

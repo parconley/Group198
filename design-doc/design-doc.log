@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.5.5)  19 OCT 2025 21:31
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.5.5)  19 OCT 2025 22:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -331,13 +331,13 @@ LaTeX Font Info:    External font `cmex10' loaded for size
  (./design-doc.toc
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <10.95> on input line 5.
-)
+ [1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}])
 \tf@toc=\write4
 \openout4 = `design-doc.toc'.
 
- [1
-
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
+ [2]
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
 (Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 51.
  [3]
@@ -412,46 +412,236 @@ t/m/n/10.95 (dss[]name, file[]name, stripe[]number) \OT1/cmr/m/n/10.95 stor-ing
  []
 
 [11]
-<../screenshots/git-screenshots/2025-09-26_git-log.png, id=251, 1026.83624pt x 
-268.00125pt>
-File: ../screenshots/git-screenshots/2025-09-26_git-log.png Graphic file (type 
-png)
-<use ../screenshots/git-screenshots/2025-09-26_git-log.png>
-Package pdftex.def Info: ../screenshots/git-screenshots/2025-09-26_git-log.png 
- used on input line 424.
-(pdftex.def)             Requested size: 469.75502pt x 122.60323pt.
- [12 <../screenshots/git-screenshots/2025-09-26_git-log.png (PNG copy)>]
-<../screenshots/git-screenshots/2025-09-26_git-reflog.png, id=257, 981.6675pt x
- 241.90375pt>
-File: ../screenshots/git-screenshots/2025-09-26_git-reflog.png Graphic file (ty
-pe png)
-<use ../screenshots/git-screenshots/2025-09-26_git-reflog.png>
-Package pdftex.def Info: ../screenshots/git-screenshots/2025-09-26_git-reflog.p
-ng  used on input line 438.
-(pdftex.def)             Requested size: 469.75502pt x 115.75812pt.
-<../screenshots/git-screenshots/2025-09-26_git-fsck.png, id=258, 974.64125pt x 
-61.22874pt>
-File: ../screenshots/git-screenshots/2025-09-26_git-fsck.png Graphic file (type
- png)
-<use ../screenshots/git-screenshots/2025-09-26_git-fsck.png>
-Package pdftex.def Info: ../screenshots/git-screenshots/2025-09-26_git-fsck.png
-  used on input line 445.
-(pdftex.def)             Requested size: 469.75502pt x 29.51091pt.
+<../screenshots/diagram-screenshots/manager-commands/1_register-user.png, id=26
+6, 1101.11375pt x 763.85374pt>
+File: ../screenshots/diagram-screenshots/manager-commands/1_register-user.png G
+raphic file (type png)
+<use ../screenshots/diagram-screenshots/manager-commands/1_register-user.png>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/manager-commands/1_
+register-user.png  used on input line 425.
+(pdftex.def)             Requested size: 399.29463pt x 276.99187pt.
+ [12]
+<../screenshots/diagram-screenshots/manager-commands/2_register-disk.png, id=27
+2, 1162.3425pt x 718.685pt>
+File: ../screenshots/diagram-screenshots/manager-commands/2_register-disk.png G
+raphic file (type png)
+<use ../screenshots/diagram-screenshots/manager-commands/2_register-disk.png>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/manager-commands/2_
+register-disk.png  used on input line 432.
+(pdftex.def)             Requested size: 399.29463pt x 246.88286pt.
+ [13 <../screenshots/diagram-screenshots/manager-commands/1_register-user.png (
+PNG copy)>]
+<../screenshots/diagram-screenshots/manager-commands/3_configure-dss.png, id=27
+9, 978.65625pt x 737.75626pt>
+File: ../screenshots/diagram-screenshots/manager-commands/3_configure-dss.png G
+raphic file (type png)
+<use ../screenshots/diagram-screenshots/manager-commands/3_configure-dss.png>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/manager-commands/3_
+configure-dss.png  used on input line 439.
+(pdftex.def)             Requested size: 399.29463pt x 301.00732pt.
+<../screenshots/diagram-screenshots/manager-commands/4_ls.png, id=280, 1031.855
+pt x 813.0375pt>
+File: ../screenshots/diagram-screenshots/manager-commands/4_ls.png Graphic file
+ (type png)
+<use ../screenshots/diagram-screenshots/manager-commands/4_ls.png>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/manager-commands/4_
+ls.png  used on input line 446.
+(pdftex.def)             Requested size: 399.29463pt x 314.61456pt.
+ [14 <../screenshots/diagram-screenshots/manager-commands/2_register-disk.png (
+PNG copy)> <../screenshots/diagram-screenshots/manager-commands/3_configure-dss
+.png (PNG copy)>]
+<../screenshots/diagram-screenshots/manager-commands/5_copy.png, id=287, 899.36
+pt x 741.77126pt>
+File: ../screenshots/diagram-screenshots/manager-commands/5_copy.png Graphic fi
+le (type png)
+<use ../screenshots/diagram-screenshots/manager-commands/5_copy.png>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/manager-commands/5_
+copy.png  used on input line 453.
+(pdftex.def)             Requested size: 399.29463pt x 329.32318pt.
+ [15 <../screenshots/diagram-screenshots/manager-commands/4_ls.png (PNG copy)>]
+<../screenshots/diagram-screenshots/manager-commands/6_copy-complete.png, id=29
+3, 1148.29pt x 720.6925pt>
+File: ../screenshots/diagram-screenshots/manager-commands/6_copy-complete.png G
+raphic file (type png)
+<use ../screenshots/diagram-screenshots/manager-commands/6_copy-complete.png>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/manager-commands/6_
+copy-complete.png  used on input line 460.
+(pdftex.def)             Requested size: 399.29463pt x 250.59662pt.
+ [16 <../screenshots/diagram-screenshots/manager-commands/5_copy.png (PNG copy)
+>]
+<../screenshots/diagram-screenshots/manager-commands/7_read.png, id=299, 782.92
+5pt x 752.8125pt>
+File: ../screenshots/diagram-screenshots/manager-commands/7_read.png Graphic fi
+le (type png)
+<use ../screenshots/diagram-screenshots/manager-commands/7_read.png>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/manager-commands/7_
+read.png  used on input line 467.
+(pdftex.def)             Requested size: 399.29463pt x 383.94078pt.
+ [17 <../screenshots/diagram-screenshots/manager-commands/6_copy-complete.png (
+PNG copy)>]
+<../screenshots/diagram-screenshots/manager-commands/8_read-complete.png, id=30
+5, 1145.27875pt x 717.68124pt>
+File: ../screenshots/diagram-screenshots/manager-commands/8_read-complete.png G
+raphic file (type png)
+<use ../screenshots/diagram-screenshots/manager-commands/8_read-complete.png>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/manager-commands/8_
+read-complete.png  used on input line 474.
+(pdftex.def)             Requested size: 399.29463pt x 250.21756pt.
+ [18 <../screenshots/diagram-screenshots/manager-commands/7_read.png (PNG copy)
+>]
+<../screenshots/diagram-screenshots/manager-commands/9_disk-failure.png, id=311
+, 951.555pt x 793.96625pt>
+File: ../screenshots/diagram-screenshots/manager-commands/9_disk-failure.png Gr
+aphic file (type png)
+<use ../screenshots/diagram-screenshots/manager-commands/9_disk-failure.png>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/manager-commands/9_
+disk-failure.png  used on input line 481.
+(pdftex.def)             Requested size: 399.29463pt x 333.17279pt.
+ [19 <../screenshots/diagram-screenshots/manager-commands/8_read-complete.png (
+PNG copy)>]
+<../screenshots/diagram-screenshots/manager-commands/10_recovery-complete.png, 
+id=318, 1134.2375pt x 695.59875pt>
+File: ../screenshots/diagram-screenshots/manager-commands/10_recovery-complete.
+png Graphic file (type png)
+<use ../screenshots/diagram-screenshots/manager-commands/10_recovery-complete.p
+ng>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/manager-commands/10
+_recovery-complete.png  used on input line 488.
+(pdftex.def)             Requested size: 399.29463pt x 244.87486pt.
+ [20 <../screenshots/diagram-screenshots/manager-commands/9_disk-failure.png (P
+NG copy)>]
+<../screenshots/diagram-screenshots/manager-commands/11_decommission-dss.png, i
+d=324, 1162.3425pt x 721.69624pt>
+File: ../screenshots/diagram-screenshots/manager-commands/11_decommission-dss.p
+ng Graphic file (type png)
+<use ../screenshots/diagram-screenshots/manager-commands/11_decommission-dss.pn
+g>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/manager-commands/11
+_decommission-dss.png  used on input line 495.
+(pdftex.def)             Requested size: 399.29463pt x 247.9173pt.
+<../screenshots/diagram-screenshots/manager-commands/12_deregister-user.png, id
+=325, 1085.05376pt x 773.89125pt>
+File: ../screenshots/diagram-screenshots/manager-commands/12_deregister-user.pn
+g Graphic file (type png)
+<use ../screenshots/diagram-screenshots/manager-commands/12_deregister-user.png
+>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/manager-commands/12
+_deregister-user.png  used on input line 502.
+(pdftex.def)             Requested size: 399.29463pt x 284.78835pt.
 
-[13 <../screenshots/git-screenshots/2025-09-26_git-reflog.png (PNG copy)> <../s
-creenshots/git-screenshots/2025-09-26_git-fsck.png (PNG copy)>]
-(./design-doc.aux)
+[21 <../screenshots/diagram-screenshots/manager-commands/10_recovery-complete.p
+ng (PNG copy)> <../screenshots/diagram-screenshots/manager-commands/11_decommis
+sion-dss.png (PNG copy)>]
+<../screenshots/diagram-screenshots/manager-commands/13_deregister-disk.png, id
+=332, 1048.91875pt x 773.89125pt>
+File: ../screenshots/diagram-screenshots/manager-commands/13_deregister-disk.pn
+g Graphic file (type png)
+<use ../screenshots/diagram-screenshots/manager-commands/13_deregister-disk.png
+>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/manager-commands/13
+_deregister-disk.png  used on input line 509.
+(pdftex.def)             Requested size: 399.29463pt x 294.6013pt.
+ [22 <../screenshots/diagram-screenshots/manager-commands/12_deregister-user.pn
+g (PNG copy)>]
+<../screenshots/diagram-screenshots/P2P-commands/1_write-block.png, id=338, 100
+1.7425pt x 749.80125pt>
+File: ../screenshots/diagram-screenshots/P2P-commands/1_write-block.png Graphic
+ file (type png)
+<use ../screenshots/diagram-screenshots/P2P-commands/1_write-block.png>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/P2P-commands/1_writ
+e-block.png  used on input line 517.
+(pdftex.def)             Requested size: 399.29463pt x 298.87405pt.
+ [23 <../screenshots/diagram-screenshots/manager-commands/13_deregister-disk.pn
+g (PNG copy)>]
+<../screenshots/diagram-screenshots/P2P-commands/2_read-block.png, id=344, 911.
+405pt x 748.7975pt>
+File: ../screenshots/diagram-screenshots/P2P-commands/2_read-block.png Graphic 
+file (type png)
+<use ../screenshots/diagram-screenshots/P2P-commands/2_read-block.png>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/P2P-commands/2_read
+-block.png  used on input line 524.
+(pdftex.def)             Requested size: 399.29463pt x 328.05513pt.
+ [24 <../screenshots/diagram-screenshots/P2P-commands/1_write-block.png (PNG co
+py)>]
+<../screenshots/diagram-screenshots/P2P-commands/3_fail.png, id=350, 904.37875p
+t x 745.78625pt>
+File: ../screenshots/diagram-screenshots/P2P-commands/3_fail.png Graphic file (
+type png)
+<use ../screenshots/diagram-screenshots/P2P-commands/3_fail.png>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/P2P-commands/3_fail
+.png  used on input line 531.
+(pdftex.def)             Requested size: 399.29463pt x 329.27356pt.
+ [25 <../screenshots/diagram-screenshots/P2P-commands/2_read-block.png (PNG cop
+y)>]
+<../screenshots/diagram-screenshots/P2P-commands/4_read-block-for-recovery.png,
+ id=357, 977.6525pt x 752.8125pt>
+File: ../screenshots/diagram-screenshots/P2P-commands/4_read-block-for-recovery
+.png Graphic file (type png)
+<use ../screenshots/diagram-screenshots/P2P-commands/4_read-block-for-recovery.
+png>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/P2P-commands/4_read
+-block-for-recovery.png  used on input line 538.
+(pdftex.def)             Requested size: 399.29463pt x 307.47195pt.
+ [26 <../screenshots/diagram-screenshots/P2P-commands/3_fail.png (PNG copy)>]
+<../screenshots/diagram-screenshots/P2P-commands/5_write-recovered-block.png, i
+d=363, 976.64874pt x 747.79375pt>
+File: ../screenshots/diagram-screenshots/P2P-commands/5_write-recovered-block.p
+ng Graphic file (type png)
+<use ../screenshots/diagram-screenshots/P2P-commands/5_write-recovered-block.pn
+g>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/P2P-commands/5_writ
+e-recovered-block.png  used on input line 545.
+(pdftex.def)             Requested size: 399.29463pt x 305.73022pt.
+ [27 <../screenshots/diagram-screenshots/P2P-commands/4_read-block-for-recovery
+.png (PNG copy)>]
+<../screenshots/diagram-screenshots/P2P-commands/6_delete-all.png, id=369, 1051
+.93pt x 813.0375pt>
+File: ../screenshots/diagram-screenshots/P2P-commands/6_delete-all.png Graphic 
+file (type png)
+<use ../screenshots/diagram-screenshots/P2P-commands/6_delete-all.png>
+Package pdftex.def Info: ../screenshots/diagram-screenshots/P2P-commands/6_dele
+te-all.png  used on input line 552.
+(pdftex.def)             Requested size: 399.29463pt x 308.61009pt.
+
+[28 <../screenshots/diagram-screenshots/P2P-commands/5_write-recovered-block.pn
+g (PNG copy)>]
+<../screenshots/git-screenshots/1_git-log.png, id=375, 848.16875pt x 378.41376p
+t>
+File: ../screenshots/git-screenshots/1_git-log.png Graphic file (type png)
+<use ../screenshots/git-screenshots/1_git-log.png>
+Package pdftex.def Info: ../screenshots/git-screenshots/1_git-log.png  used on 
+input line 561.
+(pdftex.def)             Requested size: 469.75502pt x 209.58328pt.
+ [29 <../screenshots/diagram-screenshots/P2P-commands/6_delete-all.png (PNG cop
+y)> <../screenshots/git-screenshots/1_git-log.png (PNG copy)>]
+<../screenshots/git-screenshots/2_git-reflog.png, id=382, 1090.0725pt x 457.71p
+t>
+File: ../screenshots/git-screenshots/2_git-reflog.png Graphic file (type png)
+<use ../screenshots/git-screenshots/2_git-reflog.png>
+Package pdftex.def Info: ../screenshots/git-screenshots/2_git-reflog.png  used 
+on input line 575.
+(pdftex.def)             Requested size: 469.75502pt x 197.24448pt.
+<../screenshots/git-screenshots/4_git-fsck.png, id=383, 426.59375pt x 53.19875p
+t>
+File: ../screenshots/git-screenshots/4_git-fsck.png Graphic file (type png)
+<use ../screenshots/git-screenshots/4_git-fsck.png>
+Package pdftex.def Info: ../screenshots/git-screenshots/4_git-fsck.png  used on
+ input line 582.
+(pdftex.def)             Requested size: 469.75502pt x 58.58453pt.
+
+[30 <../screenshots/git-screenshots/2_git-reflog.png (PNG copy)> <../screenshot
+s/git-screenshots/4_git-fsck.png (PNG copy)>] [31] (./design-doc.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `design-doc.out' has not changed.
-(rerunfilecheck)             Checksum: 79ED85D1D5AA7221250B3DA0F5450AD4;5065.
+(rerunfilecheck)             Checksum: D04596123343DB60A9F4F6A006046D17;5526.
  ) 
 Here is how much of TeX's memory you used:
- 9197 strings out of 480247
- 145709 string characters out of 5896152
- 449452 words of memory out of 5000000
- 26938 multiletter control sequences out of 15000+600000
+ 9395 strings out of 480247
+ 155304 string characters out of 5896152
+ 451838 words of memory out of 5000000
+ 27075 multiletter control sequences out of 15000+600000
  475108 words of font info for 48 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  60i,7n,63p,424b,470s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -465,10 +655,10 @@ st/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/font
 s/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type
 1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
 ic/amsfonts/cm/cmtt12.pfb>
-Output written on design-doc.pdf (13 pages, 287846 bytes).
+Output written on design-doc.pdf (31 pages, 1199385 bytes).
 PDF statistics:
- 349 PDF objects out of 1000 (max. 8388607)
- 308 compressed objects within 4 object streams
- 103 named destinations out of 1000 (max. 500000)
- 248 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 485 PDF objects out of 1000 (max. 8388607)
+ 406 compressed objects within 5 object streams
+ 143 named destinations out of 1000 (max. 500000)
+ 367 words of extra memory for PDF output out of 10000 (max. 10000000)
 

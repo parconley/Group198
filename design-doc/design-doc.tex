@@ -417,32 +417,169 @@ Key design decisions include:
 \section{Port Numbers}
 Because I am Group 198, the port numbers are 21200–21299 (inclusive).
 
-\section{Screenshots}
+\section{Diagrams}
 \label{sec:diagrams}
+\subsection{Manager Command Flows}
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth]{../screenshots/git-screenshots/2025-09-26_git-log.png}
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/manager-commands/1\_register-user.png}
+  \caption{Manager happy path for \texttt{register\_user}}
+  \label{fig:diagram-register-user}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/manager-commands/2\_register-disk.png}
+  \caption{Manager happy path for \texttt{register\_disk}}
+  \label{fig:diagram-register-disk}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/manager-commands/3\_configure-dss.png}
+  \caption{\texttt{configure\_dss} validation and response flow}
+  \label{fig:diagram-configure-dss}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/manager-commands/4\_ls.png}
+  \caption{\texttt{ls} aggregation of DSS metadata}
+  \label{fig:diagram-ls}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/manager-commands/5\_copy.png}
+  \caption{Copy phase~1: entering the critical section and returning DSS endpoints}
+  \label{fig:diagram-copy}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/manager-commands/6\_copy-complete.png}
+  \caption{Copy phase~2: recording file metadata and releasing the critical section}
+  \label{fig:diagram-copy-complete}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/manager-commands/7\_read.png}
+  \caption{\texttt{read} phase~1: returning disk endpoints with ownership checks}
+  \label{fig:diagram-read}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/manager-commands/8\_read-complete.png}
+  \caption{\texttt{read\_complete}: clearing in-progress tracking}
+  \label{fig:diagram-read-complete}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/manager-commands/9\_disk-failure.png}
+  \caption{\texttt{disk\_failure} phase~1: entering the failure critical section}
+  \label{fig:diagram-disk-failure}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/manager-commands/10\_recovery-complete.png}
+  \caption{\texttt{recovery\_complete}: leaving the failure critical section}
+  \label{fig:diagram-recovery-complete}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/manager-commands/11\_decommission-dss.png}
+  \caption{\texttt{decommission\_dss} workflow}
+  \label{fig:diagram-decommission-dss}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/manager-commands/12\_deregister-user.png}
+  \caption{Manager happy path for \texttt{deregister\_user}}
+  \label{fig:diagram-deregister-user}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/manager-commands/13\_deregister-disk.png}
+  \caption{Manager happy path for \texttt{deregister\_disk}}
+  \label{fig:diagram-deregister-disk}
+\end{figure}
+
+\subsection{User--Disk Peer-to-Peer Flows}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/P2P-commands/1\_write-block.png}
+  \caption{User to disk \texttt{write\_block}}
+  \label{fig:diagram-write-block}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/P2P-commands/2\_read-block.png}
+  \caption{User to disk \texttt{read\_block}}
+  \label{fig:diagram-read-block}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/P2P-commands/3\_fail.png}
+  \caption{User-initiated \texttt{fail} to simulate a disk crash}
+  \label{fig:diagram-fail}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/P2P-commands/4\_read-block-for-recovery.png}
+  \caption{\texttt{read\_block\_for\_recovery} during reconstruction}
+  \label{fig:diagram-read-block-recovery}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/P2P-commands/5\_write-recovered-block.png}
+  \caption{\texttt{write\_recovered\_block} to restore data after failure}
+  \label{fig:diagram-write-recovered-block}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../screenshots/diagram-screenshots/P2P-commands/6\_delete-all.png}
+  \caption{\texttt{delete\_all} for DSS decommissioning cleanup}
+  \label{fig:diagram-delete-all}
+\end{figure}
+
+\section{Screenshots}
+\label{sec:screenshots}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../screenshots/git-screenshots/1\_git-log.png}
   \caption{\texttt{git log} output}
   \label{fig:git-log}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \fbox{\parbox{0.9\linewidth}{I didn't include the GitHub commit history due to it being paywalled by GitHub Plus.}}
+  \fbox{\parbox{0.9\linewidth}{GitHub commit history omitted due to paywall.}}
   \caption{Repository commit history}
   \label{fig:commit-history}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth]{../screenshots/git-screenshots/2025-09-26_git-reflog.png}
+  \includegraphics[width=\linewidth]{../screenshots/git-screenshots/2\_git-reflog.png}
   \caption{\texttt{git reflog} output}
   \label{fig:git-reflog}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth]{../screenshots/git-screenshots/2025-09-26_git-fsck.png}
+  \includegraphics[width=\linewidth]{../screenshots/git-screenshots/4\_git-fsck.png}
   \caption{\texttt{git fsck} output}
   \label{fig:git-fsck}
 \end{figure}

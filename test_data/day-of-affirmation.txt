@@ -1,0 +1,12 @@
+I'm good enough, I'm smart enough, and doggone it, people like me.
+- Stuart Smalley
+
+This is the day of affirmation test file for the DSS project.
+It contains motivational content to inspire confidence.
+
+Remember: You are capable of great things.
+Your distributed storage system is working beautifully.
+XOR parity is your friend.
+Block-interleaved distributed parity saves the day.
+
+The end.

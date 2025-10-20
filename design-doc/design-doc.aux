@@ -85,18 +85,60 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.3}User Client}{12}{subsection.5.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {6}Design Decisions}{12}{section.6}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {7}Port Numbers}{12}{section.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {8}Screenshots}{12}{section.8}\protected@file@percent }
-\newlabel{sec:diagrams}{{8}{12}{Screenshots}{section.8}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \texttt  {git log} output}}{12}{figure.1}\protected@file@percent }
-\newlabel{fig:git-log}{{1}{12}{\texttt {git log} output}{figure.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Repository commit history}}{13}{figure.2}\protected@file@percent }
-\newlabel{fig:commit-history}{{2}{13}{Repository commit history}{figure.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \texttt  {git reflog} output}}{13}{figure.3}\protected@file@percent }
-\newlabel{fig:git-reflog}{{3}{13}{\texttt {git reflog} output}{figure.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \texttt  {git fsck} output}}{13}{figure.4}\protected@file@percent }
-\newlabel{fig:git-fsck}{{4}{13}{\texttt {git fsck} output}{figure.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {9}Video Demo Link and Timestamps}{13}{section.9}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Accessible Link}{13}{section*.45}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Timestamps}{13}{section*.46}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {10}Extended Design for Full Project}{13}{section.10}\protected@file@percent }
-\gdef \@abspage@last{13}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Diagrams}{13}{section.8}\protected@file@percent }
+\newlabel{sec:diagrams}{{8}{13}{Diagrams}{section.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Manager Command Flows}{13}{subsection.8.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Manager happy path for \texttt  {register\_user}}}{13}{figure.1}\protected@file@percent }
+\newlabel{fig:diagram-register-user}{{1}{13}{Manager happy path for \texttt {register\_user}}{figure.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Manager happy path for \texttt  {register\_disk}}}{14}{figure.2}\protected@file@percent }
+\newlabel{fig:diagram-register-disk}{{2}{14}{Manager happy path for \texttt {register\_disk}}{figure.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \texttt  {configure\_dss} validation and response flow}}{14}{figure.3}\protected@file@percent }
+\newlabel{fig:diagram-configure-dss}{{3}{14}{\texttt {configure\_dss} validation and response flow}{figure.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \texttt  {ls} aggregation of DSS metadata}}{15}{figure.4}\protected@file@percent }
+\newlabel{fig:diagram-ls}{{4}{15}{\texttt {ls} aggregation of DSS metadata}{figure.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Copy phase\nobreakspace  {}1: entering the critical section and returning DSS endpoints}}{16}{figure.5}\protected@file@percent }
+\newlabel{fig:diagram-copy}{{5}{16}{Copy phase~1: entering the critical section and returning DSS endpoints}{figure.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Copy phase\nobreakspace  {}2: recording file metadata and releasing the critical section}}{17}{figure.6}\protected@file@percent }
+\newlabel{fig:diagram-copy-complete}{{6}{17}{Copy phase~2: recording file metadata and releasing the critical section}{figure.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces \texttt  {read} phase\nobreakspace  {}1: returning disk endpoints with ownership checks}}{18}{figure.7}\protected@file@percent }
+\newlabel{fig:diagram-read}{{7}{18}{\texttt {read} phase~1: returning disk endpoints with ownership checks}{figure.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces \texttt  {read\_complete}: clearing in-progress tracking}}{19}{figure.8}\protected@file@percent }
+\newlabel{fig:diagram-read-complete}{{8}{19}{\texttt {read\_complete}: clearing in-progress tracking}{figure.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces \texttt  {disk\_failure} phase\nobreakspace  {}1: entering the failure critical section}}{20}{figure.9}\protected@file@percent }
+\newlabel{fig:diagram-disk-failure}{{9}{20}{\texttt {disk\_failure} phase~1: entering the failure critical section}{figure.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces \texttt  {recovery\_complete}: leaving the failure critical section}}{21}{figure.10}\protected@file@percent }
+\newlabel{fig:diagram-recovery-complete}{{10}{21}{\texttt {recovery\_complete}: leaving the failure critical section}{figure.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces \texttt  {decommission\_dss} workflow}}{21}{figure.11}\protected@file@percent }
+\newlabel{fig:diagram-decommission-dss}{{11}{21}{\texttt {decommission\_dss} workflow}{figure.11}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Manager happy path for \texttt  {deregister\_user}}}{22}{figure.12}\protected@file@percent }
+\newlabel{fig:diagram-deregister-user}{{12}{22}{Manager happy path for \texttt {deregister\_user}}{figure.12}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Manager happy path for \texttt  {deregister\_disk}}}{23}{figure.13}\protected@file@percent }
+\newlabel{fig:diagram-deregister-disk}{{13}{23}{Manager happy path for \texttt {deregister\_disk}}{figure.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}User--Disk Peer-to-Peer Flows}{24}{subsection.8.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces User to disk \texttt  {write\_block}}}{24}{figure.14}\protected@file@percent }
+\newlabel{fig:diagram-write-block}{{14}{24}{User to disk \texttt {write\_block}}{figure.14}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces User to disk \texttt  {read\_block}}}{25}{figure.15}\protected@file@percent }
+\newlabel{fig:diagram-read-block}{{15}{25}{User to disk \texttt {read\_block}}{figure.15}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces User-initiated \texttt  {fail} to simulate a disk crash}}{26}{figure.16}\protected@file@percent }
+\newlabel{fig:diagram-fail}{{16}{26}{User-initiated \texttt {fail} to simulate a disk crash}{figure.16}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces \texttt  {read\_block\_for\_recovery} during reconstruction}}{27}{figure.17}\protected@file@percent }
+\newlabel{fig:diagram-read-block-recovery}{{17}{27}{\texttt {read\_block\_for\_recovery} during reconstruction}{figure.17}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces \texttt  {write\_recovered\_block} to restore data after failure}}{28}{figure.18}\protected@file@percent }
+\newlabel{fig:diagram-write-recovered-block}{{18}{28}{\texttt {write\_recovered\_block} to restore data after failure}{figure.18}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {19}{\ignorespaces \texttt  {delete\_all} for DSS decommissioning cleanup}}{29}{figure.19}\protected@file@percent }
+\newlabel{fig:diagram-delete-all}{{19}{29}{\texttt {delete\_all} for DSS decommissioning cleanup}{figure.19}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Screenshots}{29}{section.9}\protected@file@percent }
+\newlabel{sec:screenshots}{{9}{29}{Screenshots}{section.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {20}{\ignorespaces \texttt  {git log} output}}{29}{figure.20}\protected@file@percent }
+\newlabel{fig:git-log}{{20}{29}{\texttt {git log} output}{figure.20}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {21}{\ignorespaces Repository commit history}}{30}{figure.21}\protected@file@percent }
+\newlabel{fig:commit-history}{{21}{30}{Repository commit history}{figure.21}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {22}{\ignorespaces \texttt  {git reflog} output}}{30}{figure.22}\protected@file@percent }
+\newlabel{fig:git-reflog}{{22}{30}{\texttt {git reflog} output}{figure.22}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {23}{\ignorespaces \texttt  {git fsck} output}}{30}{figure.23}\protected@file@percent }
+\newlabel{fig:git-fsck}{{23}{30}{\texttt {git fsck} output}{figure.23}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {10}Video Demo Link and Timestamps}{30}{section.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Accessible Link}{30}{section*.45}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Timestamps}{30}{section*.46}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {11}Extended Design for Full Project}{31}{section.11}\protected@file@percent }
+\gdef \@abspage@last{31}

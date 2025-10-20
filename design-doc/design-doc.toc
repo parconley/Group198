@@ -67,8 +67,11 @@
 \contentsline {subsection}{\numberline {5.3}User Client}{12}{subsection.5.3}%
 \contentsline {section}{\numberline {6}Design Decisions}{12}{section.6}%
 \contentsline {section}{\numberline {7}Port Numbers}{12}{section.7}%
-\contentsline {section}{\numberline {8}Screenshots}{12}{section.8}%
-\contentsline {section}{\numberline {9}Video Demo Link and Timestamps}{13}{section.9}%
-\contentsline {paragraph}{Accessible Link}{13}{section*.45}%
-\contentsline {paragraph}{Timestamps}{13}{section*.46}%
-\contentsline {section}{\numberline {10}Extended Design for Full Project}{13}{section.10}%
+\contentsline {section}{\numberline {8}Diagrams}{13}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Manager Command Flows}{13}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}User--Disk Peer-to-Peer Flows}{24}{subsection.8.2}%
+\contentsline {section}{\numberline {9}Screenshots}{29}{section.9}%
+\contentsline {section}{\numberline {10}Video Demo Link and Timestamps}{30}{section.10}%
+\contentsline {paragraph}{Accessible Link}{30}{section*.45}%
+\contentsline {paragraph}{Timestamps}{30}{section*.46}%
+\contentsline {section}{\numberline {11}Extended Design for Full Project}{31}{section.11}%

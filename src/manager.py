@@ -206,6 +206,10 @@ class ManagerServer:
             self.handle_copy_complete(message_id, body, addr)
             return
 
+        if message_type == "read":
+            self.handle_read(message_id, body, addr)
+            return
+
         if message_type == "deregister_user":
             self.handle_deregister_user(message_id, body, addr)
             return
@@ -641,6 +645,97 @@ class ManagerServer:
             reason=None,
             body={
                 "dss_name": dss_name,
+                "n": dss_record.n,
+                "striping_unit": dss_record.striping_unit,
+                "disks": disks_info
+            }
+        )
+
+    def handle_read(self, message_id: str, body: Any, addr: Tuple[str, int]) -> None:
+        """Handle read request: provide DSS and file information for reading."""
+        if not isinstance(body, dict):
+            self._send_response(
+                addr,
+                message_type="read_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason="body must be an object"
+            )
+            return
+
+        required = ["dss_name", "file_name", "user_name"]
+        for key in required:
+            if key not in body:
+                self._send_response(
+                    addr,
+                    message_type="read_response",
+                    message_id=message_id,
+                    status_code="FAILURE",
+                    reason=f"missing field: {key}"
+                )
+                return
+
+        dss_name = body["dss_name"]
+        file_name = body["file_name"]
+        user_name = body["user_name"]
+
+        # Verify DSS exists
+        if dss_name not in self.dss_catalog:
+            logging.info("read FAILURE from %s: DSS '%s' not found", addr, dss_name)
+            self._send_response(
+                addr,
+                message_type="read_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=f"DSS '{dss_name}' does not exist"
+            )
+            return
+
+        # Verify file exists
+        file_key = (dss_name, file_name)
+        if file_key not in self.files:
+            logging.info("read FAILURE from %s: file '%s' not found in DSS '%s'", addr, file_name, dss_name)
+            self._send_response(
+                addr,
+                message_type="read_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=f"File '{file_name}' not found in DSS '{dss_name}'"
+            )
+            return
+
+        dss_record = self.dss_catalog[dss_name]
+        file_record = self.files[file_key]
+
+        # Build disk info list
+        disks_info = []
+        for disk_name in dss_record.disks:
+            disk_record = self.disks[disk_name]
+            disks_info.append({
+                "disk_name": disk_name,
+                "ipv4_address": disk_record.ipv4_address,
+                "command_port": disk_record.command_port
+            })
+
+        logging.info(
+            "read SUCCESS from %s: dss=%s file=%s size=%d",
+            addr,
+            dss_name,
+            file_name,
+            file_record.file_size
+        )
+
+        self._send_response(
+            addr,
+            message_type="read_response",
+            message_id=message_id,
+            status_code="SUCCESS",
+            reason=None,
+            body={
+                "dss_name": dss_name,
+                "file_name": file_name,
+                "file_size": file_record.file_size,
+                "owner": file_record.owner,
                 "n": dss_record.n,
                 "striping_unit": dss_record.striping_unit,
                 "disks": disks_info

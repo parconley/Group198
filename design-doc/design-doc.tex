@@ -8,7 +8,7 @@
 
 \title{DSS Application Design Document}
 \author{Group 198: Parker Conley}
-\date{\today}
+\date{Full Project Submission -- October 19, 2024}
 
 \begin{document}
 \maketitle
@@ -17,19 +17,18 @@
 
 \section{Overview}
 
-This is a design document for a distributed storage system (DSS). It includes the message formats for the implemented commands, the time-space diagrams, the data structures and design decisions, the port numbers, the screenshots, the video demo link and timestamps.
+This document outlines the design of the distributed storage system (DSS). A manager process coordinates and disks, concurrency and state-management decisions, and supporting evidence (diagrams, screenshots, and validation artifacts) required for the project submission.
 
-\section{Message Formats for Implemented Commands}
-This milestone uses a common message envelope for all requests and responses. Individual commands define their own bodies and semantics.
+\section{Messaging Envelope}
+All messages reuse a shared JSON envelope. Individual commands define their own bodies and semantics.
 
-\subsection{Envelope Format (Common to All Messages)}
 \paragraph{Envelope}
 \begin{verbatim}
 {
   "version": 1,
   "message_id": "<role>-<pid>-<timestamp_ms>-<counter>",
   "message_type": "<command_or_response>",
-  "status_code": "SUCCESS | FAILURE (optional on requests)",
+  "status_code": "SUCCESS | FAILURE"   // responses only
   "reason": "Optional explanation on FAILURE",
   "body": { /* command-specific fields */ }
 }
@@ -38,211 +37,388 @@ This milestone uses a common message envelope for all requests and responses. In
 \noindent\textbf{Message ID Format}\par
 \noindent\textbf{Pattern} \texttt{<role>-<pid>-<timestamp\_ms>-<counter>} (e.g., \texttt{user1-4123-1732665001123-00042}).\par
 \begin{tabular}{@{}ll@{}}
-\textbf{Role}: & user name or disk name (e.g., \texttt{manager}, \texttt{user1}, \texttt{diskA}) \\
-\textbf{PID}: & process ID of the sender \\
-\textbf{Timestamp}: & current time in milliseconds \\
-\textbf{Counter}: & incremented each time this process sends a message \\
+\textbf{Role}: & Logical sender (e.g., \texttt{manager}, \texttt{user1}, \texttt{diskF}) \\
+\textbf{PID}: & Process ID of the sender \\
+\textbf{Timestamp}: & Milliseconds since epoch \\
+\textbf{Counter}: & Zero-padded integer incremented per message \\
 \end{tabular}
 
-\noindent\textbf{Purpose}: match requests and responses, enable retries on UDP, deduplicate requests, and simplify logging.
+\noindent\textbf{Purpose}: match requests to responses, support retry logic on UDP, deduplicate packets, and produce traceable log entries.
 
-\clearpage
+\section{Manager Protocol}
+The manager listens on a single UDP port and accepts nine commands. Responses always mirror the request \texttt{message\_id}. Every handler performs input validation and returns \texttt{status\_code} + \texttt{reason} on failure. This section summarizes the request/response bodies and the most important error paths; diagrams in Section~\ref{sec:diagrams} visualize happy paths.
+
 \subsection{Command: \texttt{register\_user}}
-\noindent\textbf{Purpose}\par
-\medskip
-\noindent Register a user process with the manager.
+\paragraph{Purpose} Register a user process and reserve its management/command ports.
+
 \paragraph{Request}
 \begin{verbatim}
 {
   "version": 1,
-  "message_id": "user1-4123-1732665001123-00001",
+  "message_id": "Alice-4123-1732665001123-00001",
   "message_type": "register_user",
   "body": {
-    "user_name": "User1",
+    "user_name": "Alice",
     "ipv4_address": "192.0.2.10",
-    "management_port": 2101,
-    "command_port": 2102
+    "management_port": 21213,
+    "command_port": 21214
   }
 }
 \end{verbatim}
-\paragraph{Response}
+
+\paragraph{Successful Response}
 \begin{verbatim}
 {
   "version": 1,
-  "message_id": "user1-4123-1732665001123-00001",
+  "message_id": "Alice-4123-1732665001123-00001",
   "message_type": "register_user_response",
   "status_code": "SUCCESS",
   "reason": null
 }
 \end{verbatim}
 
-\begin{figure}[H]
-  \centering
-  \textbf{Time--Space Diagram}
-  \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/register-user.png}
-  \caption{Time-Space diagram for \texttt{register\_user}}
-  \label{fig:ts-register-user}
-\end{figure}
+\paragraph{Common Failure Reasons}
+\begin{itemize}
+  \item User name already registered or not alphabetic (\texttt{reason}: \texttt{"user\_name must contain only alphabetic characters"}).
+  \item Ports outside the group range or already claimed (\texttt{reason}: \texttt{"management\_port must be in range 21200-21299"}).
+  \item Malformed JSON or missing body fields.
+\end{itemize}
 
-\clearpage
 \subsection{Command: \texttt{register\_disk}}
-\noindent\textbf{Purpose}\par
-\medskip
-\noindent Register a disk process with the manager.
+\paragraph{Purpose} Register a disk process and mark it available for assignment.
+
 \paragraph{Request}
 \begin{verbatim}
 {
   "version": 1,
-  "message_id": "diskA-6123-1732665001567-00001",
+  "message_id": "DiskC-6123-1732665001567-00001",
   "message_type": "register_disk",
   "body": {
-    "disk_name": "DiskA",
+    "disk_name": "DiskC",
     "ipv4_address": "192.0.2.11",
-    "management_port": 2201,
-    "command_port": 2202
+    "management_port": 21205,
+    "command_port": 21206
   }
 }
 \end{verbatim}
-\paragraph{Response}
+
+\paragraph{Successful Response}
 \begin{verbatim}
 {
   "version": 1,
-  "message_id": "diskA-6123-1732665001567-00001",
+  "message_id": "DiskC-6123-1732665001567-00001",
   "message_type": "register_disk_response",
-  "status_code": "SUCCESS"
+  "status_code": "SUCCESS",
+  "body": {
+    "state": "Free"
+  }
 }
 \end{verbatim}
 
-\begin{figure}[H]
-  \centering
-  \textbf{Time--Space Diagram}
-  \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/register-disk.png}
-  \caption{Time--space diagram for \texttt{register\_disk}}
-  \label{fig:ts-register-disk}
-\end{figure}
+\paragraph{Common Failure Reasons}
+\begin{itemize}
+  \item Disk name already in use or not alphabetic.
+  \item Management/command ports invalid or duplicate.
+  \item JSON parsing/validation errors identical to \texttt{register\_user}.
+\end{itemize}
 
-\clearpage
 \subsection{Command: \texttt{configure\_dss}}
-\noindent\textbf{Purpose}\par
-\medskip
-\noindent Configure a DSS from available disks.
+\paragraph{Purpose} Create a new DSS by selecting $n$ free disks and reserving them for the requesting user.
+
 \paragraph{Request}
 \begin{verbatim}
 {
   "version": 1,
-  "message_id": "user1-4123-1732665002001-00002",
+  "message_id": "Alice-4123-1732665002001-00002",
   "message_type": "configure_dss",
   "body": {
-    "dss_name": "DSS1",
-    "number_of_disks": 3,
-    "striping_unit_bytes": 1024
+    "user_name": "Alice",
+    "dss_name": "FirstDSS",
+    "n": 3,
+    "striping_unit": 1024
   }
 }
 \end{verbatim}
-\paragraph{Response}
+
+\paragraph{Successful Response}
 \begin{verbatim}
 {
   "version": 1,
-  "message_id": "user1-4123-1732665002001-00002",
+  "message_id": "Alice-4123-1732665002001-00002",
   "message_type": "configure_dss_response",
   "status_code": "SUCCESS",
   "body": {
-    "dss_name": "DSS1",
-    "disk_order": ["DiskA", "DiskB", "DiskC"],
-    "striping_unit_bytes": 1024
+    "dss_name": "FirstDSS",
+    "n": 3,
+    "striping_unit": 1024,
+    "disks": ["DiskD", "DiskE", "DiskF"]
   }
 }
 \end{verbatim}
 
-\begin{figure}[H]
-  \centering
-  \textbf{Time--Space Diagram}
-  \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/configure-dss.png}
-  \caption{Time--space diagram for \texttt{configure\_dss}}
-  \label{fig:ts-configure-dss}
-\end{figure}
+\paragraph{Common Failure Reasons}
+\begin{itemize}
+  \item Requested user is not registered.
+  \item $n < 3$, striping unit not a power of two between 128~B and 1~MiB, or insufficient free disks. 
+  \item DSS name already exists.
+\end{itemize}
 
-\clearpage
+\subsection{Command: \texttt{ls}}
+\paragraph{Purpose} Enumerate every configured DSS and the files the manager knows about.
+
+\paragraph{Request} \texttt{\{"message\_type": "ls", "body": \{\}\}}.
+
+\paragraph{Successful Response (truncated example)}
+\begin{verbatim}
+{
+  "message_type": "ls_response",
+  "status_code": "SUCCESS",
+  "body": {
+    "dss_list": [
+      {
+        "dss_name": "FirstDSS",
+        "n": 3,
+        "striping_unit": 1024,
+        "disks": ["DiskD", "DiskE", "DiskF"],
+        "files": [
+          {"file_name": "day-of-affirmation.txt",
+           "file_size": 392,
+           "owner": "Alice"}
+        ]
+      }
+    ]
+  }
+}
+\end{verbatim}
+
+\paragraph{Common Failure Reasons} If no DSS is configured the manager responds with \texttt{status\_code="FAILURE"} and \texttt{reason="No DSS is configured"}.
+
+\subsection{Command: \texttt{copy}}
+\paragraph{Purpose} Begin a two-phase copy operation. Phase~1 returns the DSS parameters and acquires a critical section so only one copy per DSS runs at a time.
+
+\paragraph{Request}
+\begin{verbatim}
+{
+  "message_type": "copy",
+  "body": {
+    "file_name": "wizard-of-oz.txt",
+    "file_size": 1238,
+    "owner": "Alice"
+  }
+}
+\end{verbatim}
+
+\paragraph{Successful Response}
+\begin{verbatim}
+{
+  "message_type": "copy_response",
+  "status_code": "SUCCESS",
+  "body": {
+    "dss_name": "FirstDSS",
+    "n": 3,
+    "striping_unit": 1024,
+    "disks": [
+      {"disk_name": "DiskD", "ipv4_address": "192.0.2.21", "command_port": 21208},
+      {"disk_name": "DiskE", "ipv4_address": "192.0.2.22", "command_port": 21210},
+      {"disk_name": "DiskF", "ipv4_address": "192.0.2.23", "command_port": 21212}
+    ]
+  }
+}
+\end{verbatim}
+
+\paragraph{Common Failure Reasons}
+\begin{itemize}
+  \item No DSS configured yet.
+  \item Owner not registered.
+  \item Another copy already in progress for the target DSS (\texttt{reason}: \texttt{"Copy operation already in progress for DSS 'FirstDSS'"}). The handler uses \texttt{self.in\_progress\_copy} to enforce this critical section.
+\end{itemize}
+
+\subsection{Command: \texttt{copy\_complete}}
+\paragraph{Purpose} Complete the copy transaction by recording the file metadata and releasing the critical section.
+
+\paragraph{Request}
+\begin{verbatim}
+{
+  "message_type": "copy_complete",
+  "body": {
+    "dss_name": "FirstDSS",
+    "file_name": "wizard-of-oz.txt",
+    "file_size": 1238,
+    "owner": "Alice"
+  }
+}
+\end{verbatim}
+
+\paragraph{Successful Response} \texttt{status\_code="SUCCESS"} with no body.
+
+\paragraph{Common Failure Reasons}
+\begin{itemize}
+  \item No copy currently in progress for the named DSS (e.g., counterparty crashed before phase~2).
+  \item Missing or malformed fields.
+\end{itemize}
+
+\subsection{Command: \texttt{read}}
+\paragraph{Purpose} Provide the caller with all metadata required to read a file from a DSS.
+
+\paragraph{Request}
+\begin{verbatim}
+{
+  "message_type": "read",
+  "body": {
+    "dss_name": "FirstDSS",
+    "file_name": "wizard-of-oz.txt",
+    "user_name": "Alice"
+  }
+}
+\end{verbatim}
+
+\paragraph{Successful Response}
+\begin{verbatim}
+{
+  "message_type": "read_response",
+  "status_code": "SUCCESS",
+  "body": {
+    "dss_name": "FirstDSS",
+    "file_name": "wizard-of-oz.txt",
+    "file_size": 1238,
+    "owner": "Alice",
+    "n": 3,
+    "striping_unit": 1024,
+    "disks": [
+      {"disk_name": "DiskD", "ipv4_address": "192.0.2.21", "command_port": 21208},
+      {"disk_name": "DiskE", "ipv4_address": "192.0.2.22", "command_port": 21210},
+      {"disk_name": "DiskF", "ipv4_address": "192.0.2.23", "command_port": 21212}
+    ]
+  }
+}
+\end{verbatim}
+
+\paragraph{Common Failure Reasons}
+\begin{itemize}
+  \item DSS does not exist.
+  \item File absent from the DSS catalog.
+  \item Ownership mismatch (\texttt{reason}: \texttt{"Permission denied: file 'wizard-of-oz.txt' is owned by 'Alice', not 'Bob'"}). This guards cross-user reads.
+\end{itemize}
+
 \subsection{Command: \texttt{deregister\_user}}
-\noindent\textbf{Purpose}\par
-\medskip
-\noindent Deregister a user process from the manager.
-\paragraph{Request}
-\begin{verbatim}
-{
-  "version": 1,
-  "message_id": "user1-4123-1732665002500-00003",
-  "message_type": "deregister_user",
-  "body": {
-    "user_name": "User1"
-  }
-}
-\end{verbatim}
-\paragraph{Response}
-\begin{verbatim}
-{
-  "version": 1,
-  "message_id": "user1-4123-1732665002500-00003",
-  "message_type": "deregister_user_response",
-  "status_code": "SUCCESS"
-}
-\end{verbatim}
+\paragraph{Purpose} Remove a user and free its claimed ports once all DSS operations are complete.
 
-\begin{figure}[H]
-  \centering
-  \textbf{Time--Space Diagram}
-  \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/deregister_user.png}
-  \caption{Time--space diagram for \texttt{deregister\_user}}
-  \label{fig:ts-deregister-user}
-\end{figure}
+\paragraph{Request} \texttt{\{"message\_type": "deregister\_user", "body": \{"user\_name": "Alice"\}\}}.
+
+\paragraph{Successful Response} \texttt{status\_code="SUCCESS"}; the manager deletes the record and clears both ports from \texttt{claimed\_ports}.
+
+\paragraph{Common Failure Reasons} Attempting to deregister a user that was never registered or providing invalid JSON.
+
+\subsection{Command: \texttt{deregister\_disk}}
+\paragraph{Purpose} Remove a disk when it is no longer part of a DSS.
+
+\paragraph{Request} \texttt{\{"message\_type": "deregister\_disk", "body": \{"disk\_name": "DiskD"\}\}}.
+
+\paragraph{Successful Response} \texttt{status\_code="SUCCESS"}; the disk is removed from the catalog and its ports are cleared.
+
+\paragraph{Common Failure Reasons}
+\begin{itemize}
+  \item Disk never registered.
+  \item Disk still belongs to an active DSS (\texttt{state != "Free"}), resulting in \texttt{reason="disk 'DiskD' is currently part of DSS 'FirstDSS'"}.
+\end{itemize}
 
 \clearpage
-\subsection{Command: \texttt{deregister\_disk}}
-\noindent\textbf{Purpose}\par
-\medskip
-\noindent Deregister a disk process from the manager.
-\paragraph{Request}
+\section{Peer-to-Peer Messaging Between Users and Disks}
+User processes communicate directly with disk command ports during copy, read, failure, and recovery workflows. Requests are sent as newline-delimited JSON, responses include the shared envelope fields, and all binary payloads are base64-encoded.
+
+\subsection{\texttt{write\_block} (User to Disk)}
+\paragraph{Purpose} Persist a single data or parity block while copying a file.
 \begin{verbatim}
 {
-  "version": 1,
-  "message_id": "diskA-6123-1732665002700-00004",
-  "message_type": "deregister_disk",
+  "message_type": "write_block",
   "body": {
-    "disk_name": "DiskA"
+    "dss_name": "FirstDSS",
+    "file_name": "wizard-of-oz.txt",
+    "file_size": 1238,
+    "owner": "Alice",
+    "stripe_number": 0,
+    "block_type": "data",
+    "block_data_base64": "<...>"
   }
 }
 \end{verbatim}
-\paragraph{Response}
-\begin{verbatim}
-{
-  "version": 1,
-  "message_id": "diskA-6123-1732665002700-00004",
-  "message_type": "deregister_disk_response",
-  "status_code": "SUCCESS"
-}
-\end{verbatim}
+Disks reply with \texttt{write\_block\_response} and either \texttt{SUCCESS} or an explanatory failure such as \texttt{"Block size mismatch"} or \texttt{"Disk full"}. Each stripe launches $n$ threads (one per disk), enabling parallel writes.
 
-\begin{figure}[H]
-  \centering
-  \textbf{Time--Space Diagram}
-  \includegraphics[width=0.95\linewidth]{../screenshots/diagram-screenshots/deregister-disk.png}
-  \caption{Time--space diagram for \texttt{deregister\_disk}}
-  \label{fig:ts-deregister-disk}
-\end{figure}
+\subsection{\texttt{read\_block} (User to Disk)}
+\paragraph{Purpose} Fetch a block during a read operation. Successful responses include \texttt{block\_type} and \texttt{block\_data\_base64}. The user decodes the payload, optionally injects a single-bit error based on the configured probability, and validates parity before accepting the stripe.
+
+\subsection{\texttt{fail} (User to Disk)}
+\paragraph{Purpose} Simulate a disk crash during the failure-and-recovery scenario. The disk deletes every block in the named DSS and reports the number of removed blocks via \texttt{blocks\_deleted}.
+
+\subsection{\texttt{read\_block\_for\_recovery} (User to Surviving Disks)}
+\paragraph{Purpose} Read surviving blocks for a given stripe when rebuilding a failed disk. The request structure matches \texttt{read\_block}; the semantics remind the disk that the call is part of recovery logging.
+
+\subsection{\texttt{write\_recovered\_block} (User to Failed Disk)}
+\paragraph{Purpose} Write reconstructed data or parity back to the failed disk. The body mirrors \texttt{write\_block} except the \texttt{block\_type} is derived from the parity-rotation algorithm during recovery.
+
+\subsection{\texttt{delete\_all} (User to Disk)}
+\paragraph{Purpose} Instruct disks to purge all blocks for a DSS while decommissioning. Responses return both \texttt{blocks\_deleted} and \texttt{files\_deleted}.
+
+\subsection{Threading, Timeouts, and Reliability}
+\begin{itemize}
+  \item The user client binds a UDP socket to its command port and spawns $n$ threads per stripe for reads and writes. A thread-safe list collects outcomes before parity validation.
+  \item Each P2P exchange uses the same timeout and retry configuration as manager messages. Retries default to zero, but the CLI flags can raise them to recover from packet loss.
+  \item Binary blocks are base64-encoded to keep messages UTF-8 safe. Padding with \texttt{0x00} octets ensures every block is exactly \texttt{striping\_unit} bytes prior to encoding.
+  \item Parity is computed with \texttt{compute\_xor\_parity} and rotates via \texttt{parity\_disk = n - ((stripe\_number \% n) + 1)}; both routines live in \texttt{user.py}.
+  \item During reads the user injects a random bit flip with probability $p$ (0--100\%). If parity fails the entire stripe is re-read, allowing the XOR check to confirm correctness.
+\end{itemize}
+
+\section{State Management and Data Structures}
+Robust state tracking is required across the manager, disks, and users to support concurrent operations and recovery.
+
+\subsection{Manager State}
+\begin{itemize}
+  \item \texttt{users}: maps user name to management/command ports and IP address.
+  \item \texttt{disks}: records disk metadata, including current state (\texttt{Free} vs.~\texttt{InDSS}) and ownership.
+  \item \texttt{dss\_catalog}: stores striping parameters and disk assignments for each DSS.
+  \item \texttt{files}: maps \texttt{(dss\_name, file\_name)} to size and owner; populated after \texttt{copy\_complete}.
+  \item \texttt{in\_progress\_copy}: protects each DSS with a single copy critical section. The manager refuses additional \texttt{copy} requests until \texttt{copy\_complete} clears the value.
+  \item \texttt{claimed\_ports} and \texttt{disk\_membership}: prevent port reuse and track which disks belong to which DSS for deregistration checks.
+\end{itemize}
+All handlers validate protocol version, message IDs, and JSON types before modifying state. Failure paths always return \texttt{status\_code="FAILURE"} with a descriptive \texttt{reason}.
+
+\subsection{Disk Storage}
+Each disk instantiates a \texttt{DiskStorage} object (see \texttt{disk\_storage.py}). The class provides thread-safe methods backed by a single lock:
+\begin{itemize}
+  \item \texttt{blocks}: dictionary keyed by \texttt{(dss\_name, file\_name, stripe\_number)} storing immutable \texttt{BlockRecord} instances.
+  \item \texttt{files}: dictionary keyed by \texttt{(dss\_name, file\_name)} returning \texttt{FileMetadata} records that summarize file ownership, size, and per-disk stripe count.
+  \item \texttt{dss\_files}: maps each DSS to the set of files present on the disk, enabling efficient \texttt{delete\_all} and failure cleanup.
+  \item \texttt{write\_block} and \texttt{write\_recovered\_block} update all indices atomically inside the lock, ensuring consistent state even with concurrent threads.
+  \item \texttt{get\_storage\_stats} and \texttt{get\_all\_files} expose diagnostics used by validation scripts.
+\end{itemize}
+Using composite keys avoids nested dictionaries and simplifies deletions. All block payloads are stored as raw bytes so XOR reconstruction and parity checks remain efficient.
+
+\subsection{User Client}
+The user CLI encapsulates several responsibilities:
+\begin{itemize}
+  \item Maintaining helper functions such as \texttt{compute\_xor\_parity}, \texttt{reconstruct\_missing\_block}, and \texttt{calculate\_parity\_disk}.
+  \item Spawning per-stripe worker threads for copy/read/recovery, collecting results in shared arrays, and coordinating retries on parity failure.
+  \item Translating filesystem operations into messages (e.g., reading files into stripes, padding, base64 encoding).
+  \item Recording critical operations in logs so the validation scripts and grading steps can trace behavior.
+  \item Managing recovery bookkeeping: determining which disk failed, orchestrating reads from surviving disks, reconstructing parity, and writing recovered blocks.
+\end{itemize}
+Thread lifetimes are carefully scoped so the user relinquishes the command port socket after each command finishes, preventing clashes with subsequent operations.
 
 \section{Design Decisions}
 
 Key design decisions include:
 \begin{itemize}
   \item Using a common message envelope for all messages.
-  \item Using a shared message ID pattern for all messages.
-  \item Using standardized response/request message formats for all commands.
+  \item Enforcing critical sections for copy operations and ownership checks on \texttt{read}.
+  \item Distributing parity with rotating XOR blocks so any single disk failure can be recovered.
+  \item Keeping disk storage in memory with composite-key dictionaries for fast lookup and deletion.
 \end{itemize}
 
 \section{Port Numbers}
 Because I am Group 198, the port numbers are 21200–21299 (inclusive).
 
 \section{Screenshots}
+\label{sec:diagrams}
 \begin{figure}[H]
   \centering
   \includegraphics[width=\linewidth]{../screenshots/git-screenshots/2025-09-26_git-log.png}

@@ -707,6 +707,24 @@ class ManagerServer:
         dss_record = self.dss_catalog[dss_name]
         file_record = self.files[file_key]
 
+        # CRITICAL: Verify ownership - user can only read their own files
+        if file_record.owner != user_name:
+            logging.info(
+                "read FAILURE from %s: user '%s' cannot read file '%s' owned by '%s'",
+                addr,
+                user_name,
+                file_name,
+                file_record.owner
+            )
+            self._send_response(
+                addr,
+                message_type="read_response",
+                message_id=message_id,
+                status_code="FAILURE",
+                reason=f"Permission denied: file '{file_name}' is owned by '{file_record.owner}', not '{user_name}'"
+            )
+            return
+
         # Build disk info list
         disks_info = []
         for disk_name in dss_record.disks:
@@ -718,11 +736,12 @@ class ManagerServer:
             })
 
         logging.info(
-            "read SUCCESS from %s: dss=%s file=%s size=%d",
+            "read SUCCESS from %s: dss=%s file=%s size=%d owner=%s",
             addr,
             dss_name,
             file_name,
-            file_record.file_size
+            file_record.file_size,
+            file_record.owner
         )
 
         self._send_response(

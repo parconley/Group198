@@ -1,26 +1,74 @@
-\contentsline {section}{\numberline {1}Overview}{2}{section.1}%
-\contentsline {section}{\numberline {2}Message Formats for Implemented Commands}{2}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Envelope Format (Common to All Messages)}{2}{subsection.2.1}%
-\contentsline {paragraph}{Envelope}{2}{section*.2}%
-\contentsline {subsection}{\numberline {2.2}Command: \texttt {register\_user}}{3}{subsection.2.2}%
-\contentsline {paragraph}{Request}{3}{section*.3}%
-\contentsline {paragraph}{Response}{3}{section*.4}%
-\contentsline {subsection}{\numberline {2.3}Command: \texttt {register\_disk}}{5}{subsection.2.3}%
-\contentsline {paragraph}{Request}{5}{section*.5}%
-\contentsline {paragraph}{Response}{5}{section*.6}%
-\contentsline {subsection}{\numberline {2.4}Command: \texttt {configure\_dss}}{7}{subsection.2.4}%
-\contentsline {paragraph}{Request}{7}{section*.7}%
-\contentsline {paragraph}{Response}{7}{section*.8}%
-\contentsline {subsection}{\numberline {2.5}Command: \texttt {deregister\_user}}{9}{subsection.2.5}%
-\contentsline {paragraph}{Request}{9}{section*.9}%
-\contentsline {paragraph}{Response}{9}{section*.10}%
-\contentsline {subsection}{\numberline {2.6}Command: \texttt {deregister\_disk}}{10}{subsection.2.6}%
-\contentsline {paragraph}{Request}{10}{section*.11}%
-\contentsline {paragraph}{Response}{10}{section*.12}%
-\contentsline {section}{\numberline {3}Design Decisions}{11}{section.3}%
-\contentsline {section}{\numberline {4}Port Numbers}{11}{section.4}%
-\contentsline {section}{\numberline {5}Screenshots}{11}{section.5}%
-\contentsline {section}{\numberline {6}Video Demo Link and Timestamps}{12}{section.6}%
-\contentsline {paragraph}{Accessible Link}{12}{section*.13}%
-\contentsline {paragraph}{Timestamps}{12}{section*.14}%
-\contentsline {section}{\numberline {7}Extended Design for Full Project}{12}{section.7}%
+\contentsline {section}{\numberline {1}Overview}{3}{section.1}%
+\contentsline {section}{\numberline {2}Messaging Envelope}{3}{section.2}%
+\contentsline {paragraph}{Envelope}{3}{section*.2}%
+\contentsline {section}{\numberline {3}Manager Protocol}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Command: \texttt {register\_user}}{3}{subsection.3.1}%
+\contentsline {paragraph}{Purpose}{3}{section*.3}%
+\contentsline {paragraph}{Request}{3}{section*.4}%
+\contentsline {paragraph}{Successful Response}{4}{section*.5}%
+\contentsline {paragraph}{Common Failure Reasons}{4}{section*.6}%
+\contentsline {subsection}{\numberline {3.2}Command: \texttt {register\_disk}}{4}{subsection.3.2}%
+\contentsline {paragraph}{Purpose}{4}{section*.7}%
+\contentsline {paragraph}{Request}{4}{section*.8}%
+\contentsline {paragraph}{Successful Response}{4}{section*.9}%
+\contentsline {paragraph}{Common Failure Reasons}{5}{section*.10}%
+\contentsline {subsection}{\numberline {3.3}Command: \texttt {configure\_dss}}{5}{subsection.3.3}%
+\contentsline {paragraph}{Purpose}{5}{section*.11}%
+\contentsline {paragraph}{Request}{5}{section*.12}%
+\contentsline {paragraph}{Successful Response}{5}{section*.13}%
+\contentsline {paragraph}{Common Failure Reasons}{5}{section*.14}%
+\contentsline {subsection}{\numberline {3.4}Command: \texttt {ls}}{6}{subsection.3.4}%
+\contentsline {paragraph}{Purpose}{6}{section*.15}%
+\contentsline {paragraph}{Request}{6}{section*.16}%
+\contentsline {paragraph}{Successful Response (truncated example)}{6}{section*.17}%
+\contentsline {paragraph}{Common Failure Reasons}{6}{section*.18}%
+\contentsline {subsection}{\numberline {3.5}Command: \texttt {copy}}{6}{subsection.3.5}%
+\contentsline {paragraph}{Purpose}{6}{section*.19}%
+\contentsline {paragraph}{Request}{6}{section*.20}%
+\contentsline {paragraph}{Successful Response}{7}{section*.21}%
+\contentsline {paragraph}{Common Failure Reasons}{7}{section*.22}%
+\contentsline {subsection}{\numberline {3.6}Command: \texttt {copy\_complete}}{7}{subsection.3.6}%
+\contentsline {paragraph}{Purpose}{7}{section*.23}%
+\contentsline {paragraph}{Request}{7}{section*.24}%
+\contentsline {paragraph}{Successful Response}{7}{section*.25}%
+\contentsline {paragraph}{Common Failure Reasons}{7}{section*.26}%
+\contentsline {subsection}{\numberline {3.7}Command: \texttt {read}}{8}{subsection.3.7}%
+\contentsline {paragraph}{Purpose}{8}{section*.27}%
+\contentsline {paragraph}{Request}{8}{section*.28}%
+\contentsline {paragraph}{Successful Response}{8}{section*.29}%
+\contentsline {paragraph}{Common Failure Reasons}{8}{section*.30}%
+\contentsline {subsection}{\numberline {3.8}Command: \texttt {deregister\_user}}{8}{subsection.3.8}%
+\contentsline {paragraph}{Purpose}{8}{section*.31}%
+\contentsline {paragraph}{Request}{8}{section*.32}%
+\contentsline {paragraph}{Successful Response}{8}{section*.33}%
+\contentsline {paragraph}{Common Failure Reasons}{9}{section*.34}%
+\contentsline {subsection}{\numberline {3.9}Command: \texttt {deregister\_disk}}{9}{subsection.3.9}%
+\contentsline {paragraph}{Purpose}{9}{section*.35}%
+\contentsline {paragraph}{Request}{9}{section*.36}%
+\contentsline {paragraph}{Successful Response}{9}{section*.37}%
+\contentsline {paragraph}{Common Failure Reasons}{9}{section*.38}%
+\contentsline {section}{\numberline {4}Peer-to-Peer Messaging Between Users and Disks}{10}{section.4}%
+\contentsline {subsection}{\numberline {4.1}\texttt {write\_block} (User to Disk)}{10}{subsection.4.1}%
+\contentsline {paragraph}{Purpose}{10}{section*.39}%
+\contentsline {subsection}{\numberline {4.2}\texttt {read\_block} (User to Disk)}{10}{subsection.4.2}%
+\contentsline {paragraph}{Purpose}{10}{section*.40}%
+\contentsline {subsection}{\numberline {4.3}\texttt {fail} (User to Disk)}{10}{subsection.4.3}%
+\contentsline {paragraph}{Purpose}{10}{section*.41}%
+\contentsline {subsection}{\numberline {4.4}\texttt {read\_block\_for\_recovery} (User to Surviving Disks)}{10}{subsection.4.4}%
+\contentsline {paragraph}{Purpose}{10}{section*.42}%
+\contentsline {subsection}{\numberline {4.5}\texttt {write\_recovered\_block} (User to Failed Disk)}{10}{subsection.4.5}%
+\contentsline {paragraph}{Purpose}{10}{section*.43}%
+\contentsline {subsection}{\numberline {4.6}\texttt {delete\_all} (User to Disk)}{11}{subsection.4.6}%
+\contentsline {paragraph}{Purpose}{11}{section*.44}%
+\contentsline {subsection}{\numberline {4.7}Threading, Timeouts, and Reliability}{11}{subsection.4.7}%
+\contentsline {section}{\numberline {5}State Management and Data Structures}{11}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Manager State}{11}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Disk Storage}{11}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}User Client}{12}{subsection.5.3}%
+\contentsline {section}{\numberline {6}Design Decisions}{12}{section.6}%
+\contentsline {section}{\numberline {7}Port Numbers}{12}{section.7}%
+\contentsline {section}{\numberline {8}Screenshots}{12}{section.8}%
+\contentsline {section}{\numberline {9}Video Demo Link and Timestamps}{13}{section.9}%
+\contentsline {paragraph}{Accessible Link}{13}{section*.45}%
+\contentsline {paragraph}{Timestamps}{13}{section*.46}%
+\contentsline {section}{\numberline {10}Extended Design for Full Project}{13}{section.10}%

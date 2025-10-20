@@ -1,10 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1758950633 "design-doc.tex" "design-doc.pdf" "design-doc" 1758950635
-  "../screenshots/diagram-screenshots/configure-dss.png" 1758912321 91999 4db4229c5c0b821bc5f2cc4162f3b806 ""
-  "../screenshots/diagram-screenshots/deregister-disk.png" 1758912352 73490 35ac3f1660bff1052c098fb04f06490c ""
-  "../screenshots/diagram-screenshots/deregister_user.png" 1758912342 75401 df85b190a529dd954ea10ba5b671fcb1 ""
-  "../screenshots/diagram-screenshots/register-disk.png" 1758912308 83893 870cefd00900fc876ee2a497a5c40776 ""
-  "../screenshots/diagram-screenshots/register-user.png" 1758912291 82485 aeb33b02633a22bd37075174c29312ae ""
+["pdflatex"] 1760934718 "design-doc.tex" "design-doc.pdf" "design-doc" 1760934720
   "../screenshots/git-screenshots/2025-09-26_git-fsck.png" 1758936465 12772 c496c4213e976544c47755916f561cc7 ""
   "../screenshots/git-screenshots/2025-09-26_git-log.png" 1758936423 66275 184a16dc3b0886d11b5d56047b82c773 ""
   "../screenshots/git-screenshots/2025-09-26_git-reflog.png" 1758936446 49175 aace2569243b61ad570ba0b6fb9db585 ""
@@ -30,9 +25,11 @@
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmtt12.tfm" 1136768653 772 9a936b7f5e2ff0557fce0f62822f0bbf ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb" 1248133631 34811 78b52f49e893bcba91bd7581cdc144c0 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb" 1248133631 32080 340ef9bf63678554ee606688e7b5339d ""
+  "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb" 1248133631 36299 5f9df58c2139e7edcf37c8fca4bd384d ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1248133631 35752 024fb6c41858982481f6968b5fc26508 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb" 1248133631 32722 d7379af29a190c3f453aba36302ff5a9 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb" 1248133631 32362 179c33bbf43f19adbb3825bb4e36e57a ""
+  "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1248133631 32569 5e5ddc8df908dea60932f3c484a54c0d ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb" 1248133631 31099 c85edf1dd5b9e826d67c9c7293b6786c ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb" 1248133631 24252 1e4e051947e12dfb50fee0b7f4e26e3a ""
   "/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii" 1461363279 71627 94eb9990bed73c364d7f53f960cc8c5b ""
@@ -85,10 +82,10 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1644012257 39432 7155514e09a3d69036fac785183a21c2 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1746510477 128028 f533b797fba58d231669ea19e894e23e ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1746510863 1405643 62f5bfd0c136cdc989c6c17826d0d6d4 ""
-  "design-doc.aux" 1758950635 5769 d6f969e6a9ad8625f24885384e0b876a "pdflatex"
-  "design-doc.out" 1758950635 2255 fb07132550ec6922bddde52a19c90444 "pdflatex"
-  "design-doc.tex" 1758950604 8878 8691d3d3e30c18c49088c9f4f853a6a7 ""
-  "design-doc.toc" 1758950635 1841 51aab20ef5ac94b6b2b55ae68d75db6c "pdflatex"
+  "design-doc.aux" 1760934720 9912 8d924f7aaa50aa57ce332fb13d2dda11 "pdflatex"
+  "design-doc.out" 1760934720 5065 79ed85d1d5aa7221250b3da0f5450ad4 "pdflatex"
+  "design-doc.tex" 1760934711 19247 f83ef178d0a263f6bc9f6a5237cacdfe ""
+  "design-doc.toc" 1760934720 5269 50e24b8a8299fd74ec4eadd58f36b68d "pdflatex"
   (generated)
   "design-doc.aux"
   "design-doc.log"

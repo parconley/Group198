@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.5.5)  26 SEP 2025 22:23
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.5.5)  19 OCT 2025 21:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -330,7 +330,7 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 15.
  (./design-doc.toc
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 3.
+(Font)              <10.95> on input line 5.
 )
 \tf@toc=\write4
 \openout4 = `design-doc.toc'.
@@ -339,113 +339,136 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 50.
-<../screenshots/diagram-screenshots/register-user.png, id=86, 1052.93375pt x 89
-1.33pt>
-File: ../screenshots/diagram-screenshots/register-user.png Graphic file (type p
-ng)
-<use ../screenshots/diagram-screenshots/register-user.png>
-Package pdftex.def Info: ../screenshots/diagram-screenshots/register-user.png  
-used on input line 82.
-(pdftex.def)             Requested size: 446.26582pt x 377.76979pt.
- [3
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 51.
+ [3]
+Overfull \hbox (30.59846pt too wide) in paragraph at lines 82--83
+[]\OT1/cmr/m/n/10.95 User name al-ready reg-is-tered or not al-pha-betic (\OT1/
+cmtt/m/n/10.95 reason\OT1/cmr/m/n/10.95 : \OT1/cmtt/m/n/10.95 "user[]name must 
+contain only alphabetic
+ []
 
-] [4 <../screenshots/diagram-screenshots/register-user.png (PNG copy)>]
-<../screenshots/diagram-screenshots/register-disk.png, id=99, 1154.3125pt x 843
-.15pt>
-File: ../screenshots/diagram-screenshots/register-disk.png Graphic file (type p
-ng)
-<use ../screenshots/diagram-screenshots/register-disk.png>
-Package pdftex.def Info: ../screenshots/diagram-screenshots/register-disk.png  
-used on input line 119.
-(pdftex.def)             Requested size: 446.26582pt x 325.97105pt.
- [5
+[4] [5]
+LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
+169.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 169.
 
-] [6 <../screenshots/diagram-screenshots/register-disk.png (PNG copy)>]
-<../screenshots/diagram-screenshots/configure-dss.png, id=111, 1139.25626pt x 8
-88.31876pt>
-File: ../screenshots/diagram-screenshots/configure-dss.png Graphic file (type p
-ng)
-<use ../screenshots/diagram-screenshots/configure-dss.png>
-Package pdftex.def Info: ../screenshots/diagram-screenshots/configure-dss.png  
-used on input line 160.
-(pdftex.def)             Requested size: 446.26582pt x 347.96104pt.
- [7
 
-] [8 <../screenshots/diagram-screenshots/configure-dss.png (PNG copy)>]
-<../screenshots/diagram-screenshots/deregister_user.png, id=124, 1290.8225pt x 
-839.135pt>
-File: ../screenshots/diagram-screenshots/deregister_user.png Graphic file (type
- png)
-<use ../screenshots/diagram-screenshots/deregister_user.png>
-Package pdftex.def Info: ../screenshots/diagram-screenshots/deregister_user.png
-  used on input line 194.
-(pdftex.def)             Requested size: 446.26582pt x 290.10367pt.
- [9
+LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbraceleft' on input line 169.
 
- <../screenshots/diagram-screenshots/deregister_user.png (PNG copy)>]
-<../screenshots/diagram-screenshots/deregister-disk.png, id=132, 1324.95pt x 82
-6.08624pt>
-File: ../screenshots/diagram-screenshots/deregister-disk.png Graphic file (type
- png)
-<use ../screenshots/diagram-screenshots/deregister-disk.png>
-Package pdftex.def Info: ../screenshots/diagram-screenshots/deregister-disk.png
-  used on input line 228.
-(pdftex.def)             Requested size: 446.26582pt x 278.23114pt.
- [10
 
- <../screenshots/diagram-screenshots/deregister-disk.png (PNG copy)>]
-<../screenshots/git-screenshots/2025-09-26_git-log.png, id=140, 1026.83624pt x 
+Overfull \hbox (35.14883pt too wide) in paragraph at lines 194--195
+ []\OT1/cmr/bx/n/10.95 Common Fail-ure Rea-sons[] \OT1/cmr/m/n/10.95 If no DSS 
+is con-fig-ured the man-ager re-sponds with \OT1/cmtt/m/n/10.95 status[]code="F
+AILURE"
+ []
+
+[6]
+Overfull \hbox (1.63737pt too wide) in paragraph at lines 227--227
+[]      \OT1/cmtt/m/n/10.95 {"disk_name": "DiskD", "ipv4_address": "192.0.2.21"
+, "command_port": 21208},[] 
+ []
+
+
+Overfull \hbox (1.63737pt too wide) in paragraph at lines 227--227
+[]      \OT1/cmtt/m/n/10.95 {"disk_name": "DiskE", "ipv4_address": "192.0.2.22"
+, "command_port": 21210},[] 
+ []
+
+[7]
+Overfull \hbox (1.63737pt too wide) in paragraph at lines 294--294
+[]      \OT1/cmtt/m/n/10.95 {"disk_name": "DiskD", "ipv4_address": "192.0.2.21"
+, "command_port": 21208},[] 
+ []
+
+
+Overfull \hbox (1.63737pt too wide) in paragraph at lines 294--294
+[]      \OT1/cmtt/m/n/10.95 {"disk_name": "DiskE", "ipv4_address": "192.0.2.22"
+, "command_port": 21210},[] 
+ []
+
+[8] [9]
+Overfull \hbox (5.40752pt too wide) in paragraph at lines 357--358
+ []\OT1/cmr/bx/n/10.95 Purpose[] \OT1/cmr/m/n/10.95 Write re-con-structed data 
+or par-ity back to the failed disk. The body mir-rors \OT1/cmtt/m/n/10.95 write
+[]block
+ []
+
+[10
+
+]
+Overfull \hbox (17.43497pt too wide) in paragraph at lines 367--368
+[]\OT1/cmr/m/n/10.95 Parity is com-puted with \OT1/cmtt/m/n/10.95 compute[]xor[
+]parity \OT1/cmr/m/n/10.95 and ro-tates via \OT1/cmtt/m/n/10.95 parity[]disk = 
+n - ((stripe[]number
+ []
+
+
+Overfull \hbox (33.5228pt too wide) in paragraph at lines 388--389
+[]\OT1/cmtt/m/n/10.95 blocks\OT1/cmr/m/n/10.95 : dic-tio-nary keyed by \OT1/cmt
+t/m/n/10.95 (dss[]name, file[]name, stripe[]number) \OT1/cmr/m/n/10.95 stor-ing
+ im-mutable \OT1/cmtt/m/n/10.95 BlockRecord
+ []
+
+[11]
+<../screenshots/git-screenshots/2025-09-26_git-log.png, id=251, 1026.83624pt x 
 268.00125pt>
 File: ../screenshots/git-screenshots/2025-09-26_git-log.png Graphic file (type 
 png)
 <use ../screenshots/git-screenshots/2025-09-26_git-log.png>
 Package pdftex.def Info: ../screenshots/git-screenshots/2025-09-26_git-log.png 
- used on input line 248.
+ used on input line 424.
 (pdftex.def)             Requested size: 469.75502pt x 122.60323pt.
-<../screenshots/git-screenshots/2025-09-26_git-reflog.png, id=141, 981.6675pt x
+ [12 <../screenshots/git-screenshots/2025-09-26_git-log.png (PNG copy)>]
+<../screenshots/git-screenshots/2025-09-26_git-reflog.png, id=257, 981.6675pt x
  241.90375pt>
 File: ../screenshots/git-screenshots/2025-09-26_git-reflog.png Graphic file (ty
 pe png)
 <use ../screenshots/git-screenshots/2025-09-26_git-reflog.png>
 Package pdftex.def Info: ../screenshots/git-screenshots/2025-09-26_git-reflog.p
-ng  used on input line 262.
+ng  used on input line 438.
 (pdftex.def)             Requested size: 469.75502pt x 115.75812pt.
-<../screenshots/git-screenshots/2025-09-26_git-fsck.png, id=142, 974.64125pt x 
+<../screenshots/git-screenshots/2025-09-26_git-fsck.png, id=258, 974.64125pt x 
 61.22874pt>
 File: ../screenshots/git-screenshots/2025-09-26_git-fsck.png Graphic file (type
  png)
 <use ../screenshots/git-screenshots/2025-09-26_git-fsck.png>
 Package pdftex.def Info: ../screenshots/git-screenshots/2025-09-26_git-fsck.png
-  used on input line 269.
+  used on input line 445.
 (pdftex.def)             Requested size: 469.75502pt x 29.51091pt.
- [11 <../screenshots/git-screenshots/2025-09-26_git-log.png (PNG copy)> <../scr
-eenshots/git-screenshots/2025-09-26_git-reflog.png (PNG copy)> <../screenshots/
-git-screenshots/2025-09-26_git-fsck.png (PNG copy)>] [12]
+
+[13 <../screenshots/git-screenshots/2025-09-26_git-reflog.png (PNG copy)> <../s
+creenshots/git-screenshots/2025-09-26_git-fsck.png (PNG copy)>]
 (./design-doc.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
 Package rerunfilecheck Info: File `design-doc.out' has not changed.
-(rerunfilecheck)             Checksum: FB07132550EC6922BDDDE52A19C90444;2255.
+(rerunfilecheck)             Checksum: 79ED85D1D5AA7221250B3DA0F5450AD4;5065.
  ) 
 Here is how much of TeX's memory you used:
- 9166 strings out of 480247
- 146750 string characters out of 5896152
- 440681 words of memory out of 5000000
- 26947 multiletter control sequences out of 15000+600000
+ 9197 strings out of 480247
+ 145709 string characters out of 5896152
+ 449452 words of memory out of 5000000
+ 26938 multiletter control sequences out of 15000+600000
  475108 words of font info for 48 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 60i,7n,63p,328b,440s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,7n,63p,424b,470s stack positions out of 5000i,500n,10000p,200000b,80000s
  </home/parker/.texlive2021/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1095.60
 0pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></
 usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/sh
-are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/font
-s/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on design-doc.pdf (12 pages, 657832 bytes).
+are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/te
+xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/font
+s/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmtt12.pfb>
+Output written on design-doc.pdf (13 pages, 287846 bytes).
 PDF statistics:
- 220 PDF objects out of 1000 (max. 8388607)
- 181 compressed objects within 2 object streams
- 59 named destinations out of 1000 (max. 500000)
- 145 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 349 PDF objects out of 1000 (max. 8388607)
+ 308 compressed objects within 4 object streams
+ 103 named destinations out of 1000 (max. 500000)
+ 248 words of extra memory for PDF output out of 10000 (max. 10000000)
 

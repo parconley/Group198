@@ -593,20 +593,31 @@ Because I am Group 198, the port numbers are 21200–21299 (inclusive).
   \item Output of: \texttt{git fsck}
 \end{enumerate}
 
-\section{Video Demo Link and Timestamps}
-\paragraph{Accessible Link} \url{https://youtu.be/xnzJNYWxVww}
-\paragraph{Timestamps}
-\begin{enumerate}
-  \item (a): N/A - Didn't need to compile.
-  \item (b): 0:00 - You can see that I have a CloudLab VM and personal PC running.
-  \item (c): 0:00 - I setup the manager, disks, and users.
-  \item (d): 2:30 - I configure the DSS.
-  \item (e): 3:28 - I try to configure the DSS again, but it fails due to insufficient disks.
-  \item (f): 4:03 - I deregister the disks and users, though the disks cannot deregister becuase they are in use.
-\end{enumerate}
+\section{Video Demo Link}
+\paragraph{Accessible Link} \url{https://youtu.be/FhN6m3gJxTA}
 
-\section{Extended Design for Full Project}
-
-For the next version of this project, I'll need to add commands, add threading, and record another video demo.
+\subsection{Video Timestamps}
+\begin{itemize}
+  \item[(a)] Compiling manager and peer programs: 0:00
+  \item[(b)] Using at least four distinct end-hosts: 0:00
+  \item[(c)] Starting the manager, six disks, and two users that register with the manager: 1:00
+  \item[(d)] Selecting one user to:
+  \begin{itemize}
+    \item[(d.1)] Run \texttt{configure\_dss} for a DSS with $n = 3$: 2:35
+    \item[(d.2)] \texttt{copy} the files \texttt{day-of-affirmation.txt}, \texttt{in-flanders.txt}, and \texttt{tale-of-two-cities.txt}: 3:00
+    \item[(d.3)] List files via \texttt{ls}: 3:30
+    \item[(d.4)] \texttt{read} \texttt{day-of-affirmation.txt}: 3:45
+  \end{itemize}
+  \item[(e)] Having the other user:
+  \begin{itemize}
+    \item[(e.1)] \texttt{configure\_dss} a second DSS with $n = 3$: 4:30
+    \item[(e.2)] \texttt{copy} \texttt{wizard-of-oz.txt} to the second DSS: 4:50
+    \item[(e.3)] Run \texttt{ls}: 5:00
+    \item[(e.4)] Attempt to \texttt{read} \texttt{in-flanders.txt} from the first DSS (must fail due to ownership): 6:30
+  \end{itemize}
+  \item[(f)] Causing a disk failure on one DSS: 6:55
+  \item[(g)] Reading a file from the DSS that experienced the disk failure: 6:55
+  \item[(h)] \texttt{decommission\_dss} for each DSS, deregistering every user and disk, and purposely terminating the manager: 8:00
+\end{itemize}
 
 \end{document}

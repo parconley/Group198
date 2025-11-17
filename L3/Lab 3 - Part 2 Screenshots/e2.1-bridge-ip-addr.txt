@@ -1,0 +1,33 @@
+pconley1@bridge:~$ ip addr show
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 02:f5:bb:ce:09:78 brd ff:ff:ff:ff:ff:ff
+    inet 172.20.3.2/12 metric 1024 brd 172.31.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::f5:bbff:fece:978/64 scope link
+       valid_lft forever preferred_lft forever
+3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel master br0 state UP group default qlen 1000
+    link/ether 02:fb:f6:6f:4f:0d brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::fb:f6ff:fe6f:4f0d/64 scope link
+       valid_lft forever preferred_lft forever
+4: eth2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel master br0 state UP group default qlen 1000
+    link/ether 02:c1:3c:f4:e2:62 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::c1:3cff:fef4:e262/64 scope link
+       valid_lft forever preferred_lft forever
+5: eth3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel master br0 state UP group default qlen 1000
+    link/ether 02:72:6e:99:7f:08 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::72:6eff:fe99:7f08/64 scope link
+       valid_lft forever preferred_lft forever
+6: eth4: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel master br0 state UP group default qlen 1000
+    link/ether 02:d8:61:8b:31:15 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::d8:61ff:fe8b:3115/64 scope link
+       valid_lft forever preferred_lft forever
+7: br0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether f2:b8:a6:73:65:49 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::f0b8:a6ff:fe73:6549/64 scope link
+       valid_lft forever preferred_lft forever

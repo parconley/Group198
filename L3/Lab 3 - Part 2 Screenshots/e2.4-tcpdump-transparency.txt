@@ -1,0 +1,10 @@
+pconley1@bridge:~$ sudo tcpdump -i br0 -e -n icmp -c 4
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on br0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+20:52:56.975179 02:0e:2f:76:d5:6d > 02:03:a9:83:3a:9b, ethertype IPv4 (0x0800), length 98: 10.0.0.100 > 10.0.0.101: ICMP echo request, id 4, seq 1, length 64
+20:52:56.975940 02:03:a9:83:3a:9b > 02:0e:2f:76:d5:6d, ethertype IPv4 (0x0800), length 98: 10.0.0.101 > 10.0.0.100: ICMP echo reply, id 4, seq 1, length 64
+20:52:57.977015 02:0e:2f:76:d5:6d > 02:03:a9:83:3a:9b, ethertype IPv4 (0x0800), length 98: 10.0.0.100 > 10.0.0.101: ICMP echo request, id 4, seq 2, length 64
+20:52:57.977931 02:03:a9:83:3a:9b > 02:0e:2f:76:d5:6d, ethertype IPv4 (0x0800), length 98: 10.0.0.101 > 10.0.0.100: ICMP echo reply, id 4, seq 2, length 64
+4 packets captured
+4 packets received by filter
+0 packets dropped by kernel

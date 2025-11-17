@@ -1,0 +1,6 @@
+pconley1@bridge:~$ sudo brctl show br0
+bridge name	bridge id		STP enabled	interfaces
+br0		8000.f2b8a6736549	no		eth1
+							eth2
+							eth3
+							eth4

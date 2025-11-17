@@ -1,0 +1,19 @@
+pconley1@juliet:~$ ip addr show
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 02:5b:18:c2:e0:d4 brd ff:ff:ff:ff:ff:ff
+    inet 172.20.3.8/12 metric 1024 brd 172.31.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::5b:18ff:fec2:e0d4/64 scope link
+       valid_lft forever preferred_lft forever
+3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 02:03:a9:83:3a:9b brd ff:ff:ff:ff:ff:ff
+    inet 10.0.0.101/24 brd 10.0.0.255 scope global eth1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::3:a9ff:fe83:3a9b/64 scope link
+       valid_lft forever preferred_lft forever

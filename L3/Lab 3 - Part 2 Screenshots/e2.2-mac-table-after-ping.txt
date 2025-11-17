@@ -1,0 +1,12 @@
+pconley1@bridge:~$ sudo brctl showmacs br0
+port no	mac addr		is local?	ageing timer
+  2	02:03:a9:83:3a:9b	no		   1.18
+  1	02:0e:2f:76:d5:6d	no		   1.18
+  3	02:72:6e:99:7f:08	yes		   0.00
+  3	02:72:6e:99:7f:08	yes		   0.00
+  2	02:c1:3c:f4:e2:62	yes		   0.00
+  2	02:c1:3c:f4:e2:62	yes		   0.00
+  4	02:d8:61:8b:31:15	yes		   0.00
+  4	02:d8:61:8b:31:15	yes		   0.00
+  1	02:fb:f6:6f:4f:0d	yes		   0.00
+  1	02:fb:f6:6f:4f:0d	yes		   0.00

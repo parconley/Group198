@@ -36,7 +36,7 @@ The Address Resolution Protocol (ARP) is a fundamental protocol in computer netw
 
 \subsubsection*{Part 1: Initial ARP Tables}
 
-Screenshot 1: PC-A Initial ARP Table}
+Screenshot 1: PC-A Initial ARP Table
 
 \begin{figure}[H]
 \centering
@@ -44,7 +44,7 @@ Screenshot 1: PC-A Initial ARP Table}
 \caption{PC-A initial ARP table showing learned neighbor entries}
 \end{figure}
 
-Screenshot 2: PC-B Initial ARP Table}
+Screenshot 2: PC-B Initial ARP Table
 
 \begin{figure}[H]
 \centering
@@ -52,7 +52,7 @@ Screenshot 2: PC-B Initial ARP Table}
 \caption{PC-B initial ARP table showing learned neighbor entries}
 \end{figure}
 
-Screenshot 3: PC-C Initial ARP Table}
+Screenshot 3: PC-C Initial ARP Table
 
 \begin{figure}[H]
 \centering
@@ -62,7 +62,7 @@ Screenshot 3: PC-C Initial ARP Table}
 
 \subsubsection*{Part 2: ARP Tables After Deletion}
 
-Screenshot 4: PC-A After ARP Table Flush}
+Screenshot 4: PC-A After ARP Table Flush
 
 \begin{figure}[H]
 \centering
@@ -70,7 +70,7 @@ Screenshot 4: PC-A After ARP Table Flush}
 \caption{PC-A ARP table after executing \texttt{ip neigh flush all}}
 \end{figure}
 
-Screenshot 5: PC-B After ARP Table Flush}
+Screenshot 5: PC-B After ARP Table Flush
 
 \begin{figure}[H]
 \centering
@@ -78,7 +78,7 @@ Screenshot 5: PC-B After ARP Table Flush}
 \caption{PC-B ARP table after executing \texttt{ip neigh flush all}}
 \end{figure}
 
-Screenshot 6: PC-C After ARP Table Flush}
+Screenshot 6: PC-C After ARP Table Flush
 
 \begin{figure}[H]
 \centering
@@ -95,7 +95,7 @@ Screenshot 6: PC-C After ARP Table Flush}
 
 \subsubsection*{Part 1: Ping with ARP Required (pc-a-arp.pcap)}
 
-Screenshot 1: Head command output showing first ping with ARP}
+Screenshot 1: Head command output showing first ping with ARP
 
 \begin{figure}[H]
 \centering
@@ -120,7 +120,7 @@ Screenshot 1: Head command output showing first ping with ARP}
 
 \subsubsection*{Part 2: Ping without ARP Required (pc-a-no-arp.pcap)}
 
-Screenshot 2: Head command output showing ping without ARP}
+Screenshot 2: Head command output showing ping without ARP
 
 \begin{figure}[H]
 \centering
@@ -136,7 +136,7 @@ Screenshot 2: Head command output showing ping without ARP}
 
 \subsubsection*{Part 3: ARP Table Screenshots}
 
-Screenshot 3: PC-A Neighbor Table}
+Screenshot 3: PC-A Neighbor Table
 
 \begin{figure}[H]
 \centering
@@ -144,7 +144,7 @@ Screenshot 3: PC-A Neighbor Table}
 \caption{PC-A neighbor table after ARP exchange}
 \end{figure}
 
-Screenshot 4: PC-B Neighbor Table}
+Screenshot 4: PC-B Neighbor Table
 
 \begin{figure}[H]
 \centering
@@ -152,7 +152,7 @@ Screenshot 4: PC-B Neighbor Table}
 \caption{PC-B neighbor table after ARP exchange}
 \end{figure}
 
-Screenshot 5: PC-C Neighbor Table}
+Screenshot 5: PC-C Neighbor Table
 
 \begin{figure}[H]
 \centering
@@ -163,29 +163,29 @@ Screenshot 5: PC-C Neighbor Table}
 \newpage
 \subsubsection*{Questions and Answers}
 
-1. Why was ARP sent in the first case but not the second?}
+1. Why was ARP sent in the first case but not the second?
 
  In the first case (pc-a-arp.pcap), the ARP table was empty after being flushed. PC-A had no knowledge of PC-B's MAC address, so it sent an ARP Request to resolve 10.0.0.101 to a MAC address before sending the ICMP Echo Request.
 
 In the second case (pc-a-no-arp.pcap), the ARP entry for 10.0.0.101 was already cached in PC-A's neighbor table from the previous ping. Since PC-A already knew the MAC address (00:4e:01:bd:77:59), no ARP resolution was necessary.
 
 \vspace{0.5cm}
-2. What is the target IP address in the ARP Request?}
+2. What is the target IP address in the ARP Request?
 
  The target IP address is 10.0.0.101 (PC-B's IP address). This is visible in the ARP Request message: "who-has 10.0.0.101 tell pc-a"
 
 \vspace{0.5cm}
-3. What is the destination MAC address in the ARP Request frame?}
+3. What is the destination MAC address in the ARP Request frame?
 
  The destination MAC address is ff:ff:ff:ff:ff:ff (the broadcast MAC address). ARP Requests are always broadcast because the sender does not yet know the target's MAC address and needs all hosts on the local network to receive and process the request.
 
 \vspace{0.5cm}
-4. What is the value of the frame type field in the Ethernet frame?}
+4. What is the value of the frame type field in the Ethernet frame?
 
  The EtherType field value is 0x0806, which identifies the frame as containing an ARP packet. This is the standard EtherType value for ARP frames.
 
 \vspace{0.5cm}
-5. At the end of the exchange, which hosts learned from the ARP Request, and which hosts learned from the ARP Reply?}
+5. At the end of the exchange, which hosts learned from the ARP Request, and which hosts learned from the ARP Reply?
 
 
 \begin{itemize}
@@ -221,19 +221,19 @@ Screenshot: Head command output showing ARP poll}
 
 \subsubsection*{Questions and Answers}
 
-1. What is the target IP address in the ARP Request?}
+1. What is the target IP address in the ARP Request?
 
  The target IP address is 10.0.0.101 (PC-B). This is the host whose reachability PC-A is verifying.
 
 \vspace{0.5cm}
-2. What is the destination MAC address of the ARP Request? Is it a broadcast or unicast address?}
+2. What is the destination MAC address of the ARP Request? Is it a broadcast or unicast address?
 
  The destination MAC address in this ARP Poll is 00:4e:01:bd:77:59 (PC-B's MAC address), which is a unicast address.
 
 This is fundamentally different from a regular ARP Request, which uses the broadcast address (ff:ff:ff:ff:ff:ff). The unicast destination proves this is an ARP Poll used for neighbor reachability verification rather than initial MAC address resolution.
 
 \vspace{0.5cm}
-3. How is this different than the ARP Request observed in Exercise 1.2?}
+3. How is this different than the ARP Request observed in Exercise 1.2?
 
 
 
@@ -268,7 +268,7 @@ This demonstrates Linux's Neighbor Unreachability Detection (NUD) mechanism, whi
 
 \subsubsection*{Part 1: Ethernet Interface Capture}
 
-Screenshot 1: Ethernet interface showing ARP retries}
+Screenshot 1: Ethernet interface showing ARP retries
 
 \begin{figure}[H]
 \centering
@@ -286,7 +286,7 @@ Screenshot 1: Ethernet interface showing ARP retries}
 
 \subsubsection*{Part 2: Loopback Interface Capture}
 
-Screenshot 2: Loopback interface showing ICMP error}
+Screenshot 2: Loopback interface showing ICMP error
 
 \begin{figure}[H]
 \centering
@@ -304,7 +304,7 @@ Screenshot 2: Loopback interface showing ICMP error}
 \newpage
 \subsubsection*{Questions and Answers}
 
-1. In the packet capture, did you see an ICMP Echo Request sent from PC-A to the non-existent host, or only ARP Requests? Why?}
+1. In the packet capture, did you see an ICMP Echo Request sent from PC-A to the non-existent host, or only ARP Requests? Why?
 
  Only ARP Requests were observed in the Ethernet interface capture (pc-a-eth-nonexistent.pcap). No ICMP Echo Request was sent to 10.0.0.200.
 
@@ -319,7 +319,7 @@ The network stack operates in layers:
 \end{enumerate}
 
 \vspace{0.5cm}
-2. How many attempts did PC-A make to resolve the MAC address, and what was the timeout between attempts?}
+2. How many attempts did PC-A make to resolve the MAC address, and what was the timeout between attempts?
 
 
 
@@ -337,7 +337,7 @@ Detailed timing:
 After the third failed attempt, the ARP resolution process gave up and the neighbor entry transitioned to the FAILED state.
 
 \vspace{0.5cm}
-3. On the loopback interface, observe that an ICMP Destination Host Unreachable message was sent from PC-A to itself. Explain why this occurred and what triggers this message.}
+3. On the loopback interface, observe that an ICMP Destination Host Unreachable message was sent from PC-A to itself. Explain why this occurred and what triggers this message.
 
 
 
@@ -371,7 +371,7 @@ This mechanism allows network applications to receive feedback about unreachable
 
 \subsubsection*{Transition 1: NONE → INCOMPLETE → REACHABLE}
 
-Screenshot 1: State transition from NONE to REACHABLE}
+Screenshot 1: State transition from NONE to REACHABLE
 
 \begin{figure}[H]
 \centering
@@ -405,7 +405,7 @@ State Transitions:
 \newpage
 \subsubsection*{Transition 2: DELAY → PROBE → REACHABLE}
 
-Screenshot 2: State transition showing ARP polling}
+Screenshot 2: State transition showing ARP polling
 
 \begin{figure}[H]
 \centering
@@ -437,7 +437,7 @@ Key Evidence: The unicast ARP Request (destination MAC: 00:4e:01:bd:77:59, NOT b
 \newpage
 \subsubsection*{Transition 3: NONE → INCOMPLETE → FAILED}
 
-Screenshot 3: Ethernet interface showing failed ARP resolution}
+Screenshot 3: Ethernet interface showing failed ARP resolution
 
 \begin{figure}[H]
 \centering
@@ -445,7 +445,7 @@ Screenshot 3: Ethernet interface showing failed ARP resolution}
 \caption{Three broadcast ARP Requests with no replies (Ethernet interface)}
 \end{figure}
 
-Screenshot 4: Loopback interface showing ICMP error}
+Screenshot 4: Loopback interface showing ICMP error
 
 \begin{figure}[H]
 \centering
@@ -516,7 +516,7 @@ All hosts on 10.0.0.0/24 network
 
 \subsubsection*{Bridge Configuration Screenshots}
 
-Screenshot 1: Bridge Interface Configuration (\texttt{ip addr show} on bridge)}
+Screenshot 1: Bridge Interface Configuration (\texttt{ip addr show on bridge)}
 
 \begin{lstlisting}[basicstyle=\small\ttfamily, breaklines=true]
 pconley1@bridge:~$ ip addr show
@@ -545,7 +545,7 @@ Bridge Interface Summary:
     \item MTU: 1500 bytes
 \end{itemize}
 
-Screenshot 2: Bridge Status (\texttt{brctl show br0})}
+Screenshot 2: Bridge Status (\texttt{brctl show br0)}
 
 \begin{lstlisting}[basicstyle=\small\ttfamily, breaklines=true]
 pconley1@bridge:~$ sudo brctl show br0
@@ -564,7 +564,7 @@ Port Configuration:
     \item Port 4 (eth4): 02:d8:61:8b:31:15 → Ophelia (10.0.0.103, MAC: 02:d0:83:3e:8a:f7)
 \end{itemize}
 
-Screenshot 3: Initial Bridge MAC Table (\texttt{brctl showmacs br0})}
+Screenshot 3: Initial Bridge MAC Table (\texttt{brctl showmacs br0)}
 
 \begin{lstlisting}[basicstyle=\small\ttfamily, breaklines=true]
 pconley1@bridge:~$ sudo brctl showmacs br0
@@ -579,7 +579,7 @@ Note: All entries marked as "local" (yes) are the bridge's own interface MAC add
 
 \subsubsection*{Host IP Configuration}
 
-Screenshot 4: Romeo IP Configuration (\texttt{ip addr show})}
+Screenshot 4: Romeo IP Configuration (\texttt{ip addr show)}
 
 \begin{lstlisting}[basicstyle=\scriptsize\ttfamily, breaklines=true]
 pconley1@romeo:~$ ip addr show
@@ -588,7 +588,7 @@ pconley1@romeo:~$ ip addr show
     inet 10.0.0.100/24 brd 10.0.0.255 scope global eth1
 \end{lstlisting}
 
-Screenshot 5: Juliet IP Configuration (\texttt{ip addr show})}
+Screenshot 5: Juliet IP Configuration (\texttt{ip addr show)}
 
 \begin{lstlisting}[basicstyle=\scriptsize\ttfamily, breaklines=true]
 pconley1@juliet:~$ ip addr show
@@ -597,7 +597,7 @@ pconley1@juliet:~$ ip addr show
     inet 10.0.0.101/24 brd 10.0.0.255 scope global eth1
 \end{lstlisting}
 
-Screenshot 6: Hamlet IP Configuration (\texttt{ip addr show})}
+Screenshot 6: Hamlet IP Configuration (\texttt{ip addr show)}
 
 \begin{lstlisting}[basicstyle=\scriptsize\ttfamily, breaklines=true]
 pconley1@hamlet:~$ ip addr show
@@ -606,7 +606,7 @@ pconley1@hamlet:~$ ip addr show
     inet 10.0.0.102/24 brd 10.0.0.255 scope global eth1
 \end{lstlisting}
 
-Screenshot 7: Ophelia IP Configuration (\texttt{ip addr show})}
+Screenshot 7: Ophelia IP Configuration (\texttt{ip addr show)}
 
 \begin{lstlisting}[basicstyle=\scriptsize\ttfamily, breaklines=true]
 pconley1@ophelia:~$ ip addr show
@@ -713,7 +713,7 @@ Forwarding Behavior:
 
 \subsubsection*{Evidence Screenshots}
 
-Screenshot 1: MAC Table Before Ping (Empty - Only Local Interfaces)}
+Screenshot 1: MAC Table Before Ping (Empty - Only Local Interfaces)
 
 \begin{lstlisting}[basicstyle=\small\ttfamily, breaklines=true]
 pconley1@bridge:~$ sudo brctl showmacs br0
@@ -724,7 +724,7 @@ port no	mac addr		is local?	ageing timer
   1	02:fb:f6:6f:4f:0d	yes		   0.00
 \end{lstlisting}
 
-Screenshot 2: Ping from Romeo to Juliet}
+Screenshot 2: Ping from Romeo to Juliet
 
 \begin{lstlisting}[basicstyle=\small\ttfamily, breaklines=true]
 pconley1@romeo:~$ ping -c 1 10.0.0.101
@@ -736,7 +736,7 @@ PING 10.0.0.101 (10.0.0.101) 56(84) bytes of data.
 rtt min/avg/max/mdev = 1.993/1.993/1.993/0.000 ms
 \end{lstlisting}
 
-Screenshot 3: MAC Table After Ping (Learned Romeo and Juliet MACs)}
+Screenshot 3: MAC Table After Ping (Learned Romeo and Juliet MACs)
 
 \begin{lstlisting}[basicstyle=\small\ttfamily, breaklines=true]
 pconley1@bridge:~$ sudo brctl showmacs br0

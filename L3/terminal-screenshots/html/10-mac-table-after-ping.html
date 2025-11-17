@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAC Table After Ping</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #fdf6e3;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+        .terminal {
+            background: #fdf6e3;
+            border: none;
+            border-radius: 0;
+            padding: 2px;
+            font-family: 'Ubuntu Mono', 'Courier New', monospace;
+            font-size: 15px;
+            line-height: 1.5;
+            color: #657b83;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">pconley1@bridge:~$ sudo brctl showmacs br0
+port no	mac addr		is local?	ageing timer
+  2	02:03:a9:83:3a:9b	no		   1.18
+  1	02:0e:2f:76:d5:6d	no		   1.18
+  3	02:72:6e:99:7f:08	yes		   0.00
+  2	02:c1:3c:f4:e2:62	yes		   0.00
+  4	02:d8:61:8b:31:15	yes		   0.00
+  1	02:fb:f6:6f:4f:0d	yes		   0.00</div>
+</body>
+</html>

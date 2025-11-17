@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bridge Interface Configuration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #fdf6e3;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+        .terminal {
+            background: #fdf6e3;
+            border: none;
+            border-radius: 0;
+            padding: 2px;
+            font-family: 'Ubuntu Mono', 'Courier New', monospace;
+            font-size: 15px;
+            line-height: 1.5;
+            color: #657b83;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">pconley1@bridge:~$ ip addr show
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 02:f5:bb:ce:09:78 brd ff:ff:ff:ff:ff:ff
+    inet 172.20.3.2/12 metric 1024 brd 172.31.255.255 scope global eth0
+3: eth1: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel master br0 state UP group default qlen 1000
+    link/ether 02:fb:f6:6f:4f:0d brd ff:ff:ff:ff:ff:ff
+4: eth2: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel master br0 state UP group default qlen 1000
+    link/ether 02:c1:3c:f4:e2:62 brd ff:ff:ff:ff:ff:ff
+5: eth3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel master br0 state UP group default qlen 1000
+    link/ether 02:72:6e:99:7f:08 brd ff:ff:ff:ff:ff:ff
+6: eth4: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel master br0 state UP group default qlen 1000
+    link/ether 02:d8:61:8b:31:15 brd ff:ff:ff:ff:ff:ff
+7: br0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether f2:b8:a6:73:65:49 brd ff:ff:ff:ff:ff:ff</div>
+</body>
+</html>

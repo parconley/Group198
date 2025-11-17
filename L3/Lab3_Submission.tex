@@ -349,72 +349,32 @@ An Ethernet bridge is a Layer 2 device that forwards frames between network segm
 
 \subsection{Exercise 2.1: Set up the Bridge}
 
-\subsubsection*{Network Topology}
-
-\begin{verbatim}
-         +------------------+
-         |     Bridge       |
-         |      br0         |
-         +------------------+
-          |    |    |    |
-       eth1 eth2 eth3 eth4
-          |    |    |    |
-      +---+----+----+----+---+
-      |        |    |        |
-   Romeo   Juliet Hamlet Ophelia
- .100      .101   .102    .103
-\end{verbatim}
-
-All hosts on 10.0.0.0/24 network
-
 \subsubsection*{Bridge Configuration Screenshots}
 
 Bridge Interface Configuration (\texttt{ip addr show} on bridge)
 
-\begin{lstlisting}[basicstyle=\small\ttfamily, breaklines=true]
-pconley1@bridge:~$ ip addr show
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
-    link/ether 02:f5:bb:ce:09:78 brd ff:ff:ff:ff:ff:ff
-    inet 172.20.3.2/12 metric 1024 brd 172.31.255.255 scope global eth0
-3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel master br0 state UP group default qlen 1000
-    link/ether 02:fb:f6:6f:4f:0d brd ff:ff:ff:ff:ff:ff
-4: eth2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel master br0 state UP group default qlen 1000
-    link/ether 02:c1:3c:f4:e2:62 brd ff:ff:ff:ff:ff:ff
-5: eth3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel master br0 state UP group default qlen 1000
-    link/ether 02:72:6e:99:7f:08 brd ff:ff:ff:ff:ff:ff
-6: eth4: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel master br0 state UP group default qlen 1000
-    link/ether 02:d8:61:8b:31:15 brd ff:ff:ff:ff:ff:ff
-7: br0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
-    link/ether f2:b8:a6:73:65:49 brd ff:ff:ff:ff:ff:ff
-\end{lstlisting}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{terminal-screenshots/images/01-bridge-ip-addr.png}
+\end{figure}
 
 The MAC Address is f2:b8:a6:73:65:49, the Bridge ID is 8000.f2b8a6736549, STP is Disabled, and the MTU is 1500 bytes.
 
 Bridge Status (\texttt{brctl show br0})
 
-\begin{lstlisting}[basicstyle=\small\ttfamily, breaklines=true]
-pconley1@bridge:~$ sudo brctl show br0
-bridge name	bridge id		STP enabled	interfaces
-br0		8000.f2b8a6736549	no		eth1
-							eth2
-							eth3
-							eth4
-\end{lstlisting}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{terminal-screenshots/images/02-bridge-brctl-show.png}
+\end{figure}
 
 Port 1 (eth1) with MAC 02:fb:f6:6f:4f:0d connects to Romeo (10.0.0.100, MAC: 02:0e:2f:76:d5:6d). Port 2 (eth2) with MAC 02:c1:3c:f4:e2:62 connects to Juliet (10.0.0.101, MAC: 02:03:a9:83:3a:9b). Port 3 (eth3) with MAC 02:72:6e:99:7f:08 connects to Hamlet (10.0.0.102, MAC: 02:db:29:99:d2:d4). Port 4 (eth4) with MAC 02:d8:61:8b:31:15 connects to  Ophelia (10.0.0.103, MAC: 02:d0:83:3e:8a:f7).
 
 Initial Bridge MAC Table (\texttt{brctl showmacs br0})
 
-\begin{lstlisting}[basicstyle=\small\ttfamily, breaklines=true]
-pconley1@bridge:~$ sudo brctl showmacs br0
-port no	mac addr		is local?	ageing timer
-  3	02:72:6e:99:7f:08	yes		   0.00
-  2	02:c1:3c:f4:e2:62	yes		   0.00
-  4	02:d8:61:8b:31:15	yes		   0.00
-  1	02:fb:f6:6f:4f:0d	yes		   0.00
-\end{lstlisting}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{terminal-screenshots/images/03-bridge-mac-table-initial.png}
+\end{figure}
 
 All entries marked as "local" (yes) are the bridge's own interface MAC addresses (eth1-eth4). No host MACs have been learned yet because no traffic has been sent.
 
@@ -422,39 +382,31 @@ All entries marked as "local" (yes) are the bridge's own interface MAC addresses
 
 Romeo IP Configuration (\texttt{ip addr show})
 
-\begin{lstlisting}[basicstyle=\scriptsize\ttfamily, breaklines=true]
-pconley1@romeo:~$ ip addr show
-3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
-    link/ether 02:0e:2f:76:d5:6d brd ff:ff:ff:ff:ff:ff
-    inet 10.0.0.100/24 brd 10.0.0.255 scope global eth1
-\end{lstlisting}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{terminal-screenshots/images/04-romeo-ip-config.png}
+\end{figure}
 
 Juliet IP Configuration (\texttt{ip addr show})
 
-\begin{lstlisting}[basicstyle=\scriptsize\ttfamily, breaklines=true]
-pconley1@juliet:~$ ip addr show
-3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
-    link/ether 02:03:a9:83:3a:9b brd ff:ff:ff:ff:ff:ff
-    inet 10.0.0.101/24 brd 10.0.0.255 scope global eth1
-\end{lstlisting}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{terminal-screenshots/images/05-juliet-ip-config.png}
+\end{figure}
 
 Hamlet IP Configuration (\texttt{ip addr show})
 
-\begin{lstlisting}[basicstyle=\scriptsize\ttfamily, breaklines=true]
-pconley1@hamlet:~$ ip addr show
-3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
-    link/ether 02:db:29:99:d2:d4 brd ff:ff:ff:ff:ff:ff
-    inet 10.0.0.102/24 brd 10.0.0.255 scope global eth1
-\end{lstlisting}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{terminal-screenshots/images/06-hamlet-ip-config.png}
+\end{figure}
 
 Ophelia IP Configuration (\texttt{ip addr show})
 
-\begin{lstlisting}[basicstyle=\scriptsize\ttfamily, breaklines=true]
-pconley1@ophelia:~$ ip addr show
-3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
-    link/ether 02:d0:83:3e:8a:f7 brd ff:ff:ff:ff:ff:ff
-    inet 10.0.0.103/24 brd 10.0.0.255 scope global eth1
-\end{lstlisting}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{terminal-screenshots/images/07-ophelia-ip-config.png}
+\end{figure}
 
 \newpage
 \subsection{Exercise 2.2: Learning MAC Addresses}
@@ -500,39 +452,24 @@ Before learning, the bridge broadcasts or floods unknown destinations to all por
 
 MAC Table Before Ping (Empty - Only Local Interfaces)
 
-\begin{lstlisting}[basicstyle=\small\ttfamily, breaklines=true]
-pconley1@bridge:~$ sudo brctl showmacs br0
-port no	mac addr		is local?	ageing timer
-  3	02:72:6e:99:7f:08	yes		   0.00
-  2	02:c1:3c:f4:e2:62	yes		   0.00
-  4	02:d8:61:8b:31:15	yes		   0.00
-  1	02:fb:f6:6f:4f:0d	yes		   0.00
-\end{lstlisting}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{terminal-screenshots/images/08-mac-table-before-ping.png}
+\end{figure}
 
 Ping from Romeo to Juliet
 
-\begin{lstlisting}[basicstyle=\small\ttfamily, breaklines=true]
-pconley1@romeo:~$ ping -c 1 10.0.0.101
-PING 10.0.0.101 (10.0.0.101) 56(84) bytes of data.
-64 bytes from 10.0.0.101: icmp_seq=1 ttl=64 time=1.99 ms
-
---- 10.0.0.101 ping statistics ---
-1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 1.993/1.993/1.993/0.000 ms
-\end{lstlisting}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{terminal-screenshots/images/09-romeo-ping-juliet.png}
+\end{figure}
 
 MAC Table After Ping (Learned Romeo and Juliet MACs)
 
-\begin{lstlisting}[basicstyle=\small\ttfamily, breaklines=true]
-pconley1@bridge:~$ sudo brctl showmacs br0
-port no	mac addr		is local?	ageing timer
-  2	02:03:a9:83:3a:9b	no		   1.18
-  1	02:0e:2f:76:d5:6d	no		   1.18
-  3	02:72:6e:99:7f:08	yes		   0.00
-  2	02:c1:3c:f4:e2:62	yes		   0.00
-  4	02:d8:61:8b:31:15	yes		   0.00
-  1	02:fb:f6:6f:4f:0d	yes		   0.00
-\end{lstlisting}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{terminal-screenshots/images/10-mac-table-after-ping.png}
+\end{figure}
 
 Two new entries now appear with "no" in the "is local?" column. Port 1 has 02:0e:2f:76:d5:6d (Romeo's MAC) which was learned from the source address. Port 2 has 02:03:a9:83:3a:9b (Juliet's MAC) which was also learned from the source address.
 
@@ -545,28 +482,10 @@ The iperf3 server runs on Juliet (10.0.0.101) and the iperf3 client runs on Rome
 
 iperf3 Performance Test from Romeo to Juliet
 
-\begin{lstlisting}[basicstyle=\tiny\ttfamily, breaklines=true]
-pconley1@romeo:~$ iperf3 -c 10.0.0.101 -t 10
-Connecting to host 10.0.0.101, port 5201
-[  5] local 10.0.0.100 port 33324 connected to 10.0.0.101 port 5201
-[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
-[  5]   0.00-1.00   sec   450 KBytes  3.68 Mbits/sec    0   56.6 KBytes
-[  5]   1.00-2.00   sec   124 KBytes  1.02 Mbits/sec    0   56.6 KBytes
-[  5]   2.00-3.00   sec  0.00 Bytes  0.00 bits/sec    0   56.6 KBytes
-[  5]   3.00-4.00   sec   124 KBytes  1.02 Mbits/sec    2   39.6 KBytes
-[  5]   4.00-5.00   sec   124 KBytes  1.02 Mbits/sec    2   26.9 KBytes
-[  5]   5.00-6.00   sec   122 KBytes   996 Kbits/sec    0   26.9 KBytes
-[  5]   6.00-7.00   sec   115 KBytes   938 Kbits/sec    2   18.4 KBytes
-[  5]   7.00-8.00   sec   115 KBytes   938 Kbits/sec    0   18.4 KBytes
-[  5]   8.00-9.00   sec   120 KBytes   985 Kbits/sec    0   18.4 KBytes
-[  5]   9.00-10.00  sec   119 KBytes   973 Kbits/sec    4   9.90 KBytes
-- - - - - - - - - - - - - - - - - - - - - - - - -
-[ ID] Interval           Transfer     Bitrate         Retr
-[  5]   0.00-10.00  sec  1.38 MBytes  1.16 Mbits/sec   10             sender
-[  5]   0.00-10.09  sec  1.14 MBytes   947 Kbits/sec                  receiver
-
-iperf Done.
-\end{lstlisting}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{terminal-screenshots/images/11-iperf3-performance.png}
+\end{figure}
 
 The measured throughput (~1.16 Mbits/sec sender, 947 Kbits/sec receiver) is lower than the theoretical maximum due to CloudLab resource constraints and virtualization overhead. However, the experiment successfully demonstrates the bridge's forwarding capability.
 
@@ -605,18 +524,10 @@ Microsegmentation creates multiple collision domains. Each port pair can operate
 
 tcpdump on Bridge Showing MAC Address Preservation
 
-\begin{lstlisting}[basicstyle=\tiny\ttfamily, breaklines=true]
-pconley1@bridge:~$ sudo tcpdump -i br0 -e -n icmp -c 4
-tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
-listening on br0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
-20:52:56.975179 02:0e:2f:76:d5:6d > 02:03:a9:83:3a:9b, ethertype IPv4 (0x0800), length 98: 10.0.0.100 > 10.0.0.101: ICMP echo request, id 4, seq 1, length 64
-20:52:56.975940 02:03:a9:83:3a:9b > 02:0e:2f:76:d5:6d, ethertype IPv4 (0x0800), length 98: 10.0.0.101 > 10.0.0.100: ICMP echo reply, id 4, seq 1, length 64
-20:52:57.977015 02:0e:2f:76:d5:6d > 02:03:a9:83:3a:9b, ethertype IPv4 (0x0800), length 98: 10.0.0.100 > 10.0.0.101: ICMP echo request, id 4, seq 2, length 64
-20:52:57.977931 02:03:a9:83:3a:9b > 02:0e:2f:76:d5:6d, ethertype IPv4 (0x0800), length 98: 10.0.0.101 > 10.0.0.100: ICMP echo reply, id 4, seq 2, length 64
-4 packets captured
-4 packets received by filter
-0 packets dropped by kernel
-\end{lstlisting}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{terminal-screenshots/images/12-tcpdump-bridge.png}
+\end{figure}
 
 \subsubsection*{Frame Analysis from tcpdump Output}
 

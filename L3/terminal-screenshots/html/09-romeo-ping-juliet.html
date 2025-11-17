@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ping from Romeo to Juliet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #fdf6e3;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+        .terminal {
+            background: #fdf6e3;
+            border: none;
+            border-radius: 0;
+            padding: 2px;
+            font-family: 'Ubuntu Mono', 'Courier New', monospace;
+            font-size: 15px;
+            line-height: 1.5;
+            color: #657b83;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">pconley1@romeo:~$ ping -c 1 10.0.0.101
+PING 10.0.0.101 (10.0.0.101) 56(84) bytes of data.
+64 bytes from 10.0.0.101: icmp_seq=1 ttl=64 time=1.99 ms
+
+--- 10.0.0.101 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 1.993/1.993/1.993/0.000 ms</div>
+</body>
+</html>

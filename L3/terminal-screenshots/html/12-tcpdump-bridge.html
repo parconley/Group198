@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tcpdump on Bridge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #fdf6e3;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+        .terminal {
+            background: #fdf6e3;
+            border: none;
+            border-radius: 0;
+            padding: 2px;
+            font-family: 'Ubuntu Mono', 'Courier New', monospace;
+            font-size: 15px;
+            line-height: 1.5;
+            color: #657b83;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">pconley1@bridge:~$ sudo tcpdump -i br0 -e -n icmp -c 4
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on br0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+20:52:56.975179 02:0e:2f:76:d5:6d &gt; 02:03:a9:83:3a:9b, ethertype IPv4 (0x0800), length 98: 10.0.0.100 &gt; 10.0.0.101: ICMP echo request, id 4, seq 1, length 64
+20:52:56.975940 02:03:a9:83:3a:9b &gt; 02:0e:2f:76:d5:6d, ethertype IPv4 (0x0800), length 98: 10.0.0.101 &gt; 10.0.0.100: ICMP echo reply, id 4, seq 1, length 64
+20:52:57.977015 02:0e:2f:76:d5:6d &gt; 02:03:a9:83:3a:9b, ethertype IPv4 (0x0800), length 98: 10.0.0.100 &gt; 10.0.0.101: ICMP echo request, id 4, seq 2, length 64
+20:52:57.977931 02:03:a9:83:3a:9b &gt; 02:0e:2f:76:d5:6d, ethertype IPv4 (0x0800), length 98: 10.0.0.101 &gt; 10.0.0.100: ICMP echo reply, id 4, seq 2, length 64
+4 packets captured
+4 packets received by filter
+0 packets dropped by kernel</div>
+</body>
+</html>

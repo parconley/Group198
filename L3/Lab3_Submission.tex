@@ -28,11 +28,9 @@
 
 \section{Address Resolution Protocol (BYENG 217)}
 
-The Address Resolution Protocol (ARP) is a fundamental protocol in computer networks that translates IP addresses to MAC (hardware) addresses. This experiment explores ARP behavior including basic request/response mechanisms, caching, neighbor reachability detection, and the ARP state machine.
+The Address Resolution Protocol (ARP) is a fundamental protocol in computer networks that translates IP addresses to MAC (hardware) addresses. This experiment explores ARP behavior  including basic request/response mechanisms, caching, neighbor reachability detection, and the ARP state machine.
 
 \subsection{Exercise 1.1: ARP Table}
-
-Objective: Observe the ARP table before and after deletion on three PCs connected to the same switch.
 
 \subsubsection*{Part 1: Initial ARP Tables}
 
@@ -86,12 +84,10 @@ Screenshot 6: PC-C After ARP Table Flush
 \caption{PC-C ARP table after executing \texttt{ip neigh flush all}}
 \end{figure}
 
-Observation: After deletion, the ARP tables are empty, requiring hosts to perform ARP resolution before any IP communication can occur.
+After deletion, the ARP tables are empty, requiring hosts to perform ARP resolution before any IP communication can occur.
 
 \newpage
 \subsection{Exercise 1.2: Basic ARP Request and Response}
-
-Objective: Observe ARP request/response exchange when pinging between hosts, and compare behavior with and without cached ARP entries.
 
 \subsubsection*{Part 1: Ping with ARP Required (pc-a-arp.pcap)}
 
@@ -103,20 +99,7 @@ Screenshot 1: Head command output showing first ping with ARP
 \caption{First 10 lines of pc-a-arp.txt showing ARP Request/Reply followed by ICMP Echo Request/Reply}
 \end{figure}
 
-Analysis:
-\begin{itemize}
-    \item Line 102-105: ARP Request - PC-A broadcasts "who-has 10.0.0.101"
-    \begin{itemize}
-        \item Source MAC: 00:4e:01:be:5c:34 (PC-A)
-        \item Destination MAC: ff:ff:ff:ff:ff:ff (broadcast)
-    \end{itemize}
-    \item Line 106-109: ARP Reply - PC-B responds with its MAC address
-    \begin{itemize}
-        \item Reply: "10.0.0.101 is-at 00:4e:01:bd:77:59"
-        \item Destination MAC: 00:4e:01:be:5c:34 (unicast to PC-A)
-    \end{itemize}
-    \item Line 110-119: ICMP Echo Request and Reply (the actual ping)
-\end{itemize}
+Line 102-105 shows the ARP Request where PC-A broadcasts "who-has 10.0.0.101" with source MAC 00:4e:01:be:5c:34 (PC-A) and destination MAC ff:ff:ff:ff:ff:ff (broadcast). Line 106-109 contains the ARP Reply where PC-B responds with its MAC address, replying "10.0.0.101 is-at 00:4e:01:bd:77:59" with destination MAC 00:4e:01:be:5c:34 (unicast to PC-A). Finaly, line 110-119 shows the ICMP Echo Request  and Reply which is the actual ping.
 
 \subsubsection*{Part 2: Ping without ARP Required (pc-a-no-arp.pcap)}
 
@@ -128,11 +111,7 @@ Screenshot 2: Head command output showing ping without ARP
 \caption{First 10 lines of pc-a-no-arp.txt showing ICMP traffic only (no ARP)}
 \end{figure}
 
-Analysis:
-\begin{itemize}
-    \item No ARP traffic observed - ARP entry already cached from previous ping
-    \item Only ICMP Echo Request and Reply visible (lines 11-20)
-\end{itemize}
+No ARP traffic was observed because the ARP entry was already cached from the previous ping. Only ICMP Echo Request and Reply packets are visible in lines 11-20.
 
 \subsubsection*{Part 3: ARP Table Screenshots}
 
@@ -165,42 +144,34 @@ Screenshot 5: PC-C Neighbor Table
 
 Q1: Why was ARP sent in the first case but not the second?
 
-Answer: In the first case (pc-a-arp.pcap), the ARP table was empty after being flushed. PC-A had no knowledge of PC-B's MAC address, so it sent an ARP Request to resolve 10.0.0.101 to a MAC address before sending the ICMP Echo Request.
+In the first case (pc-a-arp.pcap), the ARP table was empty after being flushed. PC-A had no knowledge of PC-B's MAC address, so it sent an ARP Request to resolve 10.0.0.101 to a MAC address before sending the ICMP Echo Request.
 
 In the second case (pc-a-no-arp.pcap), the ARP entry for 10.0.0.101 was already cached in PC-A's neighbor table from the previous ping. Since PC-A already knew the MAC address (00:4e:01:bd:77:59), no ARP resolution was necessary.
 
 \vspace{0.5cm}
 Q2: What is the target IP address in the ARP Request?
 
-Answer: The target IP address is 10.0.0.101 (PC-B's IP address). This is visible in the ARP Request message: "who-has 10.0.0.101 tell pc-a"
+The target IP address is 10.0.0.101 (PC-B's IP address). This is visible in the ARP Request message: "who-has 10.0.0.101 tell pc-a"
 
 \vspace{0.5cm}
 Q3: What is the destination MAC address in the ARP Request frame?
 
-Answer: The destination MAC address is ff:ff:ff:ff:ff:ff (the broadcast MAC address). ARP Requests are always broadcast because the sender does not yet know the target's MAC address and needs all hosts on the local network to receive and process the request.
+The destination MAC address is ff:ff:ff:ff:ff:ff (the broadcast MAC address). ARP Requests are always broadcast because the sender does not yet know the target's MAC address and needs all hosts on the local network to receive and process the request.
 
 \vspace{0.5cm}
 Q4: What is the value of the frame type field in the Ethernet frame?
 
-Answer: The EtherType field value is 0x0806, which identifies the frame as containing an ARP packet. This is the standard EtherType value for ARP frames.
+The EtherType field value is 0x0806, which identifies the frame as containing an ARP packet. This is the standard EtherType value for ARP frames.
 
 \vspace{0.5cm}
 Q5: At the end of the exchange, which hosts learned from the ARP Request, and which hosts learned from the ARP Reply?
 
-Answer:
-\begin{itemize}
-    \item From the ARP Request: PC-B learned PC-A's MAC address (00:4e:01:be:5c:34) and IP address (10.0.0.100). Even though the request was broadcast, PC-B processed it because it was the target, and proactively cached PC-A's information.
-    \item From the ARP Reply: Only PC-A learned from the ARP Reply. The reply was unicast directly to PC-A (destination MAC: 00:4e:01:be:5c:34), informing it that 10.0.0.101 is at MAC address 00:4e:01:bd:77:59.
-\end{itemize}
+From the ARP Request, PC-B learned PC-A's MAC address (00:4e:01:be:5c:34) and IP address (10.0.0.100). Even though the request was broadcast, PC-B processed it becuase it was the target, and  proactively cached PC-A's information. From the ARP Reply, only PC-A learned the information. The reply was unicast directly to PC-A (destination MAC: 00:4e:01:be:5c:34), informing it that 10.0.0.101 is at MAC address 00:4e:01:bd:77:59.
 
-Bidirectional Learning: The packet capture shows that approximately 5 seconds later (line 126-133), PC-B sends its own ARP Request to verify PC-A's reachability, confirming that both hosts successfully learned each other's MAC addresses.
+The packet capture shows that approximately 5 seconds later (line 126-133), PC-B sends its own ARP Request to verify PC-A's reachability, confirming that both hosts successfully learned each other's MAC addresses.
 
 \newpage
 \subsection{Exercise 1.3: Verifying Neighbour Reachability (ARP Polling)}
-
-Objective: Observe ARP polling mechanism used to verify that a cached neighbor is still reachable.
-
-Screenshot: Head command output showing ARP poll
 
 \begin{figure}[H]
 \centering
@@ -208,34 +179,23 @@ Screenshot: Head command output showing ARP poll
 \caption{First 10 lines of pc-a-poll-arp.txt showing unicast ARP Request for neighbor verification}
 \end{figure}
 
-Analysis:
-\begin{itemize}
-    \item Lines 23-32: ICMP Echo Request/Reply exchange
-    \item Lines 39-46: Unicast ARP Request and Reply (ARP Poll)
-    \begin{itemize}
-        \item Request: "who-has 10.0.0.101 tell pc-a"
-        \item Key difference: Destination MAC is unicast (not broadcast)
-    \end{itemize}
-    \item Lines 47-54: Bidirectional ARP verification
-\end{itemize}
+Lines 23-32 show the ICMP Echo Request/Reply exchange. Lines 39-46 contain the unicast ARP Request and Reply (ARP Poll), where the request asks "who-has 10.0.0.101 tell pc-a" with the key diffrence being that the destination MAC is unicast rather than broadcast. Lines 47-54 demonstrate bidirectional ARP verification.
 
 \subsubsection*{Questions and Answers}
 
 Q1: What is the target IP address in the ARP Request?
 
-Answer: The target IP address is 10.0.0.101 (PC-B). This is the host whose reachability PC-A is verifying.
+The target IP address is 10.0.0.101 (PC-B). This is the host whose reachability PC-A is verifying.
 
 \vspace{0.5cm}
 Q2: What is the destination MAC address of the ARP Request? Is it a broadcast or unicast address?
 
-Answer: The destination MAC address in this ARP Poll is 00:4e:01:bd:77:59 (PC-B's MAC address), which is a unicast address.
+The destination MAC address in this ARP Poll is 00:4e:01:bd:77:59 (PC-B's MAC address), which is a unicast address.
 
 This is fundamentally different from a regular ARP Request, which uses the broadcast address (ff:ff:ff:ff:ff:ff). The unicast destination proves this is an ARP Poll used for neighbor reachability verification rather than initial MAC address resolution.
 
 \vspace{0.5cm}
 Q3: How is this different than the ARP Request observed in Exercise 1.2?
-
-Answer:
 
 \begin{table}[H]
 \centering
@@ -257,14 +217,12 @@ ARP Cache State & NONE → INCOMPLETE → REACHABLE & REACHABLE → DELAY → PR
 \caption{Comparison of Regular ARP vs. ARP Polling}
 \end{table}
 
-Technical Explanation: In Exercise 1.2, PC-A had no ARP entry and needed to discover PC-B's MAC address, requiring a broadcast. In Exercise 1.3, PC-A's ARP entry for PC-B was expiring (REACHABLE state timing out), so it sent a unicast ARP Request directly to PC-B's known MAC address to verify PC-B is still reachable and refresh the cache entry.
+In Exercise 1.2, PC-A had no ARP entry and needed to discover PC-B's MAC address, requiring a broadcast. In Exercise 1.3, PC-A's ARP entry for PC-B was expiring (REACHABLE state timing out), so it sent a unicast ARP Request directly to PC-B's known MAC address to verify PC-B is still reachable and refresh the cache entry.
 
 This demonstrates Linux's Neighbor Unreachability Detection (NUD) mechanism, which uses unicast ARP probes to verify cached entries without flooding the network with broadcasts.
 
 \newpage
 \subsection{Exercise 1.4: ARP for Non-Existent Host}
-
-Objective: Observe ARP retry behavior and timeout when attempting to resolve a non-existent host (10.0.0.200).
 
 \subsubsection*{Part 1: Ethernet Interface Capture}
 
@@ -276,13 +234,7 @@ Screenshot 1: Ethernet interface showing ARP retries
 \caption{First 10 lines of pc-a-eth-nonexistent.txt showing three ARP Request attempts with no replies}
 \end{figure}
 
-Analysis:
-\begin{itemize}
-    \item Line 39-42: First ARP Request at 17:36:05.151575 - "who-has 10.0.0.200 tell pc-a"
-    \item Line 45-48: Second ARP Request at 17:36:06.206004 (~1 second later)
-    \item Line 51-54: Third ARP Request at 17:36:07.229998 (~1 second later)
-    \item No ARP Replies received - the host does not exist
-\end{itemize}
+Line 39-42 shows the first ARP Request at 17:36:05.151575 asking "who-has 10.0.0.200 tell pc-a". Line 45-48 contains the second ARP Request at 17:36:06.206004 (approximately 1  second later). Line 51-54 shows the third ARP Request at 17:36:07.229998 (approximately 1 second later). No ARP Replies were recieved because the host does not exist.
 
 \subsubsection*{Part 2: Loopback Interface Capture}
 
@@ -294,80 +246,41 @@ Screenshot 2: Loopback interface showing ICMP error
 \caption{ICMP Destination Host Unreachable message on loopback interface}
 \end{figure}
 
-Analysis:
-\begin{itemize}
-    \item Line 1-7: ICMP Host Unreachable message at 17:36:08.253918
-    \item Message: "pc-a > pc-a: ICMP host 10.0.0.200 unreachable"
-    \item Sent internally via loopback to inform the ping process
-\end{itemize}
+Line 1-7 shows the ICMP Host Unreachable message at 17:36:08.253918. The message reads "pc-a > pc-a: ICMP host 10.0.0.200 unreachable" and was sent internally via loopback to inform the ping process.
 
 \newpage
 \subsubsection*{Questions and Answers}
 
 Q1: In the packet capture, did you see an ICMP Echo Request sent from PC-A to the non-existent host, or only ARP Requests? Why?
 
-Answer: Only ARP Requests were observed in the Ethernet interface capture (pc-a-eth-nonexistent.pcap). No ICMP Echo Request was sent to 10.0.0.200.
+Only ARP Requests were observed in the Ethernet interface capture (pc-a-eth-nonexistent.pcap). No ICMP Echo Request was sent to 10.0.0.200.
 
-Reason: The network stack cannot send an IP packet without first resolving the destination's MAC address. The ping process attempted to resolve 10.0.0.200 through ARP but failed after 3 attempts with no reply. Since the MAC address resolution failed, the IP layer never sent the ICMP Echo Request packet.
+The network stack cannot send an IP packet without first resolving the destination's MAC address. The ping process atempted to resolve 10.0.0.200 through ARP but failed after 3 attempts with no reply. Since the MAC address resolution failed, the IP layer never sent the ICMP Echo Request packet.
 
-The network stack operates in layers:
-\begin{enumerate}
-    \item Application layer: \texttt{ping 10.0.0.200} command issued
-    \item Network layer: Needs to send ICMP Echo Request
-    \item Data link layer: Requires MAC address → ARP resolution attempted
-    \item ARP fails → Network layer cannot proceed → No ICMP packet sent
-\end{enumerate}
+The network stack operates in layers. First, the application layer issues the \texttt{ping 10.0.0.200} command. Second, the network layer needs to send an ICMP Echo Request. Third, the data link layer requires a MAC address so ARP resolution is attempted. Finally, when ARP fails, the network layer cannot proceed and no ICMP packet is sent.
 
 \vspace{0.5cm}
 Q2: How many attempts did PC-A make to resolve the MAC address, and what was the timeout between attempts?
 
-Answer:
-
-Number of attempts: 3 ARP Requests
-
-Timeout between attempts: Approximately 1 second
-
-Detailed timing:
-\begin{itemize}
-    \item 1st attempt: 17:36:05.151575
-    \item 2nd attempt: 17:36:06.206004 (gap: ~1.05 seconds)
-    \item 3rd attempt: 17:36:07.229998 (gap: ~1.02 seconds)
-\end{itemize}
+PC-A made 3 ARP Request attempts with approximately 1 second timeout between attempts. The 1st attempt occurred at 17:36:05.151575, the 2nd attempt at 17:36:06.206004 (gap of approximately 1.05 seconds), and the 3rd attempt at 17:36:07.229998 (gap of approximately 1.02 seconds).
 
 After the third failed attempt, the ARP resolution process gave up and the neighbor entry transitioned to the FAILED state.
 
 \vspace{0.5cm}
 Q3: On the loopback interface, observe that an ICMP Destination Host Unreachable message was sent from PC-A to itself. Explain why this occurred and what triggers this message.
 
-Answer:
+When the ARP resolution for 10.0.0.200 failed after 3 attempts (~3 seconds total), the Linux kernel's network stack determined that the destination host is unreachable. The kernel then generated an ICMP Type 3 (Destination Unreachable), Code 1 (Host Unreachable) message.
 
-Explanation: When the ARP resolution for 10.0.0.200 failed after 3 attempts (~3 seconds total), the Linux kernel's network stack determined that the destination host is unreachable. The kernel then generated an ICMP Type 3 (Destination Unreachable), Code 1 (Host Unreachable) message.
+The ICMP error message is sent on the loopback interface (lo) because it's being delivered back to the originating process (the \texttt{ping} command running on PC-A itself).
 
-Why loopback? The ICMP error message is sent on the loopback interface (lo) because it's being delivered back to the originating process (the \texttt{ping} command running on PC-A itself).
+First, the \texttt{ping} process requests the kernel to ping 10.0.0.200. Second, the kernel attempts ARP resolution which fails. Third, the kernel generates an ICMP Host Unreachable error. Fourth, the error is delivered internally via loopback (127.0.0.1/lo interface) to the \texttt{ping} process. Finally, \texttt{ping} displays "Destination Host Unreachable".
 
-Message flow:
-\begin{enumerate}
-    \item \texttt{ping} process requests kernel to ping 10.0.0.200
-    \item Kernel attempts ARP resolution → fails
-    \item Kernel generates ICMP Host Unreachable error
-    \item Error delivered internally via loopback (127.0.0.1/lo interface) to the \texttt{ping} process
-    \item \texttt{ping} displays "Destination Host Unreachable"
-\end{enumerate}
-
-What triggers this message?
-\begin{itemize}
-    \item The ARP resolution process exhausts all retry attempts (3 retries)
-    \item The neighbor entry transitions from INCOMPLETE to FAILED state
-    \item The kernel determines it cannot deliver the packet to the requested destination
-    \item An ICMP error is generated to inform the originating application of the failure
-\end{itemize}
+The ARP resolution process exhausts all retry attempts (3 retries), causing the neighbor entry to transition from INCOMPLETE to FAILED state. The kernel then determines it cannot deliver the packet to the requested destination, so an ICMP error is generated to inform the originating application of the failure.
 
 This mechanism allows network applications to receive feedback about unreachable destinations rather than timing out indefinitely.
 
 \newpage
 \subsection{Exercise 1.5: ARP State Machine}
-
-Objective: Demonstrate three different ARP state machine transitions: NONE→INCOMPLETE→REACHABLE, DELAY→PROBE→REACHABLE, and NONE→INCOMPLETE→FAILED.
 
 \subsubsection*{Transition 1: NONE → INCOMPLETE → REACHABLE}
 
@@ -379,28 +292,9 @@ Screenshot 1: State transition from NONE to REACHABLE
 \caption{Packet capture showing NONE → INCOMPLETE → REACHABLE state transition}
 \end{figure}
 
-Analysis (from pc-a-none-to-reachable.txt):
-\begin{itemize}
-    \item Line 85-87: ARP Request (NONE → INCOMPLETE)
-    \begin{itemize}
-        \item Broadcast request: "who-has 10.0.0.101 tell 10.0.0.100"
-        \item Destination: ff:ff:ff:ff:ff:ff (broadcast)
-    \end{itemize}
-    \item Line 88-91: ARP Reply (INCOMPLETE → REACHABLE)
-    \begin{itemize}
-        \item Reply: "10.0.0.101 is-at 00:4e:01:bd:77:59"
-        \item Unicast response to PC-A
-    \end{itemize}
-    \item Line 92-105: ICMP Echo Request/Reply (now in REACHABLE state)
-    \item Line 122-128: Bidirectional verification (~5 seconds later)
-\end{itemize}
+Line 85-87 shows the ARP Request (NONE → INCOMPLETE) which is a broadcast request asking "who-has 10.0.0.101 tell 10.0.0.100" with destination ff:ff:ff:ff:ff:ff (broadcast). Line 88-91 contains the ARP Reply (INCOMPLETE → REACHABLE) replying "10.0.0.101 is-at 00:4e:01:bd:77:59" as a unicast  response to PC-A. Line 92-105 demonstrates the ICMP Echo Request/Reply now in REACHABLE state. Line 122-128 shows bidirectional verification approximately 5 seconds later.
 
-State Transitions:
-\begin{enumerate}
-    \item NONE: No ARP entry exists
-    \item INCOMPLETE: ARP Request sent, waiting for reply
-    \item REACHABLE: ARP Reply received, entry is valid and confirmed reachable
-\end{enumerate}
+The first state is NONE where no ARP entry exists. The second state is INCOMPLETE where an ARP Request has been sent and the system is waiting for a reply. The third state is REACHABLE where an ARP Reply has been received and the entry is valid and confirmed reachable.
 
 \newpage
 \subsubsection*{Transition 2: DELAY → PROBE → REACHABLE}
@@ -413,26 +307,11 @@ Screenshot 2: State transition showing ARP polling
 \caption{Packet capture showing DELAY → PROBE → REACHABLE transition with unicast ARP polling}
 \end{figure}
 
-Analysis (from pc-a-delay-to-probe.txt):
-\begin{itemize}
-    \item Line 33-46: ICMP Echo Request/Reply (triggers DELAY state)
-    \item Line 76-82: Unicast ARP Request (DELAY → PROBE, ~5 seconds later)
-    \begin{itemize}
-        \item Request: "who-has 10.0.0.101 tell 10.0.0.100"
-        \item Key: Destination MAC is unicast 00:4e:01:bd:77:59 (NOT broadcast!)
-    \end{itemize}
-    \item Line 79-82: ARP Reply (PROBE → REACHABLE)
-    \item Line 83-89: Bidirectional verification
-\end{itemize}
+Line 33-46 shows the ICMP Echo Request/Reply which triggers the DELAY state. Line 76-82 contains the unicast ARP Request (DELAY → PROBE, approximately 5 seconds later) asking "who-has 10.0.0.101 tell 10.0.0.100" where the key observation is that the destination MAC is unicast 00:4e:01:bd:77:59 (NOT broadcast). Line 79-82 shows the ARP Reply (PROBE → REACHABLE). Line 83-89 demonstrates bidirectional verification.
 
-State Transitions:
-\begin{enumerate}
-    \item DELAY: ARP entry exists but is aging; waiting for upper-layer confirmation
-    \item PROBE: Entry is expiring; sending unicast ARP probe to verify neighbor still reachable
-    \item REACHABLE: Probe response received, entry refreshed and confirmed reachable
-\end{enumerate}
+The first state is DELAY where the ARP entry exists but is aging and waiting for upper-layer confirmaton. The second state is PROBE where the entry is expiring and a unicast ARP probe is sent to verify the neighbor is still reachable. The third state is REACHABLE where the probe response has been received, the entry is refreshed, and the neighbor is confirmed reachable.
 
-Key Evidence: The unicast ARP Request (destination MAC: 00:4e:01:bd:77:59, NOT broadcast) demonstrates the PROBE state. This is ARP polling to refresh an aging cache entry, not initial discovery.
+The unicast ARP Request (destination MAC: 00:4e:01:bd:77:59, NOT broadcast) demonstrates the PROBE state. This is ARP polling to refresh an aging cache entry, not initial discovery.
 
 \newpage
 \subsubsection*{Transition 3: NONE → INCOMPLETE → FAILED}
@@ -453,39 +332,15 @@ Screenshot 4: Loopback interface showing ICMP error
 \caption{ICMP Host Unreachable on loopback interface (consequence of FAILED state)}
 \end{figure}
 
-Analysis (from pc-a-failed-eth.txt and pc-a-failed-lo.txt):
+From the Ethernet interface (pc-a-failed-eth.txt), line 134-136 shows the first ARP Request (NONE → INCOMPLETE) at 17:51:02.703868. Line 152-154 contains the second ARP Request (approximately 1 second later) at 17:51:03.742212. Line 163-165 shows the third ARP Request (approximately 1 second later) at 17:51:04.766214. No ARP Replies were received, causing the entry to transition to FAILED state.
 
-Ethernet Interface:
-\begin{itemize}
-    \item Line 134-136: First ARP Request (NONE → INCOMPLETE) at 17:51:02.703868
-    \item Line 152-154: Second ARP Request (~1 second later) at 17:51:03.742212
-    \item Line 163-165: Third ARP Request (~1 second later) at 17:51:04.766214
-    \item No ARP Replies received → Entry transitions to FAILED state
-\end{itemize}
+From the loopback interface (pc-a-failed-lo.txt), line 1-8 shows the ICMP Host Unreachable message (consequence of FAILED state). The message reads "10.0.0.100 > 10.0.0.100: ICMP host 10.0.0.200 unreachable" and was sent internally via loopback to inform the ping process.
 
-Loopback Interface:
-\begin{itemize}
-    \item Line 1-8: ICMP Host Unreachable (consequence of FAILED state)
-    \item Message: "10.0.0.100 > 10.0.0.100: ICMP host 10.0.0.200 unreachable"
-    \item Sent internally via loopback to inform the ping process
-\end{itemize}
+The first state is NONE where no ARP entry exists for 10.0.0.200. The second state is INCOMPLETE where three broadcast ARP Requests are sent over approximately 3 seconds with no replies received. The third state is FAILED where resolution has failed and the kernel generates an ICMP Destination Host Unreachable message.
 
-State Transitions:
-\begin{enumerate}
-    \item NONE: No ARP entry exists for 10.0.0.200
-    \item INCOMPLETE: Three broadcast ARP Requests sent over ~3 seconds, no replies received
-    \item FAILED: Resolution failed; kernel generates ICMP Destination Host Unreachable
-\end{enumerate}
+Three broadcast ARP Requests were sent with no responses. An ICMP error message was sent internally via the loopback interface. The timing pattern shows approximately 1 second between retry attempts. The final state has the neighbor entry marked as FAILED.
 
-Key Evidence:
-\begin{itemize}
-    \item Three broadcast ARP Requests with no responses
-    \item ICMP error message sent internally via loopback interface
-    \item Timing pattern: ~1 second between retry attempts
-    \item Final state: Neighbor entry marked as FAILED
-\end{itemize}
-
-Significance: This demonstrates the kernel's error handling when a neighbor cannot be reached at Layer 2. The FAILED state prevents indefinite ARP retries and provides feedback to applications.
+This demonstrates the kernel's error handling when a neighbor cannot be reached at Layer 2. The FAILED state prevents indefinite ARP  retries and provides feedback to applications.
 
 \newpage
 \section{Ethernet Switch/Bridge Operation (CloudLab)}
@@ -493,8 +348,6 @@ Significance: This demonstrates the kernel's error handling when a neighbor cann
 An Ethernet bridge is a Layer 2 device that forwards frames between network segments based on MAC addresses. This experiment demonstrates bridge setup, MAC address learning, forwarding behavior, and transparent operation using a 4-port software bridge on CloudLab.
 
 \subsection{Exercise 2.1: Set up the Bridge}
-
-Objective: Configure a 4-port Ethernet bridge connecting four hosts (Romeo, Juliet, Hamlet, Ophelia) and document the network topology.
 
 \subsubsection*{Network Topology}
 
@@ -516,7 +369,7 @@ All hosts on 10.0.0.0/24 network
 
 \subsubsection*{Bridge Configuration Screenshots}
 
-Screenshot 1: Bridge Interface Configuration (\texttt{ip addr show} on bridge)
+Bridge Interface Configuration (\texttt{ip addr show} on bridge)
 
 \begin{lstlisting}[basicstyle=\small\ttfamily, breaklines=true]
 pconley1@bridge:~$ ip addr show
@@ -537,15 +390,9 @@ pconley1@bridge:~$ ip addr show
     link/ether f2:b8:a6:73:65:49 brd ff:ff:ff:ff:ff:ff
 \end{lstlisting}
 
-Bridge Interface Summary:
-\begin{itemize}
-    \item MAC Address: f2:b8:a6:73:65:49
-    \item Bridge ID: 8000.f2b8a6736549
-    \item STP: Disabled
-    \item MTU: 1500 bytes
-\end{itemize}
+The MAC Address is f2:b8:a6:73:65:49, the Bridge ID is 8000.f2b8a6736549, STP is Disabled, and the MTU is 1500 bytes.
 
-Screenshot 2: Bridge Status (\texttt{brctl show br0})
+Bridge Status (\texttt{brctl show br0})
 
 \begin{lstlisting}[basicstyle=\small\ttfamily, breaklines=true]
 pconley1@bridge:~$ sudo brctl show br0
@@ -556,15 +403,9 @@ br0		8000.f2b8a6736549	no		eth1
 							eth4
 \end{lstlisting}
 
-Port Configuration:
-\begin{itemize}
-    \item Port 1 (eth1): 02:fb:f6:6f:4f:0d → Romeo (10.0.0.100, MAC: 02:0e:2f:76:d5:6d)
-    \item Port 2 (eth2): 02:c1:3c:f4:e2:62 → Juliet (10.0.0.101, MAC: 02:03:a9:83:3a:9b)
-    \item Port 3 (eth3): 02:72:6e:99:7f:08 → Hamlet (10.0.0.102, MAC: 02:db:29:99:d2:d4)
-    \item Port 4 (eth4): 02:d8:61:8b:31:15 → Ophelia (10.0.0.103, MAC: 02:d0:83:3e:8a:f7)
-\end{itemize}
+Port 1 (eth1) with MAC 02:fb:f6:6f:4f:0d connects to Romeo (10.0.0.100, MAC: 02:0e:2f:76:d5:6d). Port 2 (eth2) with MAC 02:c1:3c:f4:e2:62 connects to Juliet (10.0.0.101, MAC: 02:03:a9:83:3a:9b). Port 3 (eth3) with MAC 02:72:6e:99:7f:08 connects to Hamlet (10.0.0.102, MAC: 02:db:29:99:d2:d4). Port 4 (eth4) with MAC 02:d8:61:8b:31:15 connects to  Ophelia (10.0.0.103, MAC: 02:d0:83:3e:8a:f7).
 
-Screenshot 3: Initial Bridge MAC Table (\texttt{brctl showmacs br0})
+Initial Bridge MAC Table (\texttt{brctl showmacs br0})
 
 \begin{lstlisting}[basicstyle=\small\ttfamily, breaklines=true]
 pconley1@bridge:~$ sudo brctl showmacs br0
@@ -575,11 +416,11 @@ port no	mac addr		is local?	ageing timer
   1	02:fb:f6:6f:4f:0d	yes		   0.00
 \end{lstlisting}
 
-Note: All entries marked as "local" (yes) are the bridge's own interface MAC addresses (eth1-eth4). No host MACs have been learned yet because no traffic has been sent.
+All entries marked as "local" (yes) are the bridge's own interface MAC addresses (eth1-eth4). No host MACs have been learned yet because no traffic has been sent.
 
 \subsubsection*{Host IP Configuration}
 
-Screenshot 4: Romeo IP Configuration (\texttt{ip addr show})
+Romeo IP Configuration (\texttt{ip addr show})
 
 \begin{lstlisting}[basicstyle=\scriptsize\ttfamily, breaklines=true]
 pconley1@romeo:~$ ip addr show
@@ -588,7 +429,7 @@ pconley1@romeo:~$ ip addr show
     inet 10.0.0.100/24 brd 10.0.0.255 scope global eth1
 \end{lstlisting}
 
-Screenshot 5: Juliet IP Configuration (\texttt{ip addr show})
+Juliet IP Configuration (\texttt{ip addr show})
 
 \begin{lstlisting}[basicstyle=\scriptsize\ttfamily, breaklines=true]
 pconley1@juliet:~$ ip addr show
@@ -597,7 +438,7 @@ pconley1@juliet:~$ ip addr show
     inet 10.0.0.101/24 brd 10.0.0.255 scope global eth1
 \end{lstlisting}
 
-Screenshot 6: Hamlet IP Configuration (\texttt{ip addr show})
+Hamlet IP Configuration (\texttt{ip addr show})
 
 \begin{lstlisting}[basicstyle=\scriptsize\ttfamily, breaklines=true]
 pconley1@hamlet:~$ ip addr show
@@ -606,7 +447,7 @@ pconley1@hamlet:~$ ip addr show
     inet 10.0.0.102/24 brd 10.0.0.255 scope global eth1
 \end{lstlisting}
 
-Screenshot 7: Ophelia IP Configuration (\texttt{ip addr show})
+Ophelia IP Configuration (\texttt{ip addr show})
 
 \begin{lstlisting}[basicstyle=\scriptsize\ttfamily, breaklines=true]
 pconley1@ophelia:~$ ip addr show
@@ -618,102 +459,46 @@ pconley1@ophelia:~$ ip addr show
 \newpage
 \subsection{Exercise 2.2: Learning MAC Addresses}
 
-Objective: Demonstrate how the bridge learns MAC addresses dynamically from network traffic by observing a ping from Romeo to Juliet.
-
 \subsubsection*{Ordered List of 6 Events}
 
 Event 1: Romeo sends ARP Request (Broadcast)
 
-Description: Romeo doesn't know Juliet's MAC address, so it broadcasts an ARP Request asking "who-has 10.0.0.101?"
-
-Evidence:
-\begin{itemize}
-    \item Destination MAC: ff:ff:ff:ff:ff:ff (broadcast)
-    \item Bridge action: Floods ARP Request out all ports except incoming port (port 1)
-    \item All hosts receive the broadcast request
-\end{itemize}
+Romeo doesn't know Juliet's MAC address, so it broadcasts an ARP Request asking "who-has 10.0.0.101?" The destination MAC is ff:ff:ff:ff:ff:ff (broadcast). The bridge floods the ARP Request out all ports except the incoming port (port 1). All hosts recieve  the broadcast request.
 
 \vspace{0.5cm}
 Event 2: Bridge learns Romeo's MAC address
 
-Description: When the ARP Request arrives at the bridge on port 1, the bridge examines the source MAC field and learns Romeo's location.
-
-Evidence:
-\begin{itemize}
-    \item Bridge MAC table updated: Port 1 → 02:0e:2f:76:d5:6d (Romeo)
-    \item Ageing timer starts (typically 300 seconds)
-    \item Entry marked as "learned" (not local)
-\end{itemize}
+When the ARP Request arrives at the bridge on port 1, the bridge examines the source MAC field and learns Romeo's location. The bridge MAC table is updated with Port 1 → 02:0e:2f:76:d5:6d (Romeo). The ageing timer starts (typically 300 seconds). The entry is marked as "learned" (not local).
 
 \vspace{0.5cm}
 Event 3: Juliet receives ARP Request and sends ARP Reply (Unicast)
 
-Description: Juliet receives the broadcast ARP Request on port 2 and replies with a unicast ARP Reply containing her MAC address.
-
-Evidence:
-\begin{itemize}
-    \item ARP Reply: "10.0.0.101 is-at 02:03:a9:83:3a:9b"
-    \item Destination MAC: 02:0e:2f:76:d5:6d (Romeo's MAC - unicast)
-    \item Bridge forwards to port 1 only (knows Romeo is on port 1 from Event 2)
-\end{itemize}
+Juliet receives the broadcast ARP Request on port 2 and replies with a unicast ARP Reply containing her MAC address. The ARP Reply states "10.0.0.101 is-at 02:03:a9:83:3a:9b". The destination MAC is 02:0e:2f:76:d5:6d (Romeo's MAC - unicast). The bridge forwards to port 1 only because it knows Romeo is on port 1 from Event 2.
 
 \vspace{0.5cm}
 Event 4: Bridge learns Juliet's MAC address
 
-Description: When the ARP Reply arrives at the bridge on port 2, the bridge examines the source MAC field and learns Juliet's location.
-
-Evidence:
-\begin{itemize}
-    \item Bridge MAC table updated: Port 2 → 02:03:a9:83:3a:9b (Juliet)
-    \item Ageing timer starts
-    \item Entry marked as "learned"
-\end{itemize}
+When the ARP Reply arrives at the bridge on port 2, the bridge examines the source MAC field and learns Juliet's location. The bridge MAC table is updated with Port 2 → 02:03:a9:83:3a:9b (Juliet). The ageing timer starts. The entry is marked as "learned".
 
 \vspace{0.5cm}
 Event 5: Romeo sends ICMP Echo Request (Unicast)
 
-Description: Romeo now knows Juliet's MAC address from the ARP Reply, so it sends an ICMP Echo Request directly to Juliet.
-
-Evidence:
-\begin{itemize}
-    \item ICMP packet: 10.0.0.100 → 10.0.0.101
-    \item Source MAC: 02:0e:2f:76:d5:6d
-    \item Destination MAC: 02:03:a9:83:3a:9b
-    \item Bridge forwards to port 2 only (knows Juliet is on port 2 from Event 4)
-\end{itemize}
+Romeo now knows Juliet's MAC address from the ARP Reply, so it sends an ICMP Echo Request directly to Juliet. The ICMP packet flows from 10.0.0.100 to 10.0.0.101. The source MAC is 02:0e:2f:76:d5:6d. The destination MAC is 02:03:a9:83:3a:9b. The bridge forwards to port 2 only because it knows Juliet is on port 2 from Event 4.
 
 \vspace{0.5cm}
 Event 6: Juliet sends ICMP Echo Reply (Unicast)
 
-Description: Juliet responds with an ICMP Echo Reply back to Romeo.
-
-Evidence:
-\begin{itemize}
-    \item ICMP reply: 10.0.0.101 → 10.0.0.100
-    \item Source MAC: 02:03:a9:83:3a:9b
-    \item Destination MAC: 02:0e:2f:76:d5:6d
-    \item Bridge forwards to port 1 only (knows Romeo is on port 1)
-\end{itemize}
+Juliet responds with an ICMP Echo Reply back to Romeo. The ICMP reply flows from 10.0.0.101 to 10.0.0.100. The source MAC is 02:03:a9:83:3a:9b. The destination MAC is 02:0e:2f:76:d5:6d. The bridge forwards to port 1 only because it knows Romeo is on port 1.
 
 \subsubsection*{Key Observations}
 
-MAC Learning:
-\begin{itemize}
-    \item The bridge learns MAC addresses from the source MAC field of incoming frames
-    \item Learning occurs on the first frame from each host
-    \item Learned entries have an ageing timer (300 seconds)
-\end{itemize}
+The bridge learns MAC addresses from the source MAC field of incoming frames. Learning occurs on the first frame from each host. Learned entries have an ageing timer of 300 seconds.
 
-Forwarding Behavior:
-\begin{itemize}
-    \item Before learning: Broadcasts/floods unknown destinations to all ports
-    \item After learning: Forwards unicast frames only to the specific port where the destination is located
-    \item Efficiency: Reduces unnecessary traffic on other ports (Hamlet and Ophelia don't see Romeo-Juliet unicast traffic after learning)
-\end{itemize}
+Before learning, the bridge broadcasts or floods unknown destinations to all ports. After learning, it forwards unicast frames only to the specific port where the destination is located. This efficiency reduces unnecessary traffic on other ports, meaning Hamlet and Ophelia don't see Romeo-Juliet unicast traffic after learning.
 
 \subsubsection*{Evidence Screenshots}
 
-Screenshot 1: MAC Table Before Ping (Empty - Only Local Interfaces)
+MAC Table Before Ping (Empty - Only Local Interfaces)
 
 \begin{lstlisting}[basicstyle=\small\ttfamily, breaklines=true]
 pconley1@bridge:~$ sudo brctl showmacs br0
@@ -724,7 +509,7 @@ port no	mac addr		is local?	ageing timer
   1	02:fb:f6:6f:4f:0d	yes		   0.00
 \end{lstlisting}
 
-Screenshot 2: Ping from Romeo to Juliet
+Ping from Romeo to Juliet
 
 \begin{lstlisting}[basicstyle=\small\ttfamily, breaklines=true]
 pconley1@romeo:~$ ping -c 1 10.0.0.101
@@ -736,7 +521,7 @@ PING 10.0.0.101 (10.0.0.101) 56(84) bytes of data.
 rtt min/avg/max/mdev = 1.993/1.993/1.993/0.000 ms
 \end{lstlisting}
 
-Screenshot 3: MAC Table After Ping (Learned Romeo and Juliet MACs)
+MAC Table After Ping (Learned Romeo and Juliet MACs)
 
 \begin{lstlisting}[basicstyle=\small\ttfamily, breaklines=true]
 pconley1@bridge:~$ sudo brctl showmacs br0
@@ -749,28 +534,16 @@ port no	mac addr		is local?	ageing timer
   1	02:fb:f6:6f:4f:0d	yes		   0.00
 \end{lstlisting}
 
-Key Observation: Two new entries now appear with "no" in the "is local?" column:
-\begin{itemize}
-    \item Port 1: 02:0e:2f:76:d5:6d (Romeo's MAC) - learned from source address
-    \item Port 2: 02:03:a9:83:3a:9b (Juliet's MAC) - learned from source address
-\end{itemize}
+Two new entries now appear with "no" in the "is local?" column. Port 1 has 02:0e:2f:76:d5:6d (Romeo's MAC) which was learned from the source address. Port 2 has 02:03:a9:83:3a:9b (Juliet's MAC) which was also learned from the source address.
 
 \newpage
 \subsection{Exercise 2.3: Effect of Smaller Collision Domain}
 
-Objective: Demonstrate how bridges create separate collision domains for each port, allowing simultaneous transmissions and higher aggregate throughput compared to hubs.
-
 \subsubsection*{Performance Test Results}
 
-Test Configuration:
-\begin{itemize}
-    \item iperf3 server on Juliet (10.0.0.101)
-    \item iperf3 client on Romeo (10.0.0.100)
-    \item Test duration: 10 seconds
-    \item Protocol: TCP with default window size
-\end{itemize}
+The iperf3 server runs on Juliet (10.0.0.101) and the iperf3 client runs on Romeo (10.0.0.100). The test duration is 10 seconds using TCP protocol with default window size.
 
-Screenshot: iperf3 Performance Test from Romeo to Juliet
+iperf3 Performance Test from Romeo to Juliet
 
 \begin{lstlisting}[basicstyle=\tiny\ttfamily, breaklines=true]
 pconley1@romeo:~$ iperf3 -c 10.0.0.101 -t 10
@@ -795,29 +568,13 @@ Connecting to host 10.0.0.101, port 5201
 iperf Done.
 \end{lstlisting}
 
-Analysis:
-
 The measured throughput (~1.16 Mbits/sec sender, 947 Kbits/sec receiver) is lower than the theoretical maximum due to CloudLab resource constraints and virtualization overhead. However, the experiment successfully demonstrates the bridge's forwarding capability.
 
-In an ideal scenario with dedicated hardware:
-\begin{itemize}
-    \item Single session throughput: ~940 Mbps (for 1 Gbps links)
-    \item Multiple simultaneous sessions achieve full throughput on non-overlapping port pairs
-    \item Total aggregate throughput can exceed line rate (e.g., 3 sessions × 940 Mbps = 2.82 Gbps)
-\end{itemize}
+In an ideal scenario with dedicated hardware, single session throughput would be approximately 940 Mbps for 1 Gbps links. Multiple simultaneous sessions achieve full throughput on non-overlapping port pairs. Total aggregate throughput can exceed line rate, for example 3 sessions × 940 Mbps = 2.82 Gbps.
 
 \subsubsection*{Network Capacity Analysis}
 
-Collision Domain Isolation:
-
-Each port on the bridge is a separate collision domain. This means:
-\begin{enumerate}
-    \item Full-Duplex Operation: Each link can send and receive simultaneously at full line rate
-    \item Independent Forwarding: The bridge can forward between different port pairs simultaneously
-    \item No Contention: Traffic from Port 1→2 does not interfere with Port 3→4
-\end{enumerate}
-
-Comparison: Bridge vs. Hub
+Each port on the bridge is a seperate collision domain. This means that full-duplex operation allows each link to send and receive simultaneously at full line rate. Independent forwarding means the bridge can forward between different port pairs simultaneously. Additionally, there is no contention, so traffic from Port 1→2 does not interfere with Port 3→4.
 
 \begin{table}[H]
 \centering
@@ -839,22 +596,14 @@ Efficiency & Low (shared medium) & High (microsegmentation) \\
 \caption{Hub vs. Bridge Performance Comparison}
 \end{table}
 
-Bridge Advantage:
-\begin{itemize}
-    \item Microsegmentation creates multiple collision domains
-    \item Each port pair can operate at full duplex simultaneously
-    \item Total network capacity scales with number of active port pairs
-    \item Significantly higher aggregate throughput than hubs
-\end{itemize}
+Microsegmentation creates multiple collision domains. Each port pair can operate at full duplex simultaneously. Total network capacity scales with the number of active port pairs. This provides significantly higher aggregate throughput than hubs.
 
 \newpage
 \subsection{Exercise 2.4: Transparent Operation of a Bridge}
 
-Objective: Demonstrate that a bridge operates transparently at Layer 2 - it does NOT modify MAC addresses in forwarded frames, distinguishing it from Layer 3 routers.
-
 \subsubsection*{Evidence: tcpdump Screenshot}
 
-Screenshot: tcpdump on Bridge Showing MAC Address Preservation
+tcpdump on Bridge Showing MAC Address Preservation
 
 \begin{lstlisting}[basicstyle=\tiny\ttfamily, breaklines=true]
 pconley1@bridge:~$ sudo tcpdump -i br0 -e -n icmp -c 4
@@ -873,61 +622,18 @@ listening on br0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 
 Frame 1: Romeo → Juliet (ICMP Echo Request)
 
-Ethernet Header:
-\begin{itemize}
-    \item Source MAC: 02:0e:2f:76:d5:6d (Romeo's eth1)
-    \item Destination MAC: 02:03:a9:83:3a:9b (Juliet's eth1)
-\end{itemize}
-
-IP Header:
-\begin{itemize}
-    \item Source IP: 10.0.0.100 (Romeo)
-    \item Destination IP: 10.0.0.101 (Juliet)
-\end{itemize}
+The source MAC is 02:0e:2f:76:d5:6d (Romeo's eth1) and the destination MAC is 02:03:a9:83:3a:9b (Juliet's eth1). The source IP is 10.0.0.100 (Romeo) and the destination IP is 10.0.0.101 (Juliet).
 
 \vspace{0.5cm}
 Frame 2: Juliet → Romeo (ICMP Echo Reply)
 
-Ethernet Header:
-\begin{itemize}
-    \item Source MAC: 02:03:a9:83:3a:9b (Juliet's eth1)
-    \item Destination MAC: 02:0e:2f:76:d5:6d (Romeo's eth1)
-\end{itemize}
-
-IP Header:
-\begin{itemize}
-    \item Source IP: 10.0.0.101 (Juliet)
-    \item Destination IP: 10.0.0.100 (Romeo)
-\end{itemize}
+The source MAC is 02:03:a9:83:3a:9b (Juliet's eth1) and the destination MAC is 02:0e:2f:76:d5:6d (Romeo's eth1). The source IP is 10.0.0.101 (Juliet) and the destination IP is 10.0.0.100 (Romeo).
 
 \subsubsection*{Analysis: Does the Bridge Modify MAC Addresses?}
 
-Answer: NO - The bridge operates transparently and does NOT modify MAC addresses.
+NO - The bridge operates transparently and does NOT modify MAC addresses.
 
-Evidence:
-
-\begin{enumerate}
-    \item Source MAC Preservation:
-    \begin{itemize}
-        \item Frames from Romeo show source MAC: 02:0e:2f:76:d5:6d
-        \item This is Romeo's actual MAC address (verified from \texttt{ip addr} on Romeo)
-        \item The bridge does NOT substitute its own MAC address
-    \end{itemize}
-
-    \item Destination MAC Preservation:
-    \begin{itemize}
-        \item Frames to Juliet show destination MAC: 02:03:a9:83:3a:9b
-        \item This is Juliet's actual MAC address (verified from \texttt{ip addr} on Juliet)
-        \item The bridge forwards without modification
-    \end{itemize}
-
-    \item No MAC Rewriting:
-    \begin{itemize}
-        \item Comparing frames at ingress (port 1) and egress (port 2): identical MAC addresses
-        \item Bridge acts as a Layer 2 forwarding device only
-        \item End hosts are unaware of the bridge's existence
-    \end{itemize}
-\end{enumerate}
+First, regarding source MAC preservation, frames from Romeo show source MAC 02:0e:2f:76:d5:6d which is Romeo's actual MAC address (verified from \texttt{ip addr} on Romeo), and the bridge does NOT substitute its own MAC address. Second, regarding destination MAC preservation, frames to Juliet show destination MAC 02:03:a9:83:3a:9b which is Juliet's actual MAC address (verified from \texttt{ip addr} on Juliet), and the bridge forwards without modification. Third, regarding MAC rewriting, comparing frames at ingress (port 1) and egress (port 2) shows identical  MAC addresses. The bridge acts as a Layer 2 forwarding device only, and end hosts are unaware of the bridge's existance.
 
 \newpage
 \subsubsection*{Comparison: Bridge vs. Router}
@@ -956,104 +662,43 @@ OSI Layer & Layer 2 (Data Link) & Layer 3 (Network) \\
 \caption{Bridge vs. Router Comparison}
 \end{table}
 
-Router Behavior (for comparison):
+If this were a router between two subnets, the ingress frame would have source MAC = Romeo and dest MAC = Router's ingress interface. The egress frame would have source MAC = Router's egress interface and dest MAC = Juliet. The router would decrement TTL and recalculate checksums. The router's MAC addresses would appear in Ethernet headers.
 
-If this were a router between two subnets:
-\begin{itemize}
-    \item Ingress frame: Source MAC = Romeo, Dest MAC = Router's ingress interface
-    \item Egress frame: Source MAC = Router's egress interface, Dest MAC = Juliet
-    \item Router decrements TTL, recalculates checksums
-    \item Router's MAC addresses appear in Ethernet headers
-\end{itemize}
-
-Bridge Behavior (actual):
-
-\begin{itemize}
-    \item Ingress frame: Source MAC = Romeo, Dest MAC = Juliet
-    \item Egress frame: Source MAC = Romeo, Dest MAC = Juliet \textit{(unchanged!)}
-    \item Bridge only reads MAC addresses to update forwarding table
-    \item Frame contents remain bit-for-bit identical (except FCS recalculation)
-\end{itemize}
+In contrast, with a bridge the ingress frame has source MAC = Romeo and dest MAC = Juliet. The egress frame has source MAC = Romeo and dest MAC = Juliet \textit{(unchanged!)}. The bridge only reads MAC addresses to update the forwarding table. Frame contents remain bit-for-bit identical except for FCS recalculation.
 
 \subsubsection*{Conclusion}
 
-The bridge operates transparently at the Data Link Layer (Layer 2):
-
-\begin{itemize}
-    \item Learns MAC addresses from source fields to build forwarding table
-    \item Forwards frames based on destination MAC lookup
-    \item Preserves all MAC addresses without modification
-    \item Invisible to end hosts - Romeo and Juliet communicate as if directly connected
-\end{itemize}
+The bridge operates transparently at the Data Link Layer (Layer 2). It learns MAC addresses from source fields to build the forwarding table. It forwards frames based on destination MAC lookup. It preserves all MAC addresses without modificaton. It is invisible to end hosts, so Romeo and Juliet communicate as if directly connected.
 
 This transparency is a fundamental characteristic of bridging and distinguishes Layer 2 devices (bridges, switches) from Layer 3 devices (routers).
 
-Practical Implication: Because bridges are transparent, they can be inserted into or removed from a network without requiring any configuration changes on end hosts. The hosts never know the bridge exists.
+Because bridges are transparent, they can be inserted into or removed from a network without requiring any configuration changes on end hosts. The hosts never know the bridge exists.
 
 \newpage
 \section{Summary}
 
 \subsection{Part 1: Address Resolution Protocol}
 
-Lab 3 Part 1 successfully demonstrated the complete behavior of the Address Resolution Protocol (ARP):
+Lab 3 Part 1 successfully demonstrated the complete behavior of the Address Resolution Protocol (ARP).
 
-Key Learnings:
-\begin{enumerate}
-    \item MAC Address Resolution: ARP translates IP addresses to MAC addresses using broadcast requests and unicast replies
-    \item Caching Behavior: Learned MAC addresses are cached to avoid repeated broadcasts
-    \item Neighbor Reachability Detection: Unicast ARP polling verifies aging cache entries without flooding
-    \item Timeout and Retry: 3 ARP attempts with ~1 second intervals for non-existent hosts
-    \item State Machine: Successfully demonstrated three transition patterns:
-    \begin{itemize}
-        \item NONE → INCOMPLETE → REACHABLE (initial discovery)
-        \item DELAY → PROBE → REACHABLE (reachability verification)
-        \item NONE → INCOMPLETE → FAILED (resolution failure)
-    \end{itemize}
-\end{enumerate}
+First, regarding MAC address resolution, ARP translates IP addresses to MAC addresses using broadcast requests and unicast replies. Second, regarding caching behavior, learned MAC addresses are cached to avoid repeated broadcasts. Third, neighbor reachability detection uses unicast ARP polling to verify aging cache entries without flooding. Fourth, timeout and retry behavior  involves 3 ARP attempts with approximately 1 second intervals for non-existent hosts. Fifth, the state machine successfully demonstrated three transition patterns including NONE → INCOMPLETE → REACHABLE (initial discovery), DELAY → PROBE → REACHABLE (reachability verification), and NONE → INCOMPLETE → FAILED (resolution failure).
 
-Deliverables:
-\begin{itemize}
-    \item 9 packet capture files (.pcap)
-    \item 9 text conversions (.txt)
-    \item 18 screenshots documenting all exercises
-    \item Complete analysis with detailed answers
-\end{itemize}
+We collected 9 packet capture files (.pcap), 9 text conversions (.txt), 18 screenshots documenting all exercises, and complete analysis with detailed answers.
 
 \subsection{Part 2: Ethernet Bridge Operation}
 
-Lab 3 Part 2 successfully demonstrated the operation of an Ethernet bridge at Layer 2:
+Lab 3 Part 2 successfully demonstrated the operation of an Ethernet bridge at Layer 2.
 
-Key Learnings:
-\begin{enumerate}
-    \item Source-Based Learning: Bridges learn MAC addresses from source fields of incoming frames
-    \item Destination-Based Forwarding: Forwards frames only to the port where destination is located (after learning)
-    \item Collision Domain Isolation: Each port is a separate collision domain, enabling simultaneous transmissions
-    \item Transparent Operation: Bridges do NOT modify MAC addresses - complete Layer 2 transparency
-    \item Microsegmentation: Allows aggregate throughput to exceed line rate through parallel port-pair transmissions
-\end{enumerate}
+First, source-based learning means bridges learn MAC addresses from source fields of incoming frames. Second, destination-based forwarding means the bridge forwards frames only to the port where the destination is located after learning. Third, collision domain isolation means each port is a separate collision domain, enabling simultaneous transmissions. Fourth, transparent operation means bridges do NOT modify MAC addresses, providing complete Layer 2 transparency. Fifth, microsegmentation allows aggregate throughput to exceed line rate through parallel port-pair transmissions.
 
-Deliverables:
-\begin{itemize}
-    \item Complete bridge configuration
-    \item MAC learning evidence
-    \item Performance test results
-    \item Transparency demonstration
-    \item Comprehensive documentation
-\end{itemize}
+We completed the bridge configuration, collected MAC learning evidence, obtained performance test results, demonstrated transparency, and provided comprehensive documentation.
 
 \subsection{Overall Lab Completion}
 
-Total Components: 9 exercises across 2 parts
+This lab consists of 9 exercises across 2 parts.
 
-All required deliverables collected:
-\begin{itemize}
-    \item $\checkmark$ All Part 1 packet captures and screenshots
-    \item $\checkmark$ Part 1 comprehensive answers
-    \item $\checkmark$ Part 2 bridge configuration and evidence
-    \item $\checkmark$ Part 2 comprehensive answers
-    \item $\checkmark$ Complete documentation
-\end{itemize}
+All Part 1 packet captures and screenshots ($\checkmark$), Part 1 comprehensive answers ($\checkmark$), Part 2 bridge configuration and evidence ($\checkmark$), Part 2 comprehensive answers ($\checkmark$), and complete documentation ($\checkmark$) have been collected.
 
-Lab Status: COMPLETE - Ready for submission
+COMPLETE - Ready for submission
 
 \end{document}
